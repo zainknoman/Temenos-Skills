@@ -18,9 +18,11 @@ def cache_dir(tmp_path):
     return d
 
 
-def test_hash_is_64_hex_chars(tmp_jar):
+def test_hash_has_sha256_prefix(tmp_jar):
     h = compute_jar_hash(tmp_jar)
-    assert len(h) == 64 and all(c in '0123456789abcdef' for c in h)
+    assert h.startswith('sha256:')
+    hex_part = h[7:]
+    assert len(hex_part) == 64 and all(c in '0123456789abcdef' for c in hex_part)
 
 
 def test_hash_is_deterministic(tmp_jar):

@@ -7,8 +7,8 @@ from pathlib import Path
 
 
 def compute_jar_hash(jar_path: Path) -> str:
-    """Return the SHA-256 hex digest of the JAR file bytes."""
-    return hashlib.sha256(jar_path.read_bytes()).hexdigest()
+    """Return 'sha256:<hex>' digest of the JAR file bytes."""
+    return 'sha256:' + hashlib.sha256(jar_path.read_bytes()).hexdigest()
 
 
 def is_cache_current(jar_path: Path, cache_dir: Path) -> bool:
