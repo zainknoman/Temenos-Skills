@@ -1,6 +1,6 @@
 # T24 Package Index
 
-> Generated 2026-06-20T03:17:58.699072+00:00 — 137 packages.
+> Generated 2026-06-20T03:39:43.046735+00:00 — 137 packages.
 
 | Package | JAR | Domain | `$USING` Declaration |
 |---------|-----|--------|---------------------|

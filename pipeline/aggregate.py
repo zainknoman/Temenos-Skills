@@ -151,8 +151,12 @@ def render_references(
 ) -> None:
     """Render all reference markdown files from enriched class list."""
     now = datetime.now(timezone.utc).isoformat()
+    def _mdcell(s: object) -> str:
+        return str(s).replace('|', '\\|').replace('\n', ' ').replace('\r', '')
+
     env = Environment(loader=FileSystemLoader(str(templates_dir)),
                       autoescape=False, trim_blocks=True, lstrip_blocks=True)
+    env.filters['mdcell'] = _mdcell
 
     # Per-domain product files
     product_tmpl = env.get_template('product.md.j2')
@@ -169,12 +173,16 @@ def render_references(
         ), encoding='utf-8')
         log.info('Wrote %s (%d classes)', out, len(domain_classes))
 
-    # Cross-cutting hooks files
+    # Cross-cutting hooks files — each file gets a filtered view
     hooks_tmpl = env.get_template('hooks.md.j2')
     all_by_type = _by_type(classes)
-    hook_ctx = {t: all_by_type.get(t, []) for t in
-                ['lifecycle-hook', 'aa-activity-hook', 'service-hook', 'validation-hook', 'auth-hook']}
-    for filename in ('hooks/lifecycle-hooks.md', 'hooks/event-hooks.md', 'hooks/validation-hooks.md'):
+    _hooks_files: list[tuple[str, list[str]]] = [
+        ('hooks/lifecycle-hooks.md', ['lifecycle-hook', 'aa-activity-hook', 'service-hook']),
+        ('hooks/validation-hooks.md', ['validation-hook', 'auth-hook']),
+        ('hooks/event-hooks.md', ['event']),
+    ]
+    for filename, type_keys in _hooks_files:
+        hook_ctx = {t: all_by_type.get(t, []) for t in type_keys}
         out = output_dir / filename
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(hooks_tmpl.render(generated_at=now, by_type=hook_ctx), encoding='utf-8')
@@ -226,14 +234,15 @@ def render_references(
     out.write_text(''.join(lines), encoding='utf-8')
     log.info('Wrote %s (%d classes)', out, len(app_classes))
 
-    # relationships/dependency-graph.md
-    jar_set = sorted({c['jar'] for c in classes})
+    # relationships/dependency-graph.md — use pre-built dict to avoid O(N²) scan
+    dep_by_jar = _by_jar(classes)
+    jar_set = sorted(dep_by_jar)
     out = output_dir / 'relationships/dependency-graph.md'
     out.parent.mkdir(parents=True, exist_ok=True)
     lines = [f'# T24 JAR Dependency Graph\n\n> Generated {now} — {len(jar_set)} JARs.\n\n',
              '| JAR | Domain | Class Count |\n', '|-----|--------|------------|\n']
     for jar in jar_set:
-        jc = [c for c in classes if c['jar'] == jar]
+        jc = dep_by_jar[jar]
         domain = jc[0]['domain'] if jc else 'misc'
         lines.append(f'| `{jar}` | `{domain}` | {len(jc)} |\n')
     out.write_text(''.join(lines), encoding='utf-8')

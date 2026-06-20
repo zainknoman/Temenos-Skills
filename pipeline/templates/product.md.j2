@@ -11,7 +11,7 @@
 |-------|-----|--------|------------|-------------|
 {% for cls in by_type['lifecycle-hook'] + by_type['aa-activity-hook'] + by_type['service-hook'] %}
 {% for m in cls['public_methods'] %}
-| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] }} |
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] | mdcell }} |
 {% endfor %}
 {% endfor %}
 {% else %}
@@ -41,7 +41,7 @@
 |-------|-----|--------|---------|-------------|
 {% for cls in by_type['public-api'] %}
 {% for m in cls['public_methods'] %}
-| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['return_type'] }}` | {{ cls['javadoc_description'] }} |
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['return_type'] }}` | {{ cls['javadoc_description'] | mdcell }} |
 {% endfor %}
 {% endfor %}
 {% else %}

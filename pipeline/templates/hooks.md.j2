@@ -25,7 +25,7 @@ Fire during T24 record processing: input → validate → authorise → post-upd
 |-------|-----|--------|------------|-------------|
 {% for cls in by_type['lifecycle-hook'] %}
 {% for m in cls['public_methods'] %}
-| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] }} |
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] | mdcell }} |
 {% endfor %}
 {% endfor %}
 {% else %}
@@ -43,7 +43,7 @@ Fire during Arrangement Architecture activity processing.
 |-------|-----|--------|------------|-------------|
 {% for cls in by_type['aa-activity-hook'] %}
 {% for m in cls['public_methods'] %}
-| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] }} |
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] | mdcell }} |
 {% endfor %}
 {% endfor %}
 {% else %}
@@ -61,7 +61,7 @@ Fire during background service and batch processing.
 |-------|-----|--------|------------|-------------|
 {% for cls in by_type['service-hook'] %}
 {% for m in cls['public_methods'] %}
-| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] }} |
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] | mdcell }} |
 {% endfor %}
 {% endfor %}
 {% else %}

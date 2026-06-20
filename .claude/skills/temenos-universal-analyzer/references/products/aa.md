@@ -1,6 +1,6 @@
 # Arrangement Architecture (AA) — Reference
 
-> Generated 2026-06-20T03:17:58.699072+00:00 from 99 JARs. Re-run `aggregate.py` to refresh.
+> Generated 2026-06-20T03:39:43.046735+00:00 from 99 JARs. Re-run `aggregate.py` to refresh.
 
 ---
 
@@ -159,24 +159,15 @@
 | `PropertyClass` | `AA_PropertyClassApi.jar` | `setPropertyClassId` | `void` | Create a new PropertyClass using a specific context.. |
 | `PropertyClass` | `AA_PropertyClassApi.jar` | `getPropertyClassId` | `java.lang.String` | Create a new PropertyClass using a specific context.. |
 | `PropertyClass` | `AA_PropertyClassApi.jar` | `getPropertyIdsForProduct` | `java.util.List<java.lang.String>` | Create a new PropertyClass using a specific context.. |
-| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getVersion` | `java.lang.String` | This interface enables the implementer to compare arrangement values against default
-value in the product property definition. |
-| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getBuildDate` | `java.lang.String` | This interface enables the implementer to compare arrangement values against default
-value in the product property definition. |
-| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getComponentVersion` | `java.lang.String` | This interface enables the implementer to compare arrangement values against default
-value in the product property definition. |
-| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getComparableValues` | `void` | This interface enables the implementer to compare arrangement values against default
-value in the product property definition. |
-| `RuleComparison` | `AA_RuleComparisonHook.jar` | `compareNegotiatedValue` | `void` | This interface enables the implementer to compare arrangement values against default
-value in the product property definition. |
-| `RuleComparison` | `AA_RuleComparisonHook.jar` | `validateNegotiableField` | `void` | This interface enables the implementer to compare arrangement values against default
-value in the product property definition. |
-| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getRelatedArrangements` | `void` | This interface enables the implementer to compare arrangement values against default
-value in the product property definition. |
-| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getDormancyException` | `com.temenos.t24.api.complex.aa.rulecomparisonhook.DormancyResponse` | This interface enables the implementer to compare arrangement values against default
-value in the product property definition. |
-| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getComparableStringValues` | `void` | This interface enables the implementer to compare arrangement values against default
-value in the product property definition. |
+| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getVersion` | `java.lang.String` | This interface enables the implementer to compare arrangement values against default value in the product property definition. |
+| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getBuildDate` | `java.lang.String` | This interface enables the implementer to compare arrangement values against default value in the product property definition. |
+| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getComponentVersion` | `java.lang.String` | This interface enables the implementer to compare arrangement values against default value in the product property definition. |
+| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getComparableValues` | `void` | This interface enables the implementer to compare arrangement values against default value in the product property definition. |
+| `RuleComparison` | `AA_RuleComparisonHook.jar` | `compareNegotiatedValue` | `void` | This interface enables the implementer to compare arrangement values against default value in the product property definition. |
+| `RuleComparison` | `AA_RuleComparisonHook.jar` | `validateNegotiableField` | `void` | This interface enables the implementer to compare arrangement values against default value in the product property definition. |
+| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getRelatedArrangements` | `void` | This interface enables the implementer to compare arrangement values against default value in the product property definition. |
+| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getDormancyException` | `com.temenos.t24.api.complex.aa.rulecomparisonhook.DormancyResponse` | This interface enables the implementer to compare arrangement values against default value in the product property definition. |
+| `RuleComparison` | `AA_RuleComparisonHook.jar` | `getComparableStringValues` | `void` | This interface enables the implementer to compare arrangement values against default value in the product property definition. |
 | `Settlement` | `AA_SettlementHook.jar` | `getVersion` | `java.lang.String` | This interface enables the implementer to return exceptions if any after execution of the User defined logic routine. |
 | `Settlement` | `AA_SettlementHook.jar` | `getBuildDate` | `java.lang.String` | This interface enables the implementer to return exceptions if any after execution of the User defined logic routine. |
 | `Settlement` | `AA_SettlementHook.jar` | `getComponentVersion` | `java.lang.String` | This interface enables the implementer to return exceptions if any after execution of the User defined logic routine. |

@@ -6,10 +6,12 @@ TEMPLATES_DIR = Path('pipeline/templates')
 
 @pytest.fixture
 def jinja_env():
-    return Environment(
+    env = Environment(
         loader=FileSystemLoader(str(TEMPLATES_DIR)),
         autoescape=False, trim_blocks=True, lstrip_blocks=True,
     )
+    env.filters['mdcell'] = lambda s: str(s).replace('|', '\\|').replace('\n', ' ')
+    return env
 
 _HOOK_CLASS = {
     'name': 'com.temenos.t24.aa.activity.ActivityHook',
