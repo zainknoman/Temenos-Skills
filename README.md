@@ -1,6 +1,6 @@
 # Temenos Skills — T24 JAR Analysis Pipeline
 
-A two-phase Python pipeline that decompiles 2,050 Temenos T24 JAR files and parses existing T24 JavaDoc HTML to populate the `temenos-universal-analyzer` Claude skill with accurate, structured knowledge of the T24/Transact Java API.
+A two-phase Python pipeline that decompiles 2,050 Temenos T24 JAR files and parses existing T24 JavaDoc HTML to populate the `t24-dev` Claude skill with accurate, structured knowledge of the T24/Transact Java API.
 
 ---
 
@@ -8,7 +8,7 @@ A two-phase Python pipeline that decompiles 2,050 Temenos T24 JAR files and pars
 
 ### The Problem
 
-The `temenos-universal-analyzer` Claude skill ships with 30 reference stub files containing `(populate)` placeholders. Without real API knowledge, Claude cannot reliably write correct T24 hook implementations, know which JAR a class lives in, or validate method signatures.
+The `t24-dev` Claude skill ships with 30 reference stub files containing `(populate)` placeholders. Without real API knowledge, Claude cannot reliably write correct T24 hook implementations, know which JAR a class lives in, or validate method signatures.
 
 ### The Solution
 
@@ -25,7 +25,7 @@ jar/t24lib/          T24.javadoc/
                                     Phase 2: aggregate.py
                                               |
                                               v
-                         .claude/skills/temenos-universal-analyzer/references/
+                         .claude/skills/t24-dev/references/
 ```
 
 ### Results
@@ -42,6 +42,21 @@ jar/t24lib/          T24.javadoc/
 | Test suite | 89 / 89 passing |
 
 The 10 remaining stub files (ATM, Customer, Deposits, TPH, OFS API, object relationships, architecture diagrams) require manual curation — they cover areas not derivable from JAR bytecode alone.
+
+---
+
+## Skill Architecture
+
+`t24-dev` is the single entry point. It detects context and delegates to one of four specialist sub-skills:
+
+| Sub-skill | Covers | Triggers |
+|-----------|--------|----------|
+| `temenos-l3-java` | L3 Java hooks: RecordLifecycle, ServiceLifecycle, ActivityLifecycle, Enquiry; Core APIs (Amount, Date, ExchangeRate, Customer, Limit, Session, AA Contract) | `L3 java`, `RecordLifecycle`, `validateRecord`, `checkId`, `com.temenos` |
+| `jbc-componentise` | jBC component authoring — full 5-phase DEVELOP workflow, 8 artefact templates (GET_API, WRITE_API, ENQUIRY, VALIDATION, TEMPLATE, DE_HANDLER), Phase 5 checklist | `jBC`, `.component`, `.b file`, `metamodelVersion`, `$PACKAGE` |
+| `infobasic` | Infobasic/jBASE BASIC routines: VVR, VIR, VAR, VCRR, NoFile Enquiry, AA calculation/getter/check, service routines, batch programs | `VVR`, `VIR`, `VAR`, `VCRR`, `NoFile`, `Infobasic`, `GOSUB` |
+| `temenos-de` | Delivery Engine pipeline: ApplicationHandoff routines, Array.5 mapping, event mapping table, print interface carrier, document-data FUNCTIONs | `DE handoff`, `ApplicationHandoff`, `Array.5`, `DE.API` |
+
+The `t24-dev` skill itself handles Java API reference lookups, impact analysis, EXPLAIN/REVIEW/ANALYZE modes, and any domain not covered by a sub-skill.
 
 ---
 
@@ -71,14 +86,20 @@ Temenos-Skills/
 │   └── pipeline/            # 89 pytest tests
 ├── jar/t24lib/              # Source JARs (not in repo)
 ├── T24.javadoc/             # Source JavaDoc HTML (not in repo)
-└── .claude/skills/temenos-universal-analyzer/references/
-    ├── products/            # aa.md, payments.md, accounts.md, ...
-    ├── hooks/               # lifecycle-hooks.md, validation-hooks.md, event-hooks.md
-    ├── apis/                # java-api.md (157 classes), rest-api.md
-    ├── classes/             # class-index.md (77,762 entries)
-    ├── packages/            # package-index.md (137 packages)
-    ├── architecture/        # application-map.md (1,453 classes)
-    └── relationships/       # dependency-graph.md (2,048 JARs)
+└── .claude/skills/
+    ├── t24-dev/             # Entry-point skill — routes to sub-skills below
+    │   └── references/
+    │       ├── products/    # aa.md, payments.md, accounts.md, ...
+    │       ├── hooks/       # lifecycle-hooks.md, validation-hooks.md, event-hooks.md
+    │       ├── apis/        # java-api.md (157 classes), rest-api.md
+    │       ├── classes/     # class-index.md (77,762 entries)
+    │       ├── packages/    # package-index.md (137 packages)
+    │       ├── architecture/# application-map.md (1,453 classes)
+    │       └── relationships/ # dependency-graph.md (2,048 JARs)
+    ├── temenos-l3-java/     # Sub-skill: L3 Java hooks & Core APIs
+    ├── jbc-componentise/    # Sub-skill: jBC component authoring (5-phase workflow)
+    ├── infobasic/           # Sub-skill: Infobasic/jBASE BASIC routines
+    └── temenos-de/          # Sub-skill: Delivery Engine pipeline
 ```
 
 ---
@@ -124,7 +145,7 @@ This processes all JARs in parallel using 8 worker threads. Each JAR is cached a
 ```bash
 python pipeline/aggregate.py \
   --cache cache \
-  --output .claude/skills/temenos-universal-analyzer/references
+  --output .claude/skills/t24-dev/references
 ```
 
 Reads all cache JSON files, classifies every class (lifecycle-hook, service-hook, public-api, record-model, etc.), groups by domain, and renders the reference markdown files via Jinja2 templates.
@@ -225,7 +246,7 @@ To force a full re-extract, delete the `cache/` directory.
 python pipeline/extract.py --jars jar/t24lib --javadoc T24.javadoc/T24.javadoc --cache cache --workers 8
 
 # Re-render reference files
-python pipeline/aggregate.py --cache cache --output .claude/skills/temenos-universal-analyzer/references
+python pipeline/aggregate.py --cache cache --output .claude/skills/t24-dev/references
 ```
 
 ---
