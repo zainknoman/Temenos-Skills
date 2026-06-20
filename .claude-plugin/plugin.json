@@ -1,0 +1,11 @@
+{
+  "name": "temenos-skills",
+  "description": "T24/Transact development skills for Claude Code — covers L3 Java hooks, jBC componentization, Infobasic routines, and Delivery Engine pipeline. Entry point: t24-dev (routes automatically to sub-skills).",
+  "version": "1.0.0",
+  "author": {
+    "name": "Zain Kamali"
+  },
+  "homepage": "https://github.com/zainknoman/Temenos-Skills",
+  "repository": "https://github.com/zainknoman/Temenos-Skills",
+  "license": "MIT"
+}

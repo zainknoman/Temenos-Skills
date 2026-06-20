@@ -25,7 +25,7 @@ jar/t24lib/          T24.javadoc/
                                     Phase 2: aggregate.py
                                               |
                                               v
-                         .claude/skills/t24-dev/references/
+                                    skills/t24-dev/references/
 ```
 
 ### Results
@@ -86,7 +86,9 @@ Temenos-Skills/
 │   └── pipeline/            # 89 pytest tests
 ├── jar/t24lib/              # Source JARs (not in repo)
 ├── T24.javadoc/             # Source JavaDoc HTML (not in repo)
-└── .claude/skills/
+├── .claude-plugin/
+│   └── plugin.json          # Plugin manifest — enables /plugin install
+└── skills/                  # Plugin skills directory (standard agentskills.io layout)
     ├── t24-dev/             # Entry-point skill — routes to sub-skills below
     │   └── references/
     │       ├── products/    # aa.md, payments.md, accounts.md, ...
@@ -145,7 +147,7 @@ This processes all JARs in parallel using 8 worker threads. Each JAR is cached a
 ```bash
 python pipeline/aggregate.py \
   --cache cache \
-  --output .claude/skills/t24-dev/references
+  --output skills/t24-dev/references
 ```
 
 Reads all cache JSON files, classifies every class (lifecycle-hook, service-hook, public-api, record-model, etc.), groups by domain, and renders the reference markdown files via Jinja2 templates.
@@ -246,7 +248,7 @@ To force a full re-extract, delete the `cache/` directory.
 python pipeline/extract.py --jars jar/t24lib --javadoc T24.javadoc/T24.javadoc --cache cache --workers 8
 
 # Re-render reference files
-python pipeline/aggregate.py --cache cache --output .claude/skills/t24-dev/references
+python pipeline/aggregate.py --cache cache --output skills/t24-dev/references
 ```
 
 ---
