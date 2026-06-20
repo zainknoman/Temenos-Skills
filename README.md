@@ -4,6 +4,25 @@ A two-phase Python pipeline that decompiles 2,050 Temenos T24 JAR files and pars
 
 ---
 
+## Install the Skills
+
+Install all five T24 skills into Claude Code with one command:
+
+```
+/plugin install zainknoman/Temenos-Skills
+```
+
+Or browse and install from the Claude Code plugin directory:
+**[claude.ai/admin-settings/directory](https://claude.ai/admin-settings/directory)** → search `temenos-skills`
+
+Once installed, the skills activate automatically when you work on T24 artifacts. You can also invoke the entry-point skill directly:
+
+```
+/t24-dev
+```
+
+---
+
 ## What Was Built
 
 ### The Problem
