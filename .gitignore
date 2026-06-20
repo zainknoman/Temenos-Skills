@@ -1,0 +1,24 @@
+# Large binary and generated directories — do not commit
+cache/
+jar/
+T24.javadoc/
+docs/
+superpowers/
+.superpowers/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Pipeline generated output (regenerable via pipeline/pdf_extractor.py)
+cache/pdf_extracts/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
