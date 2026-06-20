@@ -104,24 +104,81 @@ def parse_javap_output(output: str) -> dict:
     return result
 
 
+_JAVAP_BATCH = 100  # class files per JVM invocation
+
+
+def _split_javap_blocks(output: str) -> list[str]:
+    """Split combined javap output for multiple classes into per-class blocks.
+
+    Handles both 'Compiled from' style output and bare class declarations by
+    tracking brace depth — a block ends when the top-level '}' closes.
+    """
+    blocks: list[str] = []
+    current: list[str] = []
+    depth = 0
+    for line in output.splitlines():
+        stripped = line.strip()
+        # 'Compiled from' marks the start of a new class (some javap versions)
+        if stripped.startswith('Compiled from ') and depth == 0 and current:
+            block = '\n'.join(current).strip()
+            if '{' in block:
+                blocks.append(block)
+            current = []
+        current.append(line)
+        depth += stripped.count('{') - stripped.count('}')
+        depth = max(0, depth)
+        # Top-level closing brace: class body complete
+        if depth == 0 and stripped == '}':
+            block = '\n'.join(current).strip()
+            if '{' in block:
+                blocks.append(block)
+            current = []
+    if current:
+        block = '\n'.join(current).strip()
+        if '{' in block:
+            blocks.append(block)
+    return blocks
+
+
 def extract_classes_from_jar(jar_path: Path) -> list[dict]:
-    """Extract all non-inner-class metadata from a JAR using `javap -p`."""
-    classes = []
+    """Extract all non-inner-class metadata from a JAR using batched `javap -p` calls.
+
+    Batches _JAVAP_BATCH classes per JVM invocation to amortise startup cost.
+    """
+    classes: list[dict] = []
     with zipfile.ZipFile(jar_path, 'r') as zf:
         entries = [e for e in zf.namelist() if e.endswith('.class') and '$' not in e]
+        if not entries:
+            return classes
         with tempfile.TemporaryDirectory() as tmpdir:
-            tmp_class = Path(tmpdir) / 'current.class'
+            tmp = Path(tmpdir)
             for entry in entries:
+                zf.extract(entry, tmpdir)
+            for i in range(0, len(entries), _JAVAP_BATCH):
+                batch = entries[i: i + _JAVAP_BATCH]
+                class_files = [str(tmp / e) for e in batch]
                 try:
-                    tmp_class.write_bytes(zf.read(entry))
                     proc = subprocess.run(
-                        ['javap', '-p', str(tmp_class)],
-                        capture_output=True, text=True, timeout=15,
+                        ['javap', '-p'] + class_files,
+                        capture_output=True, text=True, timeout=120,
                     )
                     if proc.returncode == 0 and proc.stdout:
-                        cls = parse_javap_output(proc.stdout)
-                        if cls['name']:
-                            classes.append(cls)
-                except (subprocess.TimeoutExpired, zipfile.BadZipFile, OSError):
-                    pass
+                        for block in _split_javap_blocks(proc.stdout):
+                            cls = parse_javap_output(block)
+                            if cls['name']:
+                                classes.append(cls)
+                except (subprocess.TimeoutExpired, OSError):
+                    # Fallback: process each class file individually
+                    for class_file in class_files:
+                        try:
+                            proc = subprocess.run(
+                                ['javap', '-p', class_file],
+                                capture_output=True, text=True, timeout=15,
+                            )
+                            if proc.returncode == 0 and proc.stdout:
+                                cls = parse_javap_output(proc.stdout)
+                                if cls['name']:
+                                    classes.append(cls)
+                        except (subprocess.TimeoutExpired, OSError):
+                            pass
     return classes
