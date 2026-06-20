@@ -12,6 +12,9 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
+# Allow running as `python pipeline/extract.py` from the repo root
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from pipeline.cache_utils import is_cache_current, write_jar_cache
 from pipeline.javadoc_parser import parse_javadoc_dir
 from pipeline.javap_parser import extract_classes_from_jar
