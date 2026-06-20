@@ -1,13 +1,9 @@
 ---
-name: temenos-universal-analyzer
+name: t24-dev
 description: >
-  Production-grade universal analyzer and development assistant for Temenos T24/Transact.
-  Automatically processes all JAR files, JavaDoc, source code, XML metadata, BPMN, and
-  properties files to build a complete knowledge base covering: Core Banking, Accounts,
-  Customers, Deposits, Lending, Payments, TPH, ATM, COB, AA (Arrangement Architecture),
-  OFS, EB APIs, Java APIs, REST APIs, hooks, lifecycle events, version routines, service
-  routines, DE routines, data model, DTOs, BPM flows, and all framework internals.
-  Supports six development modes: EXPLAIN, REVIEW, DEBUG, REFACTOR, GENERATE, ANALYZE.
+  Use when developing, reviewing, debugging, or analyzing any Temenos T24/Transact artifact:
+  Java services, Infobasic routines, jBC components, or any T24 framework integration.
+  Covers Core Banking, AA, OFS, DE, TPH, ATM, COB, Payments, Accounts, Customers, REST, EB APIs.
   Triggers: Temenos, T24, Transact, JAR analysis, JavaDoc, jBC, Infobasic, componentise,
   AA framework, DE handoff, OFS, TPH, ATM, COB, CustomerRecord, AccountRecord,
   AAActivityRecord, EB.API, lifecycle hook, version routine, VVR, VIR, VAR, VCRR,
@@ -15,7 +11,7 @@ description: >
   OfsBuildRecord, QueryBuilder, REST API, impact analysis, code generation.
 ---
 
-# Temenos Universal Analyzer — Development Intelligence Skill
+# T24 Dev — Temenos Development Intelligence
 
 ## Architecture Overview
 
@@ -86,22 +82,22 @@ Read the request and identify the operating mode, then announce it before procee
 
 ## Skill Router
 
-Route to the correct domain based on detected classes, applications, or keywords:
+Route to the correct domain. For rows marked **REQUIRED SUB-SKILL**, invoke that skill now and follow its workflow.
 
-| Detected context | Domain activated |
-|-----------------|-----------------|
-| AA, AAActivityRecord, ARRANGEMENT, property, schedule | AA Framework |
-| DE.API, ApplicationHandoff, Array.5, DE.EVENT.MAPPING | DE (Delivery Engine) |
-| TPH, payment hub, adapter, payment message | TPH |
-| OFS, OfsBuildRecord, OfsCallBulkManager | OFS |
-| CustomerRecord, CUSTOMER, ST.Customer | Customer |
-| AccountRecord, ACCOUNT, AC.AccountOpening | Accounts |
-| FT, FUNDS.TRANSFER, payments routing | Payments |
-| REST, @GET, @POST, @Path, @QueryParam | REST API |
-| COB, batch, end-of-day, COB.SERVICE | COB |
-| ATM, TT.Contract.Teller, cash, denomination | ATM/Teller |
-| VVR, VIR, VAR, VCRR, NoFile, Infobasic, SUBROUTINE, GOSUB | Infobasic |
-| jBC, .component, .b file, metamodelVersion, $PACKAGE | jBC Componentization |
+| Detected context | Action |
+|-----------------|--------|
+| AA, AAActivityRecord, ARRANGEMENT, property, schedule | AA Framework (inline) |
+| DE.API, ApplicationHandoff, Array.5, DE.EVENT.MAPPING | **REQUIRED SUB-SKILL:** `temenos-de` |
+| TPH, payment hub, adapter, payment message | TPH (inline) |
+| OFS, OfsBuildRecord, OfsCallBulkManager | OFS (inline) |
+| CustomerRecord, CUSTOMER, ST.Customer | Customer (inline) |
+| AccountRecord, ACCOUNT, AC.AccountOpening | Accounts (inline) |
+| FT, FUNDS.TRANSFER, payments routing | Payments (inline) |
+| REST, @GET, @POST, @Path, @QueryParam | REST API (inline) |
+| COB, batch, end-of-day, COB.SERVICE | COB (inline) |
+| ATM, TT.Contract.Teller, cash, denomination | ATM/Teller (inline) |
+| VVR, VIR, VAR, VCRR, NoFile, Infobasic, SUBROUTINE, GOSUB | **REQUIRED SUB-SKILL:** `infobasic` |
+| jBC, .component, .b file, metamodelVersion, $PACKAGE | **REQUIRED SUB-SKILL:** `jbc-componentise` |
 
 If multiple domains are detected, activate all relevant domain skills and synthesize.
 
@@ -139,10 +135,11 @@ Identify: target product/framework, operation type, target T24 application(s), a
 
 ### Step 2 -- Select and apply template
 
-**Infobasic**: VVR | VIR | VAR | VCRR | NoFile Enquiry | Service | Batch | DE Routine |
+**Infobasic** — **REQUIRED SUB-SKILL:** `infobasic`:
+VVR | VIR | VAR | VCRR | NoFile Enquiry | Service | Batch | DE Routine |
 OFS Routine | AA Calculation | AA Check | AA Getter | Conversion Routine
 
-**jBC Componentization** (apply full 5-phase workflow):
+**jBC Componentization** — **REQUIRED SUB-SKILL:** `jbc-componentise` (apply full 5-phase workflow):
 GET_API | WRITE_API | ENQUIRY | VALIDATION | TEMPLATE | DE_HANDLER +
 .complex DTO and .component declaration files
 
