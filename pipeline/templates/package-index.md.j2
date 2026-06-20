@@ -1,0 +1,9 @@
+# T24 Package Index
+
+> Generated {{ generated_at }} — {{ total }} packages.
+
+| Package | JAR | Domain | `$USING` Declaration |
+|---------|-----|--------|---------------------|
+{% for pkg in packages | sort(attribute='package') %}
+| `{{ pkg['package'] }}` | `{{ pkg['jar'] }}` | `{{ pkg['domain'] }}` | `$USING {{ pkg['package'] }}` |
+{% endfor %}

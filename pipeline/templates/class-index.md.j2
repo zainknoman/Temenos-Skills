@@ -1,0 +1,9 @@
+# T24 Master Class Index
+
+> Generated {{ generated_at }} — {{ total }} classes across all JARs.
+
+| Class | JAR | Package | Domain | Component Type | Superclass |
+|-------|-----|---------|--------|----------------|-----------|
+{% for cls in classes | sort(attribute='name') %}
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ cls['package'] }}` | `{{ cls['domain'] }}` | `{{ cls['component_type'] }}` | `{{ cls['superclass'] }}` |
+{% endfor %}

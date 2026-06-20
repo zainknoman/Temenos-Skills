@@ -1,0 +1,89 @@
+# T24 Hook Reference — All Domains
+
+> Generated {{ generated_at }}. Covers all hook types across all JAR prefixes.
+
+---
+
+## Lifecycle Hooks (RecordLifecycle)
+
+Fire during T24 record processing: input → validate → authorise → post-update.
+
+{% if by_type['lifecycle-hook'] %}
+| Class | JAR | Method | Parameters | Description |
+|-------|-----|--------|------------|-------------|
+{% for cls in by_type['lifecycle-hook'] %}
+{% for m in cls['public_methods'] %}
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] }} |
+{% endfor %}
+{% endfor %}
+{% else %}
+*No RecordLifecycle hooks found.*
+{% endif %}
+
+---
+
+## AA Activity Hooks (ActivityLifecycle)
+
+Fire during Arrangement Architecture activity processing.
+
+{% if by_type['aa-activity-hook'] %}
+| Class | JAR | Method | Parameters | Description |
+|-------|-----|--------|------------|-------------|
+{% for cls in by_type['aa-activity-hook'] %}
+{% for m in cls['public_methods'] %}
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] }} |
+{% endfor %}
+{% endfor %}
+{% else %}
+*No ActivityLifecycle hooks found.*
+{% endif %}
+
+---
+
+## Service Hooks (ServiceLifecycle)
+
+Fire during background service and batch processing.
+
+{% if by_type['service-hook'] %}
+| Class | JAR | Method | Parameters | Description |
+|-------|-----|--------|------------|-------------|
+{% for cls in by_type['service-hook'] %}
+{% for m in cls['public_methods'] %}
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ m['name'] }}` | `{{ m['params'] | join(', ') }}` | {{ cls['javadoc_description'] }} |
+{% endfor %}
+{% endfor %}
+{% else %}
+*No ServiceLifecycle hooks found.*
+{% endif %}
+
+---
+
+## Validation Hooks
+
+Classes ending `Validation`. Pattern: `record.setError("FIELD.NAME", "message")` / `record.getRNew().getFieldValue("FIELD.NAME")`
+
+{% if by_type['validation-hook'] %}
+| Class | JAR | Domain | Superclass |
+|-------|-----|--------|-----------|
+{% for cls in by_type['validation-hook'] %}
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ cls['domain'] }}` | `{{ cls['superclass'] }}` |
+{% endfor %}
+{% else %}
+*No validation hooks found.*
+{% endif %}
+
+---
+
+## Authorization Hooks
+
+Classes ending `Authorization`. Called when a record is submitted for authorisation.
+
+{% if by_type['auth-hook'] %}
+| Class | JAR | Domain | Superclass |
+|-------|-----|--------|-----------|
+{% for cls in by_type['auth-hook'] %}
+| `{{ cls['short_name'] }}` | `{{ cls['jar'] }}` | `{{ cls['domain'] }}` | `{{ cls['superclass'] }}` |
+{% endfor %}
+{% else %}
+*No authorization hooks found.*
+{% endif %}
