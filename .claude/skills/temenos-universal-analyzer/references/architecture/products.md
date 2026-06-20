@@ -18,7 +18,7 @@
 | TT | Teller / ATM | TT_* | ATM Framework | TT.CONTRACT, TT.TELLER, TT.DENOMINATION, TT.BRANCH.LIMIT |
 | PI/PP/TP | Payment Initiation / TPH | PI_*, PP_*, TP_* | TPH Framework | TP.PAYMENT.ORDER, PP.PAYMENT |
 | COB | Close of Business | COB_* | COB Framework | COB.SERVICE, COB.PROCESS, COB.PARAM |
-| DE | Document / Delivery Engine | CBI.DE* | DE Framework | CBI.DE.EVENT.MAPPING, CBI.DE.PRINT.INTERFACE |
+| DE | Document / Delivery Engine | DE.* | DE Framework | DE.EVENT.MAPPING, DE.PRINT.INTERFACE |
 | EB | Core Framework | EB_* | EB.API | EB.API, VERSION, ENQUIRY, SCREEN, AUTH.TASK |
 | SC | Securities | SC_* | EB.API | SC.SEC.MASTER, SC.TRANS.ENTRY |
 | AM | Asset Management | AM_* | EB.API | AM.FUND, AM.PORTFOLIO |
@@ -66,7 +66,7 @@ The Temenos Analytics Platform sits above Transact and is composed of several li
 | Enquiry | ENQUIRY, SCREEN | Enquiry | com.temenos.t24.api.hook.system |
 | Payments | TP.PAYMENT.ORDER, PP.PAYMENT | PaymentLifecycle / PaymentOrderLifecycle | com.temenos.t24.api.hook.payments |
 | ATM / Teller | TT.CONTRACT, TT.TELLER | RecordLifecycle (TT apps) | com.temenos.t24.api.hook.system |
-| DE | CBI.DE.EVENT.MAPPING | ApplicationHandoff (jBC) | N/A — jBC-based |
+| DE | DE.EVENT.MAPPING | ApplicationHandoff (jBC) | N/A — jBC-based |
 | OFS | N/A (interface) | OfsBuildRecord / OfsCallBulkManager | com.temenos.t24 (jBC runtime) |
 
 ---
@@ -113,7 +113,7 @@ Transact models configurable via Extensibility Framework (Design Studio / Temeno
 | AA Framework | Lifecycle and property management for lending/deposit/savings products | AA.ARRANGEMENT.ACTIVITY | ActivityLifecycle (Java), AA routines (jBC) |
 | EB.API (RecordLifecycle) | Transaction-level hooks on any T24 application | VERSION record (HOOK field) | RecordLifecycle (Java) or version routines (jBC) |
 | OFS | Programmatic T24 transaction submission without a screen | OFS.GLOBUS.MANAGER (jBC) / OfsBuildRecord | OFS routine (jBC) |
-| DE | Document generation — feeds Docupilot and print interfaces | CBI.DE.EVENT.MAPPING | ApplicationHandoff + CBI.GET.* FUNCTIONs (jBC) |
+| DE | Document generation — feeds Docupilot and print interfaces | DE.EVENT.MAPPING | ApplicationHandoff + DE.GET.* FUNCTIONs (jBC) |
 | TPH | Payment hub routing, message transform, adapter management | TP.PAYMENT.ORDER input/authorise | PaymentOrderLifecycle / PaymentLifecycle (Java) |
 | COB | End-of-day batch processing | COB.SERVICE definition | ServiceLifecycle (Java) or COB service routines (jBC) |
 | ATM/Teller | Cash management, teller operations, denomination handling | TT.CONTRACT.TELLER, TT.DENOMINATION | RecordLifecycle on TT.* apps |
