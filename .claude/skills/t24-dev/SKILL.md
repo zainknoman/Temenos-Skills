@@ -87,6 +87,7 @@ Route to the correct domain. For rows marked **REQUIRED SUB-SKILL**, invoke that
 | Detected context | Action |
 |-----------------|--------|
 | AA, AAActivityRecord, ARRANGEMENT, property, schedule | AA Framework (inline) |
+| RecordLifecycle, ServiceLifecycle, ActivityLifecycle, Enquiry, L3 Java, hook, validateRecord, checkId, autoField, com.temenos | **REQUIRED SUB-SKILL:** `temenos-l3-java` |
 | DE.API, ApplicationHandoff, Array.5, DE.EVENT.MAPPING | **REQUIRED SUB-SKILL:** `temenos-de` |
 | TPH, payment hub, adapter, payment message | TPH (inline) |
 | OFS, OfsBuildRecord, OfsCallBulkManager | OFS (inline) |
@@ -143,8 +144,10 @@ OFS Routine | AA Calculation | AA Check | AA Getter | Conversion Routine
 GET_API | WRITE_API | ENQUIRY | VALIDATION | TEMPLATE | DE_HANDLER +
 .complex DTO and .component declaration files
 
-**Java**: Event Handler | Lifecycle Hook | Record API | Service API | REST API |
-Integration API | Listener | Validation Component | Authorization Component
+**Java** — **REQUIRED SUB-SKILL:** `temenos-l3-java`:
+RecordLifecycle | ServiceLifecycle | ActivityLifecycle | Enquiry | NoFile Enquiry |
+version routines (checkId, validateRecord, autoField, input, beforeAuth, auth) |
+Core APIs (Amount, Date, ExchangeRate, Customer, Limit, Session, AA Contract)
 
 ### Step 3 -- Generate
 
