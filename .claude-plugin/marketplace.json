@@ -1,0 +1,14 @@
+{
+  "name": "temenos-skills",
+  "owner": {
+    "name": "Zain Kamali",
+    "email": "zainknoman@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "temenos-skills",
+      "source": ".",
+      "description": "T24/Transact development skills for Claude Code — t24-dev (entry point), temenos-l3-java, jbc-componentise, infobasic, temenos-de"
+    }
+  ]
+}
