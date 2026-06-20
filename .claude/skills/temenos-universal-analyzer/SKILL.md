@@ -91,7 +91,7 @@ Route to the correct domain based on detected classes, applications, or keywords
 | Detected context | Domain activated |
 |-----------------|-----------------|
 | AA, AAActivityRecord, ARRANGEMENT, property, schedule | AA Framework |
-| DE.API, ApplicationHandoff, Array.5, CBI.DE | DE (Delivery Engine) |
+| DE.API, ApplicationHandoff, Array.5, DE.EVENT.MAPPING | DE (Delivery Engine) |
 | TPH, payment hub, adapter, payment message | TPH |
 | OFS, OfsBuildRecord, OfsCallBulkManager | OFS |
 | CustomerRecord, CUSTOMER, ST.Customer | Customer |
@@ -131,7 +131,7 @@ Identify: target product/framework, operation type, target T24 application(s), a
 | Validate field or record on commit | VALIDATION hook / VAR / VCRR |
 | Fire on lifecycle event | Event listener / AA hook / EB.ACTIVITY |
 | Run scheduled or batch job | COB service / Batch routine |
-| Feed Document Engine print | DE handoff routine / CBI.GET.* FUNCTION |
+| Feed Document Engine print | DE handoff routine / DE.GET.* FUNCTION |
 | Expose as REST endpoint | REST jBC component / Java REST class |
 | AA property calculation | AA Calculation / AA Getter / AA Check |
 | Define custom application schema | TEMPLATE definition |

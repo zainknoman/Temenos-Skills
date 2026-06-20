@@ -574,10 +574,10 @@ The `HOOK.CLASS` field on the VERSION record points to the fully qualified class
 
 ```
 1. Event fires on T24 application (e.g. ACCOUNT authorised)
-2. CBI.DE.EVENT.MAPPING routes to ApplicationHandoff routine
+2. DE.EVENT.MAPPING routes to ApplicationHandoff routine
 3. ApplicationHandoff builds Array.5 with document data
-4. CBI.GET.* FUNCTION routines supply field-level data
-5. CBI.DE.PRINT.INTERFACE dispatches to Docupilot/PDF engine
+4. DE.GET.* FUNCTION routines supply field-level data
+5. DE.PRINT.INTERFACE dispatches to Docupilot/PDF engine
 6. Document delivered via email/portal/print queue
 ```
 
@@ -585,9 +585,9 @@ The `HOOK.CLASS` field on the VERSION record points to the fully qualified class
 
 | Application | Purpose |
 |------------|---------|
-| `CBI.DE.EVENT.MAPPING` | Maps T24 events to document templates and handoff routines |
-| `CBI.DE.PRINT.INTERFACE` | Configures delivery channel (email, portal, print) |
-| `CBI.DE.DOC.TEMPLATE` | Template definitions |
+| `DE.EVENT.MAPPING` | Maps T24 events to document templates and handoff routines |
+| `DE.PRINT.INTERFACE` | Configures delivery channel (email, portal, print) |
+| `DE.DOC.TEMPLATE` | Template definitions |
 
 ### jBC Coding Pattern
 
@@ -608,14 +608,14 @@ INITIALISE:
     RETURN
 
 POPULATE.ARRAY:
-    * Field positions in Array.5 defined by CBI.DE.EVENT.MAPPING
+    * Field positions in Array.5 defined by DE.EVENT.MAPPING
     ARRAY.5<2,1> = ACCOUNT.CURRENCY
     ARRAY.5<3,1> = ACCOUNT.BALANCE
     RETURN
 END
 
 
-* CBI.GET.* FUNCTION — supplies a computed field to the document
+* DE.GET.* FUNCTION — supplies a computed field to the document
 FUNCTION MYBANK.GET.ACCOUNT.OFFICER(ACCOUNT.ID, ERR)
     CALL EB.READ.ANY('ACCOUNT', ACCOUNT.ID, R.ACCOUNT, ERR)
     MYBANK.GET.ACCOUNT.OFFICER = R.ACCOUNT<F.ACCOUNT.OFFICER>

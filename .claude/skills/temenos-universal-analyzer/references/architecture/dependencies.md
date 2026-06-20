@@ -105,13 +105,13 @@ OFS is jBC-based. The `OFS.GLOBUS.MANAGER` subroutine is part of the T24 jBC run
 ### DE (Document Engine) Dependencies
 
 ```
-CBI.DE.EVENT.MAPPING   → triggered by T24 event framework
+DE.EVENT.MAPPING   → triggered by T24 event framework
       ↓
 ApplicationHandoff routine (jBC)   → depends on target application record
       ↓
-CBI.GET.* FUNCTION routines        → depend on business data applications
+DE.GET.* FUNCTION routines        → depend on business data applications
       ↓
-CBI.DE.PRINT.INTERFACE             → depends on document delivery system
+DE.PRINT.INTERFACE             → depends on document delivery system
 ```
 
 ### REST API Dependencies
