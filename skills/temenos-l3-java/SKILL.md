@@ -2,7 +2,7 @@
 name: temenos-l3-java
 description: "Expert assistant for Temenos T24/Transact L3 Java customization development. Covers CSD coding standards, all superclasses (RecordLifecycle, ServiceLifecycle, Enquiry, ActivityLifecycle), all version routine types (ID, CheckRecord, AutoField, Validation, Input, BeforeAuth, Auth), enquiry routines (Build, Conversion, NoFile), full official API package/class/method reference, Core APIs (Amount, Date, Exchange Rate, Customer, Limit, Session, AA Contract), EB.API configuration, DataAccess, Contract API, LocalRef, and AA batch/ActivityLifecycle patterns. Triggers: 'L3 java', 'T24 customization', 'CSD standards', 'write a hook', 'RecordLifecycle', 'ServiceLifecycle', 'Enquiry', 'ActivityLifecycle', 'version routine', 'checkId', 'validateRecord', 'validateField', 'defaultFieldValues', 'postUpdateRequest', 'updateCoreRecord', 'generateSecondaryActivity', 'updateLookupTable', 'setFilterCriteria', 'setValue', 'setIds', 'EB.API', 'NOFILE enquiry', 'PaymentLifecycle', 'PaymentOrderLifecycle', 'DataAccess', 'Contract', 'LocalRefGroup', 'setError', 'isService', 'BigDecimal', 'getAvailableAmount', 'addWorkingDays', 'calculateRate'."
 metadata:
-  version: 1.3.0
+  version: 1.5.0
 ---
 
 # Temenos T24/Transact L3 Java Customization Expert
@@ -93,13 +93,38 @@ public TValidationResponse validateRecord(String application, String currentReco
 ```
 
 #### `checkId` — Validate/transform record ID before load
+Return value is the (possibly modified) record ID that T24 will use.
 ```java
 @Override
 public String checkId(String currentRecordId, TransactionContext transactionContext) {
-    // Validate ID format or auto-append components
+    // Validate ID format:
     String[] parts = currentRecordId.split("\\.");
     if (parts.length < 2) {
         throw new com.temenos.api.exceptions.T24CoreException("", "EB-INVALID.ID");
+    }
+    return currentRecordId;
+}
+```
+
+**Auto-generate a new record ID** (return a completely different ID — T24 uses whatever you return):
+```java
+@Override
+public String checkId(String currentRecordId, TransactionContext transactionContext) {
+    // Generate unique card number using epoch nanos:
+    String prefix = currentRecordId.split("\\.")[0];
+    long uniqueEpoch = (System.currentTimeMillis() * 10000) + (System.nanoTime() % 10000);
+    return prefix + ".PC" + uniqueEpoch;
+}
+```
+
+**Auto-append department code from Session:**
+```java
+@Override
+public String checkId(String currentRecordId, TransactionContext transactionContext) {
+    String[] parts = Arrays.copyOf(currentRecordId.split("\\."), 3);
+    Session session = new Session(this);
+    if (parts[2] == null) {
+        currentRecordId += "." + session.getUserRecord().getDepartmentCode().getValue();
     }
     return currentRecordId;
 }
@@ -151,6 +176,31 @@ public void postUpdateRequest(String application, String currentRecordId,
     txnData.setSourceId("OFS.LOAD");
     transactionData.add(txnData);
     currentRecords.add(rec.toStructure());
+
+    // Access build date from servicehook TransactionData:
+    String buildDate = transactionData.get(0).getBuildDate();  // yyyyMMdd
+}
+```
+
+#### `defaultFieldValuesOnHotField` — Fires when a hot field changes
+Import: `com.temenos.t24.api.complex.eb.templatehook.InputValue`
+```java
+@Override
+public void defaultFieldValuesOnHotField(String application, String currentRecordId,
+        TStructure currentRecord, InputValue currentInputValue,
+        TStructure unauthorisedRecord, TStructure liveRecord,
+        TransactionContext transactionContext) {
+
+    SomeRecord rec = new SomeRecord(currentRecord);
+    try {
+        String hotFieldVal = rec.getLocalRefField("HOT.FIELD").getValue();
+        if (!hotFieldVal.isEmpty()) {
+            DataAccess da = new DataAccess(this);
+            OtherRecord other = new OtherRecord(da.getRecord("", "OTHER.APP", "", hotFieldVal));
+            rec.setSomeField(other.getSomeField().getValue());
+            currentRecord.set(rec.toStructure());
+        }
+    } catch (Exception e) {}
 }
 ```
 
@@ -484,6 +534,73 @@ inter.setFixedRate(fixedRate, 0);
 record.set(inter.toStructure());
 ```
 
+#### AaArrPaymentScheduleRecord — Live Payment Schedule (vs AaPrdDesPaymentScheduleRecord)
+`AaPrdDesPaymentScheduleRecord` = design-time (entered on screen).  
+`AaArrPaymentScheduleRecord` = live/running schedule retrieved via `Contract.getConditionForProperty()`.
+```java
+import com.temenos.t24.api.records.aaarrpaymentschedule.AaArrPaymentScheduleRecord;
+
+String propId = contract.getPropertyIdsForPropertyClass("PAYMENT.SCHEDULE").get(0);
+TStructure schedStructure = contract.getConditionForProperty(propId);
+AaArrPaymentScheduleRecord liveSched = new AaArrPaymentScheduleRecord(schedStructure);
+String numPayments = liveSched.getPaymentType().get(0).getPercentage().get(0).getNumPayments().getValue();
+```
+
+#### AaBillDetailsRecord — Reading AA.BILL.DETAILS
+Use the generated record class — **never use `da.getFieldValue()` for field reads**.
+```java
+import com.temenos.t24.api.records.aabilldetails.AaBillDetailsRecord;
+
+// Correct way to read bill fields:
+AaBillDetailsRecord billDtlRec = new AaBillDetailsRecord(da.getRecord("AA.BILL.DETAILS", billId));
+String property  = billDtlRec.getProperty().getValue();       // maps to PROPERTY field
+String payDate   = billDtlRec.getPaymentDate().getValue();    // maps to PAYMENT.DATE
+String payAmtStr = billDtlRec.getPaymentAmount().getValue();  // maps to PAYMENT.AMOUNT
+BigDecimal payAmt = payAmtStr.isEmpty() ? BigDecimal.ZERO : new BigDecimal(payAmtStr);
+```
+
+#### AaArrTermAmountRecord — Live/Running Condition (vs AaPrdDesTermAmountRecord)
+`AaPrdDesTermAmountRecord` = **design-time** product condition (what the user enters on screen).
+`AaArrTermAmountRecord` = **live/running** condition after booking (actual values in effect).
+```java
+import com.temenos.t24.api.records.aaarrtermamount.AaArrTermAmountRecord;
+
+// Read the live (running) term amount for a booked arrangement:
+AaArrTermAmountRecord arrTermRec = new AaArrTermAmountRecord(record);
+String term = arrTermRec.getTerm().toString();  // e.g. "24M"
+
+// From Contract API (live condition):
+AaArrTermAmountRecord liveTerm = contract.getCommitmentCondition("COMMITMENT");
+// Note: contract.getCommitmentCondition() returns AaArrTermAmountRecord in the live AA context
+```
+
+#### AaPrdDesDormancyRecord
+```java
+import com.temenos.t24.api.records.aaprddesdormancy.AaPrdDesDormancyRecord;
+import com.temenos.t24.api.records.aaprddesdormancy.StatusClass;
+
+AaPrdDesDormancyRecord dormRec = new AaPrdDesDormancyRecord(record);
+List<StatusClass> statusList = dormRec.getStatus();
+for (int i = 0; i < statusList.size(); i++) {
+    String statusVal = statusList.get(i).getStatus().getValue();
+    String period    = statusList.get(i).getPeriod().getValue();
+    if ("Abandoned".equalsIgnoreCase(statusVal)) {
+        statusList.get(i).setPeriod("365D");
+        dormRec.setStatus(statusList.get(i), i);
+    }
+}
+record.set(dormRec.toStructure());
+```
+
+#### AaPrdDesLimitRecord
+```java
+import com.temenos.t24.api.records.aaprddeslimit.AaPrdDesLimitRecord;
+
+AaPrdDesLimitRecord limitRec = new AaPrdDesLimitRecord(da.getRecord("AA.PRD.DES.LIMIT", propId));
+// Or query by arrangement ID pattern:
+List<String> limitIds = da.selectRecords("", "AA.PRD.DES.LIMIT", "", "WITH @ID LIKE " + arrangementId + "...");
+```
+
 #### AaPrdDesChargeRecord
 ```java
 import com.temenos.t24.api.records.aaprddescharge.AaPrdDesChargeRecord;
@@ -553,7 +670,9 @@ String arrangementId = arrangementActivityRecord.getArrangement().getValue();
 String activity      = arrangementActivityRecord.getActivity().getValue();    // "LENDING-NEW-ARRANGEMENT"
 String product       = arrangementActivityRecord.getProduct().getValue();
 String currency      = arrangementActivityRecord.getCurrency().getValue();
-String effDate       = arrangementActivityRecord.getEffectiveDate().toString();
+// getEffectiveDate() returns a TDate — use either .getValue() or .toString() (both return YYYYMMDD):
+String effDate       = arrangementActivityRecord.getEffectiveDate().getValue();  // preferred
+// String effDate    = arrangementActivityRecord.getEffectiveDate().toString();   // also works
 String commodity     = arrangementActivityRecord.getLocalRefField("IS.PRODUCT").getValue();
 
 // Customers (MV):
@@ -706,6 +825,25 @@ ACCOUNTS-UPDATE-BALANCE
 
 ---
 
+## TransactionContext API
+
+Available on all RecordLifecycle methods as the `transactionContext` parameter:
+
+```java
+// Current function (INPUT, AUTH, DELETE, REVERSE, REAUTH):
+String function = transactionContext.getCurrentFunction().toString();
+// Conditionally apply logic:
+if (function.equals("AUTH")) { /* auth-only logic */ }
+if (function.equals("INPUT")) { /* input-only logic */ }
+if (function.equals("DELETE")) { /* delete-only logic */ }
+
+// Current version ID (e.g. "CUSTOMER,JIB.OFS.UPDATE"):
+String versionId = transactionContext.getCurrentVersionId();
+if (versionId.contains("DECISION")) { /* version-specific logic */ }
+```
+
+---
+
 ## DataAccess — File Handling
 
 Declare one `DataAccess` instance in the parent hook method; pass it to sub-methods. Do not re-create it in every sub-method.
@@ -716,10 +854,17 @@ DataAccess da = new DataAccess(this);
 // Read from live table of current company:
 SomeRecord rec = new SomeRecord(da.getRecord("APPLICATION.NAME", "RECORD_ID"));
 
-// Read with explicit company mnemonic and file suffix:
+// Read history directly with $HIS suffix in 2-arg form:
+SomeRecord hist2 = new SomeRecord(da.getRecord("APPLICATION.NAME$HIS", "RECORD_ID;1"));
+// Or with explicit company mnemonic and file suffix (4-arg form):
 // fileSuffix: "" = live, "$NAU" = unauthorised, "$HIS" = history, "$SIM" = simulation, "$DEL" = deleted
 SomeRecord rec2 = new SomeRecord(da.getRecord("BNK", "APPLICATION.NAME", "", "RECORD_ID"));
 SomeRecord rNau = new SomeRecord(da.getRecord("BNK", "APPLICATION.NAME", "$NAU", "RECORD_ID"));
+
+// da.getRecord() can return null — check before wrapping in a record class:
+TStructure rawRec = da.getRecord("EB.JIB.GOAML.TXN.LIST", txnPurpose);
+if (rawRec == null) return;
+SomeRecord typedRec = new SomeRecord(rawRec);
 
 // Read from history table (most recent history record):
 SomeRecord hist = new SomeRecord(da.getHistoryRecord("APPLICATION.NAME", "RECORD_ID"));
@@ -729,6 +874,21 @@ TStructure ordRec = da.getRequestResponse(requestDetailId, exists);
 
 // Select IDs matching criteria:
 List<String> ids = da.selectRecords("", "APPLICATION.NAME", "", "WITH FIELD EQ 'VALUE'");
+// With company prefix (e.g. for multi-company):
+List<String> ids2 = da.selectRecords("BNK", "CARD.ISSUE", "", "WITH STATUS EQ 'ACTIVE'");
+
+// Cross-reference lookup — get related record IDs from concat file:
+List<String> accountIds = da.getConcatValues("CUSTOMER.ACCOUNT", customerId);
+for (String accountId : accountIds) {
+    AccountRecord accRec = new AccountRecord(da.getRecord("ACCOUNT", accountId));
+    // ...
+}
+
+// 3-arg getFieldValue — read arbitrary field from a TStructure you already fetched:
+// Use ONLY when you don't have (or can't use) the generated getter.
+// The TStructure must have been fetched from the same app.
+TStructure cusRec = da.getRecord("", "CUSTOMER", "", customerId);
+String fieldVal = da.getFieldValue("CUSTOMER", "SHORT.NAME", cusRec).getValue();
 
 // Get current T24 runtime directory:
 String dir = da.getCurrentDirectory();
@@ -782,7 +942,13 @@ TStructure cachedRec = session.getCachedRecord("APPLICATION", "RECORD_ID");
 
 // Publish:
 session.publishMessage(interfaceId, record, response);
-session.setNextVersion("VERSION.NAME", record);
+
+// Route to another version after current record commits:
+// setNextVersion(versionId, function, recordId, generateId)
+TBoolean generateId = new TBoolean();
+generateId.set(false);
+session.setNextVersion("TARGET.VERSION,FUNC", "INPUT", currentRecordId, generateId);
+// generateId.set(true) = T24 auto-generates the record ID for the next version
 
 // Delete a current variable:
 session.deleteCurrentVariable("!MYVAR");
@@ -805,7 +971,12 @@ AA COB jobs go through AA.ARRANGEMENT.ACTIVITY via OFS; `isService()` lets you d
 ```java
 import com.temenos.t24.api.system.Date;
 
-Date date = new Date(this);
+Date date = new Date(this);  // standard hook context
+// or no-arg constructor when used as a class-level field (also seen in real code):
+// Date date = new Date();  — works but loses hook context; use new Date(this) inside methods
+
+// Get today's date (T24 business date, not system clock):
+String today = date.getDates().getToday().getValue();  // YYYYMMDD — preferred; uses T24 business date
 
 // Add/subtract working days (equivalent to CDT in JBC):
 String resultDate = date.addWorkingDays(inDate, inOffsetDays);
@@ -869,9 +1040,44 @@ String val = rec.getLocalRefField("SINGLE.FIELD").getValue();
 rec.getLocalRefField("SINGLE.FIELD").setValue("new value");
 rec.getLocalRefField("SINGLE.FIELD").setError("Error message");
 
-// LocalRefClass (raw multi-occurrence):
+// LocalRefClass (raw multi-occurrence — read all values of a local ref field):
+// Use getLocalRef(), NOT getLocalRefGroups(), for simple repeating local ref fields
 LocalRefClass localRef = rec.getLocalRef("L.FIELD");
-localRef.add("value");
+localRef.add("value");                       // append a new value
+String contains = localRef.toString();       // all values as string for .contains() check
+int count = localRef.get().size();           // number of values
+String val = localRef.get(0).toString();     // first value as string
+// Can also call on arrangementActivityRecord:
+LocalRefClass odClose = arrangementActivityRecord.getLocalRef("L.OD.CLOSE");
+String firstVal = odClose.size() > 0 ? odClose.get(0).toString() : "";
+```
+
+### LocalRefGroup error in validateRecord (multi-field group pattern)
+When a LocalRefGroup has multiple sub-fields and you need to set an error on one:
+```java
+// 1. Get the list
+LocalRefList grpList = cusRec.getLocalRefGroups("NAME.3");
+int listSize = grpList.size();
+
+try {
+    for (int i = 0; i <= listSize; i++) {  // note: <= to cover empty list case
+        String val = "";
+        try { val = grpList.get(i).getLocalRefField("NAME.3").getValue(); } catch (Exception e) {}
+
+        if (val.isEmpty()) {
+            // Create a new group, set error, then add or replace:
+            LocalRefGroup grp = cusRec.createLocalRefGroup("NAME.3");
+            grp.getLocalRefField("NAME.3").setError("NAME.3 is mandatory");
+            if (listSize <= 0) {
+                cusRec.getLocalRefGroups("NAME.3").add(i, grp);   // no existing row → add
+            } else {
+                cusRec.getLocalRefGroups("NAME.3").set(i, grp);   // row exists → replace
+            }
+            currentRecord.set(cusRec.toStructure());
+            return cusRec.getValidationResponse();
+        }
+    }
+} catch (Exception e) {}
 ```
 
 **IMPORTANT:** Always wrap LocalRef operations in try-catch. The field may not exist on older records.
@@ -929,16 +1135,53 @@ records.add(rec.toStructure());
 
 ```java
 import com.temenos.api.exceptions.T24CoreException;
+import com.temenos.api.exceptions.T24IOException;  // for table write failures
 
-// Throw a T24 error (stops processing):
-throw new T24CoreException("", "ERROR.MESSAGE.CODE");
+// Throw a T24 error with an EB.ERROR code (preferred — CSD compliant):
+throw new T24CoreException("", "EB-CSD.SOME.ERROR.CODE");
+
+// Single-arg form — for dynamic error messages built at runtime:
+throw new T24CoreException("Invalid account: " + accountId);
+throw new T24CoreException("Amount " + amount + " exceeds daily limit");
 
 // Field-level error (shows on screen, blocks save):
 rec.getSomeField().setError("Human readable message or ERROR.CODE");
 
 // Field-level override (shows warning, user can confirm):
 rec.getSomeField().setOverride("OVERRIDE.CODE");
+
+// Safe field access — guard against null when field may not exist:
+import java.util.Optional;
+String val = Optional.ofNullable(rec.getSomeField().getValue()).orElse("");
+
+// Table write may throw T24IOException — catch specifically:
+try {
+    myTable.write(recordId, myRec);
+} catch (T24IOException e) {
+    // table write failed — log and continue or re-throw
+}
 ```
+
+## Logging Pattern
+
+```java
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
+// Declare logger as a class-level field:
+private Logger m_logger = Logger.getLogger(MyHookClass.class.getName());
+
+// Usage:
+m_logger.log(Level.INFO, "Processing arrangement: " + arrangementId);
+m_logger.log(Level.SEVERE, "Exception occurred: " + e.getMessage());
+
+// Optional: file logging (use T24 server path accessible at runtime):
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
+// FileHandler setup only if file path is known and writable — wrap in try-catch IOException
+```
+
+**Note:** `System.out.println()` is visible in T24 TAFJ logs but is discouraged in production (CSD rule). Use Logger in production code.
 
 ---
 
@@ -966,10 +1209,53 @@ String customField = cusRec.getLocalRefField("CUST.FIELD").getValue();
 ### Account Record
 ```java
 import com.temenos.t24.api.records.account.AccountRecord;
+import com.temenos.t24.api.party.Account;
 
 AccountRecord accRec = new AccountRecord(da.getRecord("ACCOUNT", accountId));
 String category = accRec.getCategory().getValue();
 String arrangementId = accRec.getArrangementId().getValue();
+String customer = accRec.getCustomer().getValue();
+
+// Alternate account types (e.g. IBAN):
+List<AltAcctTypeClass> altAccts = accRec.getAltAcctType();
+for (int i = 0; i < altAccts.size(); i++) {
+    if (accRec.getAltAcctType(i).getAltAcctType().getValue().equals("T24.IBAN")) {
+        String iban = accRec.getAltAcctType(i).getAltAcctId().getValue();
+    }
+}
+
+// Account entry count via party API:
+Account act = new Account(this);
+act.setAccountId(accountId);
+TDate fromDate = new TDate(); fromDate.set("20240101");
+TDate toDate   = new TDate(); toDate.set("20241231");
+int numEntries = act.getEntries("BOOK", "", "", "", fromDate, toDate).size();
+// getEntries(bookingType, valueDate, tradeDate, narr, fromDate, toDate)
+```
+
+### Charge Booking (AcChargeRequestRecord)
+Used in `updateRecord` to trigger a charge as a linked transaction:
+```java
+import com.temenos.t24.api.records.acchargerequest.AcChargeRequestRecord;
+import com.temenos.t24.api.records.acchargerequest.ChargeCodeClass;
+
+AcChargeRequestRecord acChgReqRec = new AcChargeRequestRecord();  // no-arg constructor
+acChgReqRec.setRequestType("BOOK");
+acChgReqRec.setStatus("PAID");
+acChgReqRec.setDebitAccount(accountId);
+ChargeCodeClass chgCodeCls = new ChargeCodeClass();
+chgCodeCls.setChargeCode("STMT.COMM");
+chgCodeCls.setChargeAmount("50.00");
+acChgReqRec.setChargeCode(chgCodeCls, 0);       // indexed MV set
+acChgReqRec.setExtraDetails("Statement charge", 0);
+currentRecords.add(acChgReqRec.toStructure());   // added to linked transaction list
+
+com.temenos.t24.api.complex.eb.templatehook.TransactionData txnData =
+    new com.temenos.t24.api.complex.eb.templatehook.TransactionData();
+txnData.setVersionId("AC.CHARGE.REQUEST,OFS.UPDATE");
+txnData.setFunction("I");
+txnData.setNumberOfAuthoriser("0");
+transactionData.add(txnData);
 ```
 
 ### Letter of Credit
@@ -1088,6 +1374,38 @@ Application name maps to record class: `LETTER.OF.CREDIT` → `LetterOfCreditRec
 - `list.add(index, group)` — insert at position
 - `list.set(index, group)` — replace at position (use when row already exists)
 
+### 9. Typed MV nested class access
+Generated record classes expose MV fields as `List<XxxClass>` where `XxxClass` has strongly-typed sub-field getters/setters:
+```java
+// Read typed MV list:
+List<CashSalesCyClass> cashSalesList = pl.getCashSalesCy();
+// Access sub-fields:
+String cashCy = cashSalesList.get(i).getCashSalesCy().getValue();
+// Mutate in place — no need to re-add to the list:
+cashSalesList.get(i).setCashSales("100.00");  // direct setter on list element
+// Commit via toStructure():
+currentRecord.set(pl.toStructure());
+
+// Indexed access shortcut (same as list.get(i)):
+String val = rec.getPostingRestrict(i).getPostingRestrict().getValue();
+```
+
+### 10. TBoolean — mutable boolean flag
+Use when you need a boolean that can be modified inside a helper method (Java booleans are pass-by-value):
+```java
+import com.temenos.api.TBoolean;
+
+TBoolean errorFlag = new TBoolean();
+errorFlag.set(false);       // or .set(true)
+boolean hasError = errorFlag.get();
+
+// As a mutable output param:
+private void validatePhone(LocalRefGroup rec, TBoolean errorFlag) {
+    rec.getLocalRefField("M.PHONE.1").setError("ERR");
+    errorFlag.set(true);
+}
+```
+
 ---
 
 ## Decision Guide: Which Superclass?
@@ -1129,17 +1447,17 @@ T24 attaches hook routines to VERSION records via an **EB.API** record. The rout
 | `AUTH.ROUTINE` | `postUpdateRequest()` | After authorise, asynchronously via OFS | Uses OFS.MESSAGE.SERVICE; async processing |
 
 ### validateField — Validation Routine
+**Signature is 4 params** — `fieldData` is the current value of the changed field.
 ```java
 @Override
 public TValidationResponse validateField(String application, String currentRecordId,
-        String fieldName, TStructure currentRecord, TStructure liveRecord,
-        TransactionContext transactionContext) {
+        String fieldData, TStructure currentRecord) {
 
     SomeRecord rec = new SomeRecord(currentRecord);
-    String fieldVal = rec.getSomeLocalField().getValue();
 
-    if (fieldVal.equals("1002")) {
-        rec.getSomeLocalField().setError("SECTOR 1002 IS NOT ALLOWED");
+    // fieldData = value the user just typed into the field
+    if (fieldData.equals("1002")) {
+        rec.getLocalRefField("MY.SECTOR").setError("SECTOR 1002 IS NOT ALLOWED");
     }
     // Note: core fields cannot be modified here — only local/version fields
     currentRecord.set(rec.toStructure());
@@ -1197,12 +1515,18 @@ public void postUpdateRequest(String application, String currentRecordId,
 
 ### setFilterCriteria — Build Routine
 Attached to enquiry ENQUIRY record. Sets selection criteria programmatically.
+**Return type is `List<FilterCriteria>`** — always return the (modified) list.
 ```java
 @Override
-public void setFilterCriteria(List<FilterCriteria> filterCriteria,
+public List<FilterCriteria> setFilterCriteria(List<FilterCriteria> filterCriteria,
         EnquiryContext enquiryContext) {
     // Override a selection field value at runtime:
-    filterCriteria.get(0).setValue("USD");  // e.g. force CURRENCY = USD
+    FilterCriteria fc = new FilterCriteria();
+    fc.setFieldname("@ID");
+    fc.setOperand("EQ");
+    fc.setValue("RECORD.ID.1 RECORD.ID.2");
+    filterCriteria.set(0, fc);  // replace existing criteria at index 0
+    return filterCriteria;      // REQUIRED — must return the list
 }
 ```
 
@@ -1834,6 +2158,132 @@ The `AA.PRD.DES.ACTIVITY.API` table maps Java methods to T24 routine fields:
 
 ---
 
+---
+
+## jBC-to-Java Conversion Guide
+
+When converting jBC routines to T24 L3 Java, follow these rules to produce idiomatic T24 Java.
+
+### jBC Routine Type → Java Pattern
+
+| jBC Type | T24 Wiring | Java Pattern |
+|---|---|---|
+| `SUBROUTINE` (INPUT.ROUTINE) | VERSION → INPUT.ROUTINE | Extend `RecordLifecycle`, override `validateRecord()` |
+| `SUBROUTINE` (CHECK.REC.ROUTINE) | VERSION → CHECK.REC.ROUTINE | Extend `RecordLifecycle`, override `defaultFieldValues()` |
+| `SUBROUTINE` (AUTH.ROUTINE) | VERSION → AUTH.ROUTINE | Extend `RecordLifecycle`, override `postUpdateRequest()` |
+| `FUNCTION` (utility called by others) | N/A — not wired to EB.API | Static helper methods OR private methods in the calling hook |
+| `SUBROUTINE` (SERVICE) | TSA.SERVICE → SERVICE | Extend `ServiceLifecycle`, override `getIds()` + `updateRecord()` |
+| `SUBROUTINE` (AA PRE VALIDATION RTN) | AA.PRD.DES.ACTIVITY.API → RECORD.ROUTINE | Extend `ActivityLifecycle`, override `defaultFieldValues()` |
+| `SUBROUTINE` (AA POST ROUTINE) | AA.PRD.DES.ACTIVITY.API → POST.ROUTINE | Extend `ActivityLifecycle`, override `postCoreTableUpdate()` |
+
+### Key Field Access Rule: Always Use Generated Record Classes
+
+**jBC** reads fields by name string:
+```jbc
+MATREAD REC FROM F.AA.BILL.DETAILS, BILL.ID ELSE REC = ""
+PROPERTY  = REC<1>          ;* or REC<AA.BILL.DETAILS.PROPERTY>
+PAY.DATE  = REC<2>
+PAY.AMT   = REC<3>
+```
+
+**Java WRONG** — `getFieldValue()` is a raw fallback; do NOT use it for normal field reads:
+```java
+// WRONG — bypasses type safety and generated API:
+String property = da.getFieldValue("AA.BILL.DETAILS", "PROPERTY", billRec);
+```
+
+**Java CORRECT** — always wrap with the generated record class:
+```java
+AaBillDetailsRecord billDtlRec = new AaBillDetailsRecord(da.getRecord("AA.BILL.DETAILS", billId));
+String property  = billDtlRec.getProperty().getValue();
+String payDate   = billDtlRec.getPaymentDate().getValue();
+String payAmt    = billDtlRec.getPaymentAmount().getValue();
+```
+
+### jBC FUNCTION → Java: Correct Patterns
+
+A jBC `FUNCTION` is a reusable utility. Java equivalent options:
+
+**Option 1 — Static utility methods (preferred for simple logic):**
+```java
+// Utility class — no superclass needed, no T24 wiring
+public class BillDetailsHelper {
+    public static BillResult getLatestBill(DataAccess p_da, Contract p_contract, String p_arrangementId) {
+        // DataAccess and Contract are passed from the calling hook's 'this' context
+        List<String> billIds = p_contract.getBillIds("", "", "", "", "", "", "", "", "");
+        // ... logic ...
+    }
+}
+```
+
+**Option 2 — Private methods inside the hook class (preferred for reuse within one hook):**
+```java
+public class MyCbiHook extends RecordLifecycle {
+    @Override
+    public TValidationResponse validateRecord(...) {
+        DataAccess da = new DataAccess(this);
+        Contract contract = new Contract(this);
+        contract.setContractId(arrangementId);
+        BillResult result = getLend01BillDetails(da, contract, arrangementId);
+        // ...
+    }
+
+    private BillResult getLend01BillDetails(DataAccess p_da, Contract p_contract, String p_arrangementId) {
+        // implementation here
+    }
+}
+```
+
+**Option 3 — Instance helper class taking the hook `this`** (use only when the helper needs to survive across method calls):
+```java
+// The hook 'this' must extend a T24 superclass — the helper receives it via constructor
+// DataAccess/Contract constructors accept any T24 lifecycle instance, not just RecordLifecycle
+public class BillDetailsHelper {
+    private final DataAccess m_da;
+    private final Contract   m_contract;
+
+    // Pass the hook 'this' directly — works for RecordLifecycle, ActivityLifecycle, etc.
+    public BillDetailsHelper(RecordLifecycle p_hook) {
+        m_da       = new DataAccess(p_hook);
+        m_contract = new Contract(p_hook);
+    }
+}
+```
+
+### jBC String Comparison → Java
+
+| jBC | Java |
+|---|---|
+| `IF X = "VALUE" THEN` | `if ("VALUE".equals(x))` |
+| `IF X EQ "VALUE" THEN` | `if ("VALUE".equals(x))` |
+| `IF X # "" THEN` | `if (!x.isEmpty())` |
+| `IF X = "" THEN` | `if (x.isEmpty())` |
+| `IF X GT Y THEN` (date YYYYMMDD) | `if (x.compareTo(y) > 0)` — lex order = chron order |
+| `UPCASE(X)` | `x.toUpperCase()` |
+| `X[1,4]` (substring pos 1, len 4) | `x.substring(0, 4)` — Java is 0-indexed |
+| `LEN(X)` | `x.length()` |
+
+### jBC Multivalue → Java
+
+| jBC | Java |
+|---|---|
+| `DCOUNT(REC<MV.FIELD>,@VM)` | `mvList.size()` |
+| `REC<MV.FIELD,i>` | `mvList.get(i-1).getField().getValue()` — Java 0-indexed |
+| `REC<MV.FIELD,i,j>` (SV) | navigate the inner list on the sub-class |
+| `REC<MV.FIELD> = INSERT(...)` | `mvList.add(index, newGroup)` |
+| `DEL REC<MV.FIELD,i>` | `mvList.remove(i-1)` |
+
+### Common jBC → Java Field-Name Mapping
+
+T24 field names map to Java getter/setter via camelCase with dots removed:
+- `PAYMENT.DATE` → `getPaymentDate()` / `setPaymentDate()`
+- `PAYMENT.AMOUNT` → `getPaymentAmount()` / `setPaymentAmount()`
+- `@ID` in jBC → record ID string passed as first parameter to the hook
+- `TODAY` (common variable) → `session.getCurrentVariable("!TODAY")`
+- `COMPANY` → `session.getCompanyId()`
+
+---
+
 ## Common Mistakes to Avoid
 
 1. **Missing `currentRecord.set(rec.toStructure())`** / **`record.set(propRec.toStructure())`** — changes are lost without this.
@@ -1857,3 +2307,13 @@ The `AA.PRD.DES.ACTIVITY.API` table maps Java methods to T24 routine fields:
 15. **`validateRecord()` in ActivityLifecycle cannot update core fields** — only local ref fields can be set here; use `defaultFieldValues()` for core field updates.
 16. **AA COB vs online** — ALL AA activities (online and COB) go through AA.ARRANGEMENT.ACTIVITY. If an update should not run during COB, check `isService()` and return early.
 17. **`generateSecondaryActivity()`** — all `secondaryActivity` values must be set. Partial setup = secondary activity silently not generated.
+18. **`da.getFieldValue()` misuse** — **NEVER use this for normal field reads**. The **3-arg form** `da.getFieldValue("APP", "FIELD.NAME", existingStruct).getValue()` IS valid when you need to read a field from a TStructure you already fetched (e.g. a cross-ref join). But **never** use any form as a substitute for the generated getter on the current record's fields. Always use the generated class: `new AaBillDetailsRecord(da.getRecord("AA.BILL.DETAILS", id)).getPaymentDate().getValue()` — not `da.getFieldValue("AA.BILL.DETAILS", "PAYMENT.DATE", struct)`.
+19. **`setFilterCriteria()` must return `List<FilterCriteria>`** — the method signature returns the modified list, it is **not** `void`. Always `return filterCriteria;` at the end or the hook silently does nothing.
+20. **Kony/Infinity files are NOT T24 L3 Java** — files with `com.konylabs`, `com.dbp`, `com.kony`, `com.temenos.onboarding`, or `JavaService2` imports are Temenos Infinity (DBP) services, not T24 hook customizations. The hook superclasses (`RecordLifecycle`, `ActivityLifecycle`, `ServiceLifecycle`, `Enquiry`) only apply to T24 core customizations.
+21. **`ActivityLifecycle` is the correct class name** — there is no `ActivityRecordLifecycle` or `ActivityRecordLifeCycle`. The full import is `com.temenos.t24.api.hook.arrangement.ActivityLifecycle`.
+22. **`AaPrdDesTermAmountRecord` vs `AaArrTermAmountRecord`** — `AaPrdDes*` classes are product design-time conditions (what the user enters). `AaArr*` classes are the live running conditions of a booked arrangement. Using the wrong one returns empty fields.
+23. **`validateField()` has 4 parameters, not 6** — The real signature is `validateField(String application, String currentRecordId, String fieldData, TStructure currentRecord)`. The `fieldData` param is the current value of the changed field. If you write a 6-param override it silently does nothing.
+24. **`Session.setNextVersion()` requires 4 args in real implementations** — `sess.setNextVersion(versionId, function, recordId, generateId)` where `generateId` is a `TBoolean`. The 2-arg form shown in some docs does not match production usage.
+25. **`da.getRecord()` can return null** — Always null-check before passing to a record constructor: `TStructure raw = da.getRecord(...); if (raw == null) return;`
+26. **`defaultFieldValuesOnHotField()` is a distinct method** — Not the same as `defaultFieldValues()`. It fires only when a hot field (configured in VERSION) changes value. Import `com.temenos.t24.api.complex.eb.templatehook.InputValue` for the 7-param signature.
+27. **`T24CoreException` single-arg form is valid for dynamic messages** — `throw new T24CoreException("Account " + id + " invalid")` is the correct pattern when the message must include a runtime value. The 2-arg form `T24CoreException("", "EB-CODE")` is for static EB.ERROR codes (CSD preferred).
