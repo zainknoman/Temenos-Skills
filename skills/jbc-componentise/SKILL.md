@@ -955,7 +955,7 @@ Run for every `.b` file generated or reviewed:
 [ ] $PACKAGE <PACKAGE.NAME> appears at line 13 (after the 12-line validation header)
 [ ] FUNCTION or SUBROUTINE keyword matches the component artefact type
 [ ] Routine name in FUNCTION/SUBROUTINE declaration exactly matches jBC: value in .component
-[ ] All required $USING declarations present (EB.SystemTables, EB.API, EB.DataAccess + domain namespaces)
+[ ] All required $USING declarations present (EB.SystemTables, EB.API, EB.DataAccess + domain namespaces; add EB.LocalReferences when reading local ref fields)
 [ ] Initialisation guard present for FUNCTION types (if package uses one); absent for VALIDATION type
 [ ] outRecord field positions use <PACKAGE>.<TypeName>.<alias> qualified names
 [ ] GOSUB labels present for multi-step routines (DE_HANDLER, ENQUIRY, complex WRITE_API)
@@ -1063,6 +1063,73 @@ When extending or modifying existing components:
 | `SC.SCC` | Securities and custody |
 | `LD.LOANS.AND.DEPOSITS` | Loan and deposit contracts |
 | `AA` | Arrangement Architecture products |
+| `EB.LocalReferences` | `GetLocRef` — resolve local reference field position by name |
+
+---
+
+## Local Reference Field Pattern
+
+T24 local reference fields (custom fields added to standard applications) cannot be accessed by a fixed position — their column index varies per implementation. Use `EB.LocalReferences.GetLocRef` to resolve the position at runtime, then `FIELD(..., @VM, pos)` to extract the value.
+
+**Step 1 — resolve position (once, at initialise or top of routine):**
+```jBC
+    $USING EB.LocalReferences
+
+    EB.LocalReferences.GetLocRef('APPLICATION.NAME', 'LOCAL.REF.FIELD.ID', FieldPos)
+
+    ;* Examples:
+    EB.LocalReferences.GetLocRef('CUSTOMER', 'EMPL.ID',    EmplIdPos)
+    EB.LocalReferences.GetLocRef('CUSTOMER', 'DEPT.CODE',  DeptCodePos)
+```
+
+**Step 2 — extract value from the local ref multivalue string:**
+```jBC
+    localRef   = customerRecord<ST.Customer.Customer.LocalRef>
+    employeeId = FIELD(localRef, @VM, EmplIdPos)
+    deptCode   = FIELD(localRef, @VM, DeptCodePos)
+```
+
+**Rules:**
+- `GetLocRef` sets `FieldPos` to the integer position of the field in the `LOCAL.REF` MV string
+- `FIELD(str, @VM, n)` extracts the nth `@VM`-delimited token (1-based)
+- Always resolve position via `GetLocRef` — never hardcode a numeric position
+- Call `GetLocRef` once per routine (not inside a loop); cache the result in a variable
+
+---
+
+## Multivalue Field Access with FIELD()
+
+When iterating parallel multivalue arrays (multiple fields at the same MV index), use `FIELD(..., @VM, i)` rather than `record<POS, i>` component notation. This is the correct jBC pattern when dealing with raw record strings.
+
+```jBC
+    $USING EB.DataAccess
+    $USING BF.ConBalanceUpdates
+
+    ecbRecord = BF.ConBalanceUpdates.EBContractBalances.Read(accountId, readError)
+
+    typeSysdate = ecbRecord<BF.ConBalanceUpdates.EBContractBalances.TypeSysdate>
+    openBalance = ecbRecord<BF.ConBalanceUpdates.EBContractBalances.OpenBalance>
+    noOfTypes   = DCOUNT(typeSysdate, @VM)
+
+    FOR i = 1 TO noOfTypes
+        typeCode = FIELD(typeSysdate, @VM, i)
+        balance  = FIELD(openBalance, @VM, i)
+
+        BEGIN CASE
+            CASE typeCode EQ 'TOTCOMMITMENTBL'
+                loanAmount = balance
+            CASE typeCode EQ 'CURACCOUNT'
+                amountPaid = balance
+        END CASE
+    NEXT i
+```
+
+**Pattern rules:**
+- Extract the full MV string for each parallel field **before** the loop — avoids repeated record access inside iterations
+- `DCOUNT(str, @VM)` gives the count of `@VM`-delimited tokens
+- `FIELD(str, @VM, i)` is equivalent to `str<1, i>` for a raw string but clearer in parallel-array loops
+- Use `BEGIN CASE / CASE / END CASE` (not nested `IF`) when dispatching on a type code
+- Variable names: `noOf<Thing>` for the count, `typeCode` / `balance` for inner loop vars
 
 ---
 
