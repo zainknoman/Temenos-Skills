@@ -1589,17 +1589,64 @@ public String setValue(String application, String fieldName, String currentValue
 1. Override `setIds()` in a class extending `Enquiry`
 2. Create `STANDARD.SELECTION` record with ID = `NOFILE.<EB_API_RECORD_NAME>`
 3. Create `ENQUIRY` record and set FILE.NAME = that STANDARD.SELECTION record
+
+#### FilterCriteria — named-field switch pattern (production)
+When the ENQUIRY has multiple filter fields, iterate `filterCriteria` and switch on `getFieldname()`:
 ```java
 @Override
 public List<String> setIds(List<FilterCriteria> filterCriteria, EnquiryContext enquiryContext) {
     DataAccess da = new DataAccess(this);
+    Session session = new Session(this);
     List<String> results = new ArrayList<>();
-    String accountNo = filterCriteria.get(0).getValue();
-    // Read from multiple applications and build result rows:
-    CustomerRecord cus = new CustomerRecord(da.getRecord("CUSTOMER", someId));
-    results.add(cus.getCustomerId() + "*" + cus.getCategory().getValue() + "*" + catDesc);
+
+    String arrId    = "";
+    String fromDate = "";
+    String toDate   = "";
+
+    // Named-field switch — more robust than index-based get(0), get(1):
+    for (int i = 0; i < filterCriteria.size(); i++) {
+        String fieldName = filterCriteria.get(i).getFieldname();  // returns String directly
+        switch (fieldName) {
+            case "ARR.ID":    arrId    = filterCriteria.get(i).getValue(); break;
+            case "FROM.DATE": fromDate = filterCriteria.get(i).getValue(); break;
+            case "TO.DATE":   toDate   = filterCriteria.get(i).getValue(); break;
+        }
+    }
+
+    // Note: some versions return an object needing .toString():
+    // String fieldName = filterCriteria.get(i).getFieldname().toString();
+
+    try {
+        // Date range filtering with LocalDate:
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate fromDt = LocalDate.parse(fromDate, fmt);
+        LocalDate toDt   = LocalDate.parse(toDate,   fmt);
+
+        // Read records, filter, build output:
+        // ... processing logic ...
+
+        // Output row — columns separated by "*", one string per row:
+        results.add(arrId + "*" + fromDate + "*" + computedValue);
+
+    } catch (Exception e) {
+        // On error add a partial/empty row so the enquiry doesn't return null:
+        results.add("" + "*" + "" + "*" + "");
+    }
     return results;
 }
+```
+
+**Output row rules:**
+- Each `String` in the returned `List` = one enquiry row
+- Columns within a row are `"*"`-delimited (agreed with ENQUIRY field definitions)
+- Always add a catch that appends a safe empty row — prevents null return crashing the enquiry
+- `getFieldname()` returns `String` directly in modern T24 versions; older versions may need `.toString()`
+
+#### setIds — simple positional variant (legacy)
+```java
+String param1 = filterCriteria.get(0).getValue();
+String param2 = filterCriteria.get(1).getValue();
+results.add(param1 + "*" + param2 + "*computed_value");
 ```
 
 ---
@@ -1821,6 +1868,172 @@ Type: **Hook** = override in your class; **API** = call on the object; **Depreca
 | `Session` | `printLine` | API | Print to T24 standard output (with process/job/session prefix) |
 | `Session` | `publishMessage` | API | Transform record and publish per configuration |
 | `Session` | `setNextVersion` | API | Define VERSION launched on successful commit (EB.SET.NEXT.TASK) |
+
+---
+
+## Production Utility Patterns
+
+Patterns extracted from real bank L3 implementations.
+
+### hasFieldValue — safe TField unwrap
+
+```java
+import java.util.Optional;
+import com.temenos.api.TField;
+
+public String hasFieldValue(TField fieldVal) {
+    return Optional.ofNullable(fieldVal.getValue()).orElse("");
+}
+```
+
+Use this everywhere instead of inline `.getValue()` — guards against null TField on older records.
+
+### hasRecord — guarded DataAccess read into shared TStructure
+
+```java
+private TStructure tStructure = null;
+
+private void hasRecord(String fileName, String recordId) {
+    try {
+        tStructure = dataAccess.getRecord(fileName, recordId);
+    } catch (Exception e) {
+        tStructure = null;
+    }
+}
+```
+
+Call before constructing a record class from `tStructure`. **Always null-check `tStructure`** before passing to a record constructor — `da.getRecord()` can return null on missing records and `hasRecord` also catches exceptions silently.
+
+### Session.getCompanyRecord() — company mnemonic
+
+```java
+import com.temenos.t24.api.records.company.CompanyRecord;
+
+Session session = new Session(this);
+CompanyRecord companyRecord = session.getCompanyRecord();
+String companyMnemonic = hasFieldValue(companyRecord.getFinancialMne());
+```
+
+### LocalDate date range filter
+
+When filtering T24 date strings (YYYYMMDD) against a from/to range:
+
+```java
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
+LocalDate fromDt = LocalDate.parse(fromDateStr, fmt);
+LocalDate toDt   = LocalDate.parse(toDateStr,   fmt);
+LocalDate billDt = LocalDate.parse(billDateStr,  fmt);
+
+if (billDt.isAfter(fromDt) && billDt.isBefore(toDt)) {
+    // within range — process record
+}
+// isAfter / isBefore are EXCLUSIVE of the boundary date
+// use !billDt.isBefore(fromDt) for inclusive from, !billDt.isAfter(toDt) for inclusive to
+```
+
+### selectRecords + for-each loop
+
+```java
+// Select IDs with LIKE filter:
+List<String> ids = da.selectRecords("", "PP.LORO.NOSTRO.ACCOUNT", "", "WITH @ID LIKE " + currency);
+
+// Iterate with for-each (preferred over indexed for when you don't need the index):
+for (String id : ids) {
+    PpLoroNostroAccountRecord rec = new PpLoroNostroAccountRecord(da.getRecord("PP.LORO.NOSTRO.ACCOUNT", id));
+    String fieldVal = hasFieldValue(rec.getAccountnumbertype());
+    if (fieldVal.contains("N")) {
+        // ...
+    }
+}
+```
+
+### Deeply nested MV access (3+ levels)
+
+Generated record classes can expose MV fields inside MV fields. Access via chained indexed getters:
+
+```java
+// PpBankchargesRecord: getFeetype(mvIndex).getFeetierrangelowerlimit(svIndex).getFixedchargeamount()
+PpBankchargesRecord bankRec = new PpBankchargesRecord(da.getRecord("PP.BANK.CHARGES", id));
+String fixedAmt = hasFieldValue(bankRec.getFeetype(0).getFeetierrangelowerlimit(0).getFixedchargeamount());
+```
+
+Always use indexed accessor `getXxx(i)` (0-based) when the getter is on an MV class, not `getXxx().get(i)`.
+
+### AaAccountDetails — nested MV bill iteration (BillPayDate → BillId)
+
+`AA.ACCOUNT.DETAILS` has a two-level MV structure: `BILL.PAY.DATE` (outer MV) contains `BILL.ID` (inner MV):
+
+```java
+import com.temenos.t24.api.records.aaaccountdetails.AaAccountDetailsRecord;
+import com.temenos.t24.api.records.aaaccountdetails.BillIdClass;
+import com.temenos.t24.api.records.aaaccountdetails.BillPayDateClass;
+
+AaAccountDetailsRecord aaDet = new AaAccountDetailsRecord(da.getRecord("AA.ACCOUNT.DETAILS", arrangementId));
+
+List<BillPayDateClass> billDateList = aaDet.getBillPayDate();
+for (BillPayDateClass billDateEntry : billDateList) {
+    List<BillIdClass> billIdList = billDateEntry.getBillId();
+    for (BillIdClass bill : billIdList) {
+        String billDate   = hasFieldValue(bill.getBillDate());
+        String billStatus = hasFieldValue(bill.getBillStatus());
+        String setStatus  = hasFieldValue(bill.getSetStatus());
+        String payMethod  = hasFieldValue(bill.getPayMethod());
+        String billId     = hasFieldValue(bill.getBillId());
+        String actRef     = hasFieldValue(bill.getActivityRef());
+    }
+}
+```
+
+### AaBillDetailsRecord — full field access
+
+```java
+import com.temenos.t24.api.records.aabilldetails.AaBillDetailsRecord;
+import com.temenos.t24.api.records.aabilldetails.PaymentTypeClass;
+import com.temenos.t24.api.records.aabilldetails.PropertyClass;
+import com.temenos.t24.api.records.aabilldetails.RepayRefClass;
+
+AaBillDetailsRecord billRec = new AaBillDetailsRecord(da.getRecord("AA.BILL.DETAILS", billId));
+
+String actPayDate  = hasFieldValue(billRec.getActualPayDate());
+String payDate     = hasFieldValue(billRec.getPaymentDate());
+String orTotalAmt  = hasFieldValue(billRec.getOrTotalAmount());   // original total
+String osTotalAmt  = hasFieldValue(billRec.getOsTotalAmount());   // outstanding total
+double paid = Double.parseDouble(orTotalAmt.isEmpty() ? "0" : orTotalAmt)
+            - Double.parseDouble(osTotalAmt.isEmpty() ? "0" : osTotalAmt);
+
+// Payment type MV:
+for (PaymentTypeClass payType : billRec.getPaymentType()) {
+    String billType = hasFieldValue(payType.getBillType()); // e.g. "PAYMENT" → remap to "SETTLEMENT"
+}
+
+// Property → RepayRef nested MV:
+for (PropertyClass prop : billRec.getProperty()) {
+    for (RepayRefClass repayRef : prop.getRepayRef()) {
+        String ref = hasFieldValue(repayRef.getRepayRef());
+        // ref may be an AAA.ARRANGEMENT.ACTIVITY reference (starts "AAA")
+        if (ref.length() >= 3 && ref.substring(0, 3).equals("AAA")) {
+            String aaaRef = ref.substring(0, 18);
+            AaArrangementActivityRecord actRec = new AaArrangementActivityRecord(
+                    da.getRecord("AA.ARRANGEMENT.ACTIVITY", aaaRef));
+            String txnContractId = hasFieldValue(actRec.getTxnContractId());
+            String settleRef     = txnContractId.substring(0, 18);
+        }
+    }
+}
+```
+
+### Production anti-patterns to avoid
+
+| Anti-pattern seen in prod | Correct approach |
+|--------------------------|-----------------|
+| `DataAccess da = new DataAccess(this)` declared **both** at class level AND inside the method | Declare once in the method that uses it (or at class level, never both) |
+| `new AaBillDetailsRecord(tStructure)` when `tStructure` last pointed to a **different** application | Always read the correct application before constructing: `da.getRecord("AA.BILL.DETAILS", billId)` |
+| `Integer.valueOf(amt1) > Integer.valueOf(amt2)` for monetary comparison | Use `BigDecimal` — `new BigDecimal(amt1).compareTo(new BigDecimal(amt2)) > 0` |
+| Class-level mutable strings (`oldval`, `newval`) mutated inside a private helper | Pass as method parameters or use local variables — class-level mutable state is not thread-safe |
+| `System.out.println(...)` throughout production code | Use `Logger` — `m_logger.log(Level.INFO, "...")` |
 
 ---
 
@@ -2120,7 +2333,77 @@ TNumber numOverDue     = contract.getNumberOfOverDueBills();
 // --- Interest ---
 AaInterestAccrualsRecord accr = contract.getInterestAccrualsRecord(property, startDate);
 InterestAmount intAmt         = contract.getInterestAmounts(propertyId, startDate, endDate);
+
+// --- Future repayment schedule (installment breakdown by date) ---
+// @deprecated in some versions — annotate @SuppressWarnings("deprecation") if needed
+List<RepaymentSchedule> schedule = contract.getFutureRepaymentSchedule(fromTDate, toTDate);
+
+// --- Contract balance movements (accrued profit, deferred profit, etc.) ---
+List<BalanceMovement> balMvts = contract.getContractBalanceMovements(balanceType, "");
+// balanceType examples: "RECDEFERREDPFT", "CURACCOUNT", "TOTCOMMITMENT"
 ```
+
+#### RepaymentSchedule API (`com.temenos.t24.api.complex.aa.contractapi`)
+
+```java
+import com.temenos.api.TDate;
+import com.temenos.t24.api.arrangement.accounting.Contract;
+import com.temenos.t24.api.complex.aa.contractapi.BalanceMovement;
+import com.temenos.t24.api.complex.aa.contractapi.RepaymentDueType;
+import com.temenos.t24.api.complex.aa.contractapi.RepaymentMethod;
+import com.temenos.t24.api.complex.aa.contractapi.RepaymentSchedule;
+
+Contract contract = new Contract(this);
+contract.setContractId(arrangementId);
+
+// Build TDate from string (YYYYMMDD):
+String today   = session.getCurrentVariable("!TODAY");
+String matDate = contract.getMaturityDate().toString();  // "YYYYMMDD"
+TDate fromTDate = new TDate(today);
+TDate toTDate   = new TDate(matDate);
+
+// Get installment schedule between today and maturity:
+List<RepaymentSchedule> schedule = contract.getFutureRepaymentSchedule(fromTDate, toTDate);
+
+double totalPrincipal = 0.0, totalProfit = 0.0;
+
+for (int s = 0; s < schedule.size(); s++) {
+    String dueDate = schedule.get(s).getDueDate().toString();  // "YYYYMMDD"
+
+    // Each due date has one or more due types (ACCOUNT, PRINCIPALINT, etc.):
+    List<RepaymentDueType> dueTypes = schedule.get(s).getRepaymentDueType();
+    for (int dt = 0; dt < dueTypes.size(); dt++) {
+
+        // Each due type has one or more repayment methods (property breakdown):
+        List<RepaymentMethod> methods = dueTypes.get(dt).getRepaymentMethod();
+        for (int m = 0; m < methods.size(); m++) {
+            String property = methods.get(m).getDueProperty().toString();  // e.g. "ACCOUNT"
+            String amount   = methods.get(m).getDuePropertyAmount().toString();
+
+            switch (property) {
+                case "ACCOUNT":      // principal component
+                    totalPrincipal += Double.valueOf(amount); break;
+                case "PRINCIPALINT": // profit/interest component
+                    totalProfit    += Double.valueOf(amount); break;
+            }
+        }
+    }
+}
+
+// Get accrued deferred profit balance movements:
+List<BalanceMovement> balMvts = contract.getContractBalanceMovements("RECDEFERREDPFT", "");
+double accruedProfit = 0.0;
+for (BalanceMovement bm : balMvts) {
+    accruedProfit = bm.getBalance().doubleValue();
+}
+```
+
+**Rules:**
+- `TDate` is constructed from a `String` ("YYYYMMDD"): `new TDate(dateStr)`
+- `getDueDate().toString()` and `getMaturityDate().toString()` both return "YYYYMMDD"
+- Property codes in `getDueProperty()`: `"ACCOUNT"` = principal, `"PRINCIPALINT"` = profit/interest
+- `getBalance().doubleValue()` — use `BigDecimal` in CSD-compliant code: `bm.getBalance().bigDecimalValue()`
+- `getFutureRepaymentSchedule` may be deprecated — add `@SuppressWarnings("deprecation")` on the method
 
 ### AA.Product API
 
