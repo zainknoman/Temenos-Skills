@@ -1390,7 +1390,49 @@ currentRecord.set(pl.toStructure());
 String val = rec.getPostingRestrict(i).getPostingRestrict().getValue();
 ```
 
-### 10. TBoolean — mutable boolean flag
+### 10. JAR MV detection: secondary classes = multivalue fields
+
+When `jar\com\temenos\t24\api\Record\<ApplicationName>\` contains **more than one** `.java`/`.class` file:
+
+- `<AppNameCamelCase>Record.java` (e.g., `AaArrAccountRecord.java`) = the primary record class
+- Every **other** `*Class.java`/`.class` in the same folder (e.g., `AltIdTypeClass.java`, `PostingRestrictClass.java`) = a **multivalue field group class**
+
+Each extra class maps to a multivalue field on the record. Always use the typed `List<XxxClass>` accessor — never raw field-position access.
+
+```java
+// AltIdTypeClass found in jar → ALT.ACCT.TYPE is multivalue on AccountRecord
+import com.temenos.t24.api.records.account.AltIdTypeClass;
+
+List<AltIdTypeClass> altIds = accRec.getAltAcctType();
+
+// Read all MV occurrences:
+for (int i = 0; i < altIds.size(); i++) {
+    String altType = altIds.get(i).getAltAcctType().getValue();
+    String altId   = altIds.get(i).getAltAcctId().getValue();
+}
+
+// Add new MV row:
+AltIdTypeClass newAlt = new AltIdTypeClass();
+newAlt.setAltAcctType("IBAN");
+newAlt.setAltAcctId("GB29NWBK60161331926819");
+accRec.getAltAcctType().add(altIds.size(), newAlt);  // append
+
+// Replace existing row (row must already exist — use add() for new rows):
+accRec.getAltAcctType().set(0, newAlt);
+
+// Remove MV row at index i:
+accRec.getAltAcctType().remove(i);
+
+// Indexed shortcut (same as list.get(i)):
+String code = accRec.getPostingRestrict(0).getPostingRestrict().getValue();
+
+// Set via indexed setter (if generated):
+accRec.setPostingRestrict("DEBIT", 0);
+```
+
+jBC equivalent: `FOR lvI = 1 TO DCOUNT(REC<FIELD.POS>, @VM)` / `REC<FIELD.POS, lvI>` (see jBC Multivalue → Java table).
+
+### 11. TBoolean — mutable boolean flag
 Use when you need a boolean that can be modified inside a helper method (Java booleans are pass-by-value):
 ```java
 import com.temenos.api.TBoolean;

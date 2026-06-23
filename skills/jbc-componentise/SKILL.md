@@ -96,6 +96,49 @@ metamodelVersion 1.6
 | `date` | T24 date fields (`startDate`, `endDate`, `valueDate`) |
 | `Namespace:ClassName` | Input DTO from a `.complex` file (e.g., `DocuPilot:RaiseFTRequest`) |
 
+### Multivalue Field Detection from JAR Structure
+
+When examining `jar\com\temenos\t24\api\Record\<ApplicationName>\`:
+
+| Files in folder | Meaning |
+|----------------|---------|
+| Single `<AppNameCamelCase>Record.java` + `.class` | All fields are scalar |
+| Primary `<AppNameCamelCase>Record.java` **plus** other `*Class.java`/`.class` files | The extra `*Class` files = **multivalue group classes** — their T24 fields are multivalue |
+
+**Example:** `AA.ARR.ACCOUNT` folder contains `AaArrAccountRecord.java`, `AltIdTypeClass.java`, `PostingRestrictClass.java`  
+→ `ALT.ACCT.TYPE` and `POSTING.RESTRICT` are multivalue fields.
+
+**In `.complex`:** mark MV fields with `*` (asterisk):
+```
+GetAccountDetails
+{
+    currency         : string     ;* scalar field
+    altAcctType      : string *   ;* multivalue — from AltIdTypeClass
+    postingRestrict  : string *   ;* multivalue — from PostingRestrictClass
+}
+```
+
+**In `.b` file — read MV field with FOR/NEXT + DCOUNT:**
+```jBC
+    lvMvCount = DCOUNT(sourceRecord<<Namespace.TableAlias.MvField>>, @VM)
+    FOR lvI = 1 TO lvMvCount
+        outRecord<<PACKAGE.OutputType.mvFieldAlias, lvI>> = sourceRecord<<Namespace.TableAlias.MvField, lvI>>
+    NEXT lvI
+```
+
+**In `.b` file — read MV with sub-values (inner class has multiple sub-fields):**
+```jBC
+    lvMvCount = DCOUNT(sourceRecord<<Namespace.TableAlias.MvField>>, @VM)
+    FOR lvI = 1 TO lvMvCount
+        lvSvCount = DCOUNT(sourceRecord<<Namespace.TableAlias.MvField, lvI>>, @SM)
+        FOR lvJ = 1 TO lvSvCount
+            outRecord<<PACKAGE.OutputType.svFieldAlias, lvI, lvJ>> = sourceRecord<<Namespace.TableAlias.MvField, lvI, lvJ>>
+        NEXT lvJ
+    NEXT lvI
+```
+
+**Rule:** use `FOR/NEXT + DCOUNT` for indexed MV arrays; use `LOOP/REMOVE/WHILE/REPEAT` only for string result-set IDs.
+
 ---
 
 ## Phase 0 — Announce and Parse (DEVELOP mode)

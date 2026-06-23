@@ -58,3 +58,89 @@ Load the appropriate reference file(s) for the task at hand:
 3. Verify dynamic array addressing syntax (<FM,VM,SM>)
 4. Verify CALL parameter order matches the called subroutine signature
 5. Check ICONV/OCONV format codes for date conversion issues
+
+---
+
+## Multivalue Field Detection from JAR Structure
+
+When `jar\com\temenos\t24\api\Record\<ApplicationName>\` contains **more than one** `.java` or `.class` file:
+
+| Files in folder | Meaning |
+|----------------|---------|
+| `<AppNameCamelCase>Record.java` + `.class` only | Scalar record — all fields are single-value |
+| Primary `<AppNameCamelCase>Record.java` **plus** other `*Class.java`/`.class` files | The extra `*Class` files are **multivalue group classes** — each maps to a multivalue T24 field |
+
+**Example:** `AA.ARR.ACCOUNT` folder contains `AaArrAccountRecord.java`, `AltIdTypeClass.java`, `PostingRestrictClass.java`  
+→ the fields corresponding to `AltIdTypeClass` and `PostingRestrictClass` are multivalue — code them with MV array syntax.
+
+**Rule: every non-primary class in that folder = a multivalue field. Never read or write it as a scalar.**
+
+### Separators
+
+| Constant | CHAR | Level |
+|----------|------|-------|
+| `@FM` | 254 | Field (attribute) |
+| `@VM` | 253 | Multivalue |
+| `@SM` | 252 | Sub-value |
+
+### Read MV field (FOR/NEXT + DCOUNT)
+
+```
+    lvMvCount = DCOUNT(lvRecord<FIELD.POS>, @VM)
+    FOR lvI = 1 TO lvMvCount
+        lvMvValue = lvRecord<FIELD.POS, lvI>
+        * process lvMvValue
+    NEXT lvI
+```
+
+### Guard empty MV field before loop
+
+```
+    IF lvRecord<FIELD.POS> NE '' THEN
+        lvMvCount = DCOUNT(lvRecord<FIELD.POS>, @VM)
+        FOR lvI = 1 TO lvMvCount
+            lvMvValue = lvRecord<FIELD.POS, lvI>
+        NEXT lvI
+    END
+```
+
+### Write MV values
+
+```
+    FOR lvI = 1 TO lvItemCount
+        lvRecord<FIELD.POS, lvI> = lvValues<lvI>
+    NEXT lvI
+```
+
+### Read MV with sub-values (SV — inner class has multiple sub-fields)
+
+```
+    lvMvCount = DCOUNT(lvRecord<FIELD.POS>, @VM)
+    FOR lvI = 1 TO lvMvCount
+        lvSvCount = DCOUNT(lvRecord<FIELD.POS, lvI>, @SM)
+        FOR lvJ = 1 TO lvSvCount
+            lvSvValue = lvRecord<FIELD.POS, lvI, lvJ>
+        NEXT lvJ
+    NEXT lvI
+```
+
+### Add new MV occurrence
+
+```
+    lvRecord = INSERT(lvRecord, FIELD.POS, lvMvCount + 1, 0, lvNewValue)
+```
+
+### Delete MV occurrence
+
+```
+    DEL lvRecord<FIELD.POS, lvI>
+```
+
+### Naming conventions for MV loops
+
+| Variable | Purpose |
+|----------|---------|
+| `lvMvCount` | total MV occurrences (`DCOUNT(..., @VM)`) |
+| `lvI` | outer MV loop index (1-based) |
+| `lvJ` | inner SV loop index (1-based) |
+| `lvMvValue` | current MV value inside loop |
