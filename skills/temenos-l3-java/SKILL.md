@@ -2,7 +2,7 @@
 name: temenos-l3-java
 description: "Expert assistant for Temenos T24/Transact L3 Java customization development. Covers CSD coding standards, all superclasses (RecordLifecycle, ServiceLifecycle, Enquiry, ActivityLifecycle), all version routine types (ID, CheckRecord, AutoField, Validation, Input, BeforeAuth, Auth), enquiry routines (Build, Conversion, NoFile), full official API package/class/method reference, Core APIs (Amount, Date, Exchange Rate, Customer, Limit, Session, AA Contract), EB.API configuration, DataAccess, Contract API, LocalRef, and AA batch/ActivityLifecycle patterns. Triggers: 'L3 java', 'T24 customization', 'CSD standards', 'write a hook', 'RecordLifecycle', 'ServiceLifecycle', 'Enquiry', 'ActivityLifecycle', 'version routine', 'checkId', 'validateRecord', 'validateField', 'defaultFieldValues', 'postUpdateRequest', 'updateCoreRecord', 'generateSecondaryActivity', 'updateLookupTable', 'setFilterCriteria', 'setValue', 'setIds', 'EB.API', 'NOFILE enquiry', 'PaymentLifecycle', 'PaymentOrderLifecycle', 'DataAccess', 'Contract', 'LocalRefGroup', 'setError', 'isService', 'BigDecimal', 'getAvailableAmount', 'addWorkingDays', 'calculateRate'."
 metadata:
-  version: 1.5.0
+  version: 1.6.0
 ---
 
 # Temenos T24/Transact L3 Java Customization Expert
@@ -2034,6 +2034,453 @@ for (PropertyClass prop : billRec.getProperty()) {
 | `Integer.valueOf(amt1) > Integer.valueOf(amt2)` for monetary comparison | Use `BigDecimal` — `new BigDecimal(amt1).compareTo(new BigDecimal(amt2)) > 0` |
 | Class-level mutable strings (`oldval`, `newval`) mutated inside a private helper | Pass as method parameters or use local variables — class-level mutable state is not thread-safe |
 | `System.out.println(...)` throughout production code | Use `Logger` — `m_logger.log(Level.INFO, "...")` |
+
+---
+
+## Additional Production Patterns
+
+Patterns extracted from the full production sample set (12 files).
+
+### Enquiry setValue — Production 5-Param Signature
+
+Production NOFILE column conversion signature (observed in multiple production files):
+
+```java
+@Override
+public String setValue(String value, String currentId, TStructure currentRecord,
+        List<FilterCriteria> filterCriteria, EnquiryContext enquiryContext) {
+    // 'value' = the primary key / field value passed by the enquiry row
+    // 'currentId' = current row ID in context
+    DataAccess da = new DataAccess(this);
+
+    AaActivityHistoryRecord aahisRec = new AaActivityHistoryRecord(da.getRecord("AA.ACTIVITY.HISTORY", value));
+    List<EffectiveDateClass> effectiveDateList = aahisRec.getEffectiveDate();
+    String sysDate = "";
+    for (int i = 0; i < effectiveDateList.size(); i++) {
+        List<ActivityRefClass> actList = effectiveDateList.get(i).getActivityRef();
+        for (int j = 0; j < actList.size(); j++) {
+            String activity = hasFieldValue(actList.get(j).getActivity());
+            if (activity.contains("CLOSE") || activity.contains("DORMANT")) {
+                sysDate = hasFieldValue(actList.get(j).getSystemDate());
+            }
+        }
+    }
+    return sysDate;
+}
+```
+
+Note: older docs show `setValue(String application, String fieldName, String currentValue, TStructure record, EnquiryContext enquiryContext)`. The 5-param production form above is what real bank implementations use.
+
+### Enquiry setFilterCriteria — NE Operand and LocalRefList Expansion
+
+```java
+@Override
+public List<FilterCriteria> setFilterCriteria(List<FilterCriteria> filterCriteria, EnquiryContext enquiryContext) {
+    DataAccess da = new DataAccess(this);
+    String cif = filterCriteria.get(0).getValue();
+    String recivFlag = filterCriteria.size() > 1 ? filterCriteria.get(1).getValue() : "";
+
+    FilterCriteria fiMain = new FilterCriteria();
+    FilterCriteria fiNotEmpty = new FilterCriteria();
+    fiNotEmpty.setFieldname("@ID");
+    fiNotEmpty.setValue("");
+    fiNotEmpty.setOperand("NE");   // exclude records where @ID is empty
+
+    if (recivFlag.contains("Y")) {
+        try {
+            CustomerRecord cusRec = new CustomerRecord(da.getRecord("CUSTOMER", cif));
+            LocalRefList chldCifs = cusRec.getLocalRefGroups("KMB.CHILD.CIF");
+            String chCifList = "";
+            for (int i = 0; i < chldCifs.size(); i++) {
+                String chCif = chldCifs.get(i).getLocalRefField("KMB.CHILD.CIF").getValue();
+                chCifList = (i == 0) ? chCif : chCifList + " " + chCif;
+            }
+            cif += " " + chCifList;  // space-delimited list = T24 EQ multi-value match
+        } catch (Exception e) { /* continue with base cif only */ }
+    }
+    fiMain.setFieldname("CUSTOMER");
+    fiMain.setValue(cif);
+    fiMain.setOperand("EQ");
+    filterCriteria.set(0, fiMain);
+    if (filterCriteria.size() > 1) filterCriteria.set(1, fiNotEmpty);
+    return filterCriteria;
+}
+```
+
+Import needed: `import com.temenos.api.LocalRefList;`
+
+### VM_MARKER — Building VM-Delimited Columns in setIds Output
+
+```java
+static final String VM_MARKER = Character.toString('');  // Unicode U+F8FD = @VM
+
+// Accumulate MV values from a list:
+String holdAmount = "";
+List<FromDateClass> holdAmountList = accRec.getFromDate();
+for (FromDateClass holdAmountVal : holdAmountList) {
+    String holdAmt = hasFieldValue(holdAmountVal.getLockedAmount());
+    holdAmount = holdAmount.concat(VM_MARKER).concat(holdAmt);
+}
+
+// Multi-language field — index 0 = English, index 1 = Arabic:
+List<TField> shortList = accRec.getShortTitle();  // returns List<TField>, not a Class
+String shortNameEn = shortList.size() > 0 ? hasFieldValue(shortList.get(0)) : "";
+String shortNameAr = shortList.size() > 1 ? hasFieldValue(shortList.get(1)) : "";
+// Same pattern for: accRec.getAccountTitle1(), aaProductLineRecord.getDescription(), aaPrdRec.getDescription()
+```
+
+### AaArrangementRecord — Additional Field Patterns
+
+```java
+// Product group:
+String productGroup = aaRec.getProductGroup().getValue();
+
+// Arr status → display value mapping:
+String arrStatus = hasFieldValue(aaRec.getArrStatus());
+switch (arrStatus) {
+    case "AUTH": case "CURRENT":    arrStatus = "APPROVED"; break;
+    case "UNAUTH":                  arrStatus = "ACTIVE";   break;
+    case "PENDING.CLOSURE": case "CLOSE": arrStatus = "CLOSED"; break;
+}
+
+// Linked application (account ID):
+import com.temenos.t24.api.records.aaarrangement.LinkedApplClass;
+for (LinkedApplClass linkApplListVal : aaRec.getLinkedAppl()) {
+    linkedAcctId = linkApplListVal.getLinkedApplId().getValue();
+}
+
+// Customer role on arrangement (OWNER / GUARANTOR / CO-BORROWER):
+import com.temenos.t24.api.records.aaarrangement.CustomerClass;
+for (CustomerClass cusListVal : aaRec.getCustomer()) {
+    String custRole = hasFieldValue(cusListVal.getCustomerRole());
+    String custId   = hasFieldValue(cusListVal.getCustomer());
+}
+
+// Filter product list to find active product:
+String activeProduct = hasFieldValue(aaRec.getActiveProduct());
+for (ProductClass tempPC : aaRec.getProduct()) {
+    if (tempPC.getProduct().getValue().equals(activeProduct)) { /* found */ }
+}
+
+// Stream filter alternative:
+ProductLineClass prdLine = productLineList.stream()
+    .filter(p -> p.getProductLine().getValue().equals("LENDING"))
+    .findFirst().orElse(null);
+if (prdLine != null) { /* use prdLine.getArrangement() */ }
+```
+
+### AaAccountDetailsRecord — Additional Fields
+
+```java
+import com.temenos.t24.api.records.aaaccountdetails.RepayReferenceClass;
+
+AaAccountDetailsRecord aaDet = new AaAccountDetailsRecord(
+        da.getRecord(companyMnemonic, "AA.ACCOUNT.DETAILS", "", arrId));
+
+String paymentStartDate = hasFieldValue(aaDet.getPaymentStartDate());
+
+// Repay reference MV — extract last pay date from reference string:
+for (RepayReferenceClass payDate : aaDet.getRepayReference()) {
+    String repayRef = hasFieldValue(payDate.getRepayReference());
+    String[] parts = repayRef.split("-");
+    if (parts.length > 1) lastPayDate = parts[1];
+}
+```
+
+### RepaymentSchedule — getDueOutstandingBalance + getDueTypeAmount
+
+```java
+List<RepaymentSchedule> schedule = contractRec.getFutureRepaymentSchedule(tPdate, mPdate);
+for (RepaymentSchedule entry : schedule) {
+    String outstanding = entry.getDueOutstandingBalance().toString();  // overall balance
+    for (RepaymentDueType dueType : entry.getRepaymentDueType()) {
+        String dueTypeAmt = dueType.getDueTypeAmount().toString();     // amount per due type
+    }
+}
+```
+
+### Contract.getOutstandingBalance() — OutstandingBalances
+
+```java
+import com.temenos.t24.api.complex.aa.contractapi.OutstandingBalances;
+
+OutstandingBalances osBalances = contract.getOutstandingBalance();
+double total = Double.valueOf(osBalances.getAccountBalance().toString())
+             + Double.valueOf(osBalances.getChargeBalance().toString())
+             + Double.valueOf(osBalances.getInterestBalance().toString());
+```
+
+### com.temenos.t24.api.contract.Balance — Account Balance by Type
+
+Different from `Contract.getContractBalanceMovements()`. Takes ACCOUNT ID (not arrangement ID):
+
+```java
+import com.temenos.t24.api.contract.Balance;
+
+Balance conBal = new Balance(this);
+String totalDue     = conBal.get(accountId, "TOTALDUECHECK").getAmount().getValue().toString();
+String principalPft = conBal.get(accountId, "RECPRINCIPALPFT").getAmount().getValue().toString();
+String deferredPft  = conBal.get(accountId, "RECDEFERREDPFT").getAmount().getValue().toString();
+```
+
+Common type codes: `TOTALDUECHECK`, `RECPRINCIPALPFT`, `RECDEFERREDPFT`, `CURBALANCE`, `CURACCOUNT`.
+
+### Contract Condition — SETTLEMENT and SCHEDULE
+
+```java
+// Settlement condition → payout account:
+import com.temenos.t24.api.records.aaarrsettlement.AaArrSettlementRecord;
+import com.temenos.t24.api.records.aaarrsettlement.PayoutCurrencyClass;
+import com.temenos.t24.api.records.aaarrsettlement.PayoutAccountClass;
+
+AaArrSettlementRecord settRec = new AaArrSettlementRecord(
+        contract.getConditionForProperty("SETTLEMENT"));
+for (PayoutCurrencyClass pcur : settRec.getPayoutCurrency()) {
+    for (PayoutAccountClass pacc : pcur.getPayoutAccount()) {
+        String payOutAccount = hasFieldValue(pacc.getPayoutAccount());
+    }
+}
+
+// Payment schedule condition → residual amount + calc amount:
+AaPrdDesPaymentScheduleRecord paySchedule = new AaPrdDesPaymentScheduleRecord(
+        contract.getConditionForProperty("SCHEDULE"));
+String residualAmount = hasFieldValue(paySchedule.getResidualAmount());
+for (PaymentTypeClass payType : paySchedule.getPaymentType()) {
+    if (payType.getPaymentType().getValue().equalsIgnoreCase("CONSTANT")) {
+        for (PercentageClass perc : payType.getPercentage()) {
+            String calcAmount = hasFieldValue(perc.getCalcAmount());
+            if (calcAmount != null && !calcAmount.isEmpty()) break;
+        }
+        break;
+    }
+}
+```
+
+### IsContractRecord — IS Module (Murabaha/Commodity)
+
+```java
+import com.temenos.t24.api.records.iscontract.IsContractRecord;
+import com.temenos.t24.api.records.iscontract.CommodityClass;
+import com.temenos.t24.api.records.iscontract.AssetRefClass;
+
+IsContractRecord isContractRecord = new IsContractRecord(
+        da.getRecord(companyMnemonic, "IS.CONTRACT", "", contractId));
+String dpAmount = hasFieldValue(isContractRecord.getTotalDpAmt());
+
+for (CommodityClass commod : isContractRecord.getCommodity()) {
+    for (AssetRefClass assetRef : commod.getAssetRef()) {
+        String vendorCif  = hasFieldValue(assetRef.getVendor());
+        String vendorName = hasFieldValue(assetRef.getVendorName());
+    }
+}
+```
+
+### StandingOrderRecord — Frequency Parsing
+
+```java
+import com.temenos.t24.api.records.standingorder.StandingOrderRecord;
+
+StandingOrderRecord stoRec = new StandingOrderRecord(
+        da.getRecord(companyMnemonic, "STANDING.ORDER", "", stoId));
+String freq      = hasFieldValue(stoRec.getCurrentFrequency()); // e.g. "20240101e1M        "
+String startDate = freq.substring(0, 8);
+String periodDay = freq.substring(6, 8);
+String period    = freq.substring(8, 28);
+String endDate   = hasFieldValue(stoRec.getCurrentEndDate());
+String amount    = hasFieldValue(stoRec.getCurrentAmountBal());
+
+String periodDesc = period.contains("e1D") ? "Daily"
+                  : period.contains("e1W") ? "Weekly"
+                  : period.contains("e1M") ? "Monthly"
+                  : period.contains("e1Y") ? "Yearly" : period;
+```
+
+### DeptAcctOfficerRecord
+
+```java
+import com.temenos.t24.api.records.deptacctofficer.DeptAcctOfficerRecord;
+
+DeptAcctOfficerRecord aoRec = new DeptAcctOfficerRecord(
+        da.getRecord(companyMnemonic, "DEPT.ACCT.OFFICER", "", acctOfficer));
+String acctOfficerName = hasFieldValue(aoRec.getName());
+```
+
+### AccountingEntry.setAccountId() — Custom Account Number Generation
+
+Extends `com.temenos.t24.api.hook.accounting.AccountingEntry`. Used for check-digit calculation and sequence management.
+
+```java
+import com.temenos.t24.api.hook.accounting.AccountingEntry;
+import com.temenos.api.TString;
+import com.temenos.api.exceptions.T24IOException;
+import com.temenos.t24.api.tables.myapp.MyAccountSequenceTable;
+
+public class MyGenerateAccountId extends AccountingEntry {
+
+    @Override
+    public void setAccountId(String applicationName, String currentVersionId,
+            String idType, String checkDigitType, TString currentAccountId) {
+
+        if (!applicationName.contentEquals("ACCOUNT")) return;
+
+        Session session = new Session(this);
+        DataAccess dataAccess = new DataAccess(this);
+
+        // Guard conditions:
+        boolean isNew      = idType.contentEquals("NEW") && checkDigitType.contentEquals("F");
+        boolean isAcInput  = idType.contentEquals("") && checkDigitType.contentEquals("")
+                          && currentVersionId.equals(",KMB.AC.INPUT");
+
+        // Table locking pattern for sequence numbers:
+        MyAccountSequenceTable seqTable = new MyAccountSequenceTable(this);
+        try {
+            MyAccountSequenceRecord seqRec = seqTable.read(sequenceId);
+            seqTable.lock(sequenceId);
+            int lastSeq = Integer.parseInt(hasFieldValue(seqRec.getLastSeqNo())) + 1;
+            String formatted = String.format("%04d", lastSeq);
+            seqRec.setLastSeqNo(formatted);
+            seqTable.write(sequenceId, seqRec);
+            seqTable.release(sequenceId);
+        } catch (T24IOException e) { /* new record — seq starts at 1 */ }
+
+        // Check for duplicate before finalising:
+        List<String> existing = dataAccess.selectRecords(companyMnemonic, "ACCOUNT", "", "WITH @ID EQ " + actualId);
+        List<String> unauth   = dataAccess.selectRecords(companyMnemonic, "ACCOUNT", "$NAU", "WITH @ID EQ " + actualId);
+        List<String> closed   = dataAccess.selectRecords(companyMnemonic, "ACCOUNT.CLOSED", "", "WITH @ID EQ " + actualId);
+
+        // Set the output account ID:
+        currentAccountId.set(actualId);  // TString.set() — not setValue()
+    }
+}
+```
+
+Key: `TString.set(value)` sets the mutable output. Register as `AccountingEntry` component in EB.API wired to ACCOUNT VERSION.
+
+### AA.ACTIVITY.HISTORY — Indexed Last-Element Access
+
+When you need only the last (most recent) activity ref, use size-1 index:
+
+```java
+AaActivityHistoryRecord aahisRec = new AaActivityHistoryRecord(
+        da.getRecord(companyMnemonic, "AA.ACTIVITY.HISTORY", "", arrId));
+int effDsize = aahisRec.getEffectiveDate().size();
+int refSize  = aahisRec.getEffectiveDate(effDsize - 1).getActivityRef().size() - 1;
+String lastActivityRef = aahisRec.getEffectiveDate(effDsize - 1)
+        .getActivityRef(refSize).getActivityRef().getValue();
+
+// Stream filter to find USER-initiated activity:
+for (EffectiveDateClass effDate : aahisRec.getEffectiveDate()) {
+    Optional<ActivityRefClass> actRef = effDate.getActivityRef().stream()
+            .filter(ref -> ref.getInitiation().getValue().equals("USER"))
+            .findFirst();
+    if (actRef.isPresent()) {
+        String sysDate = hasFieldValue(actRef.get().getSystemDate());
+    }
+}
+```
+
+### CustomerRecord.getDateTime(i) — Creation Timestamp
+
+```java
+String creationDateTime = customerRecord.getDateTime(0);  // index 0 = first datetime entry
+```
+
+### AaArrangementActivityRecord — getCoCode uses toString
+
+```java
+// getCoCode() returns a type that needs .toString(), not .getValue():
+String coCode = aaArrangementActivityRecord.getCoCode().toString();
+```
+
+### Building Records with Indexed Setters in postUpdateRequest
+
+When creating a new record programmatically using the typed record class:
+
+```java
+// No-arg constructor for a new record:
+LimitRecord limRec = new LimitRecord();
+limRec.setLimitProduct(limPrd);
+limRec.setLimitCurrency(limCcy);
+
+// MV scalar field — indexed setter: (value, mvIndex)
+limRec.setCustomerNumber(cusNo, 0);
+
+// MV class field — create class, then set with index:
+CountryOfRiskClass cntRsk = new CountryOfRiskClass();
+cntRsk.setCountryOfRisk(contRisk);
+limRec.setCountryOfRisk(cntRsk, 0);
+
+TStructure limStructure = limRec.toStructure();
+currentRecords.add(limStructure);
+
+// postUpdateRequest TransactionData (servicehook):
+com.temenos.t24.api.complex.eb.servicehook.TransactionData td =
+    new com.temenos.t24.api.complex.eb.servicehook.TransactionData();
+td.setTransactionId(cusNo + "." + limPrd + ".01");
+td.setFunction("I");
+td.setVersionId("LIMIT,KMB.INPUT");
+td.setSourceId("KMB.OFS.LIMIT");
+td.setNumberOfAuthoriser("0");
+transactionData.add(td);
+```
+
+### hasLiveRecord Static Utility Pattern
+
+Real-world utility method for checking record existence and storing result:
+
+```java
+// CommonRecordVal pattern (seen in KmbNofGetCifLastDetails, KmbNofMurabahaList):
+public class CommonRecordVal {
+    public static TStructure tStructure = null;
+
+    public static boolean hasLiveRecord(String tableName, String id, String companyMnemonic, Object hookCtx) {
+        try {
+            DataAccess da = new DataAccess((RecordLifecycle) hookCtx);
+            tStructure = da.getRecord(companyMnemonic, tableName, "", id);
+            return tStructure != null;
+        } catch (Exception e) {
+            tStructure = null;
+            return false;
+        }
+    }
+}
+
+// Usage:
+boolean exists = CommonRecordVal.hasLiveRecord("AA.CUSTOMER.ARRANGEMENT", customerId, finMnemonic, this);
+if (exists) {
+    aaCustomerRecord = new AaCustomerArrangementRecord(CommonRecordVal.tStructure);
+}
+```
+
+Warning: static `tStructure` violates CSD thread-safety rule. For new code use instance DataAccess and null-check: `TStructure raw = da.getRecord(...); if (raw != null) {...}`.
+
+### jBASE COMMON Access via Reflection (Low-Level)
+
+Only when a jBASE COMMON variable has no public API equivalent (e.g., in-progress AA arrangement):
+
+```java
+import com.temenos.tafj.api.client.impl.T24Context;
+import com.temenos.tafj.common.jSession;
+import com.temenos.tafj.common.jVar;
+
+java.lang.reflect.Method mlgetSession =
+    T24Context.class.getDeclaredMethod("getSession", (Class[]) null);
+mlgetSession.setAccessible(true);
+jSession jSess = (jSession) mlgetSession.invoke(this);
+
+if (jSess != null) {
+    jVar jvr = jSess.getCommonNamed("AAAAP", 4, "AA$R.ARRANGEMENT");
+    String r_aa = jvr.toString();
+    if (!r_aa.equals("0")) {
+        char delimFm = (char) 63742;  // @FM
+        char delimVm = '';       // @VM
+        String[] arFields = r_aa.split(String.valueOf(delimFm));
+        String customerId = arFields[0].split(String.valueOf(delimVm))[0];
+    }
+}
+```
+
+Warning: Version-sensitive internal TAFJ API. Do not use when a public API exists.
 
 ---
 
