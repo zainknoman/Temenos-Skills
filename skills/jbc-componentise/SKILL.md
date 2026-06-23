@@ -98,7 +98,7 @@ metamodelVersion 1.6
 
 ### Multivalue Field Detection from JAR Structure
 
-When examining `jar\com\temenos\t24\api\Record\<ApplicationName>\`:
+When examining `jar\com\temenos\t24\api\records\<ApplicationName>\`:
 
 | Files in folder | Meaning |
 |----------------|---------|

@@ -15,6 +15,31 @@ description: >
 
 > **Naming convention:** Throughout this skill, `<PKG>` is a placeholder for your project package name (e.g., `MY.BANK`, `CORP.CUSTOM`). Replace it with your actual package prefix in all routine names, component declarations, and T24 table names. `<Pkg>` is the PascalCase form used in component class aliases.
 
+## Identifying Multivalue Core Fields from JAR Structure
+
+To determine whether a T24 application field is multivalue before writing a handoff or document routine:
+
+1. Navigate to `jar\com\temenos\t24\api\records\` in the JAR folder
+2. Find the subfolder for the application (e.g., `aaaccountarrangement\` for `AA.ARR.ACCOUNT`)
+3. Inspect the files inside that subfolder:
+   - **Primary file** `<AppNameCamelCase>Record.java` + `.class` (e.g., `AaArrAccountRecord.java`) = the record class — **not** a field
+   - **Every other** `*Class.java` + `.class` file (e.g., `AltIdTypeClass.java`, `PostingRestrictClass.java`) = a **multivalue core field group**
+4. Each extra class = one multivalue field — code it with `DCOUNT(..., @VM)` / `FIELD(..., @VM, i)` in jBC
+
+**Example:** `AA.ARR.ACCOUNT` subfolder contains `AaArrAccountRecord.java`, `AltIdTypeClass.java`, `PostingRestrictClass.java`  
+→ `ALT.ACCT.TYPE` and `POSTING.RESTRICT` are multivalue — loop over them, never read as scalar.
+
+**In DE handoff routines — read MV field:**
+```jBC
+    lvMvCount = DCOUNT(lvRecord<FIELD.POS>, @VM)
+    FOR lvI = 1 TO lvMvCount
+        lvMvValue = FIELD(lvRecord<FIELD.POS>, @VM, lvI)
+        ;* or:  lvMvValue = lvRecord<FIELD.POS, lvI>
+    NEXT lvI
+```
+
+---
+
 ## Architecture Overview
 
 The DE pipeline has three layers:

@@ -64,6 +64,29 @@ All reference files live under `references/` relative to this skill.
 
 ---
 
+## Identifying Multivalue Core Fields from JAR Structure
+
+Before generating or reviewing code for any T24 application, check whether its fields are multivalue:
+
+1. Navigate to `jar\com\temenos\t24\api\records\` in the JAR folder
+2. Find the subfolder for the application (e.g., `aaaccountarrangement\` for `AA.ARR.ACCOUNT`)
+3. Inspect the files in that subfolder:
+   - **Primary file** `<AppNameCamelCase>Record.java` + `.class` (e.g., `AaArrAccountRecord.java`) = the record class — not a field
+   - **Every other** `*Class.java` + `.class` file (e.g., `AltIdTypeClass.java`, `PostingRestrictClass.java`) = a **multivalue core field group class**
+4. **Each extra class = one multivalue field** on that application record
+
+**Example:** `AA.ARR.ACCOUNT` subfolder contains:
+- `AaArrAccountRecord.java` → record class (ignored for MV detection)
+- `AltIdTypeClass.java` → `ALT.ACCT.TYPE` is multivalue
+- `PostingRestrictClass.java` → `POSTING.RESTRICT` is multivalue
+
+**Enforcement:** never read a detected MV field as a scalar. Route to the appropriate sub-skill for correct MV coding patterns:
+- Infobasic → `FOR/NEXT + DCOUNT` / `record<POS, i>` / `FIELD(rec, @VM, i)`
+- jBC component → `DCOUNT(@VM)` loop + `*` marker in `.complex` for MV output fields
+- L3 Java → `List<XxxClass>` typed accessor via generated record class
+
+---
+
 ## Mode Detection
 
 Read the request and identify the operating mode, then announce it before proceeding:

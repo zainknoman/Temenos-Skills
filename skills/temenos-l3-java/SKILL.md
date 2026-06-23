@@ -1392,7 +1392,7 @@ String val = rec.getPostingRestrict(i).getPostingRestrict().getValue();
 
 ### 10. JAR MV detection: secondary classes = multivalue fields
 
-When `jar\com\temenos\t24\api\Record\<ApplicationName>\` contains **more than one** `.java`/`.class` file:
+When `jar\com\temenos\t24\api\records\<ApplicationName>\` contains **more than one** `.java`/`.class` file:
 
 - `<AppNameCamelCase>Record.java` (e.g., `AaArrAccountRecord.java`) = the primary record class
 - Every **other** `*Class.java`/`.class` in the same folder (e.g., `AltIdTypeClass.java`, `PostingRestrictClass.java`) = a **multivalue field group class**

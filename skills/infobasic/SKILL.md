@@ -63,7 +63,7 @@ Load the appropriate reference file(s) for the task at hand:
 
 ## Multivalue Field Detection from JAR Structure
 
-When `jar\com\temenos\t24\api\Record\<ApplicationName>\` contains **more than one** `.java` or `.class` file:
+When `jar\com\temenos\t24\api\records\<ApplicationName>\` contains **more than one** `.java` or `.class` file:
 
 | Files in folder | Meaning |
 |----------------|---------|
