@@ -9,6 +9,8 @@ superpowers/
 
 # Generated knowledge DB (~200MB, regenerate via pipeline/insert_parse.py + pipeline/html_parse.py)
 temenos_knowledge.db
+temenos_knowledge.db-shm
+temenos_knowledge.db-wal
 
 # Python bytecode
 __pycache__/
