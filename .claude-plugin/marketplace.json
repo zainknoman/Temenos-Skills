@@ -8,7 +8,7 @@
     {
       "name": "temenos-skills",
       "source": ".",
-      "description": "T24/Transact development skills for Claude Code — t24-dev (entry point), temenos-l3-java, jbc-componentise, infobasic, temenos-de"
+      "description": "T24/Transact development and operations skills for Claude Code — temenos-dev (entry point), temenos-l3, temenos-jbc, temenos-infobasic, temenos-de, temenos-admin, temenos-migration, temenos-integration, temenos-devsecops, temenos-architect"
     }
   ]
 }

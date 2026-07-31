@@ -1,0 +1,30 @@
+# CUSTOMER.DEFAULT — Table Schema
+
+> Source: `INSERTS/I_F.CUSTOMER.DEFAULT` in `ST_Customer.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `EB.CDE.ACCOUNT.OFFICER` | `CustomerDefault_AccountOfficer` | TField | No | Identifies the main Account Officer responsible for the Customer. This code will be defaulted on all Customer transactions within T24 except if it is overriden by another Account Officer code at the transaction or product level. The existence of the Account Officer code on every Customer transaction will allow generation of M.I.S. information at the Account Officer level. Validation Rules: 1-4 numeric characters. (Optional input. No default value.) The field must contain a valid code on the DEPT.ACCT.OFFICER table (Ref: GENERAL TABLES). |
+| 2 | `EB.CDE.OTHER.OFFICER` | `CustomerDefault_OtherOfficer` |  |  |  |
+| 3 | `EB.CDE.INDUSTRY` | `CustomerDefault_Industry` | TField | No | Specifies the Industry code default value which is associated with the Sector code. Identifies the Industry in which the Customer is trading. Each User can define their own industry codes according to the use they want to make of them. Production of central bank reports classified by Industry codes or the monitoring of the overall credit exposure by Industry type are typical examples of uses of this code. Validation Rules: 1-10 numeric characters. (Optional input. No default value.) The field must contain a valid code on the INDUSTRY table. |
+| 4 | `EB.CDE.TARGET` | `CustomerDefault_Target` | TField | No | Specifies how the Customer is considered by the bank and how he fits in with the Account Officer's overall marketing strategy. Examples of this field are: "Prime Customer", "No Potential" etc. but it must be a valid code on the TARGET code table. The values of the field should be defined according to the bank's overall marketing strategy. Validation Rules: 1-4 numeric character Target code. (Optional input. No default value.) The field must contain a valid code on the TARGET table. |
+| 5 | `EB.CDE.NATIONALITY` | `CustomerDefault_Nationality` | TField | No | Specifies the Country code default value which is associated with the Sector code and indicates the Nationality of the Customer. Validation Rules: 2 type SSS (Uppercase alpha) character, Country Code. (Optional input. No default value.) The field must contain a valid code on the COUNTRY table (Ref: GENERAL TABLES). |
+| 6 | `EB.CDE.CUSTOMER.STATUS` | `CustomerDefault_CustomerStatus` | TField | No | Specifies the Customer Status code default value which is associated with the Sector code. Validation Rules: 1-4 numeric character Customer Status code. (Optional input. No default value.) The field must contain a valid code on the CUSTOMER.STATUS table. |
+| 7 | `EB.CDE.RESIDENCE` | `CustomerDefault_Residence` | TField | No | Specifies the Country code default value which is associated with the Sector code and indicates the Country of Residence of the Customer. When no inputs are entered in this table, an error message will be displayed next to this field to remind the User that at least one field must have an input. Validation Rules: 2 type SSS (uppercase alpha) characters, Country code. (Optional input. No default value.) The field must contain a valid code on the COUNTRY table (Ref: GENERAL TABLES). |
+| 8 | `EB.CDE.STREET.NON.MANDAT` | `CustomerDefault_StreetNonMandat` | TField | Yes | Specifies whether the fields STREET in CUSTOMER and STREET.ADDR in DE.ADDRESS (for PRINT carrier) applications is non-mandatory for customers whose Sector code equal to the ID of the CUSTOMER.DEFAULT record. For Customers associated with this CUSTOMER.DEFAULT record and with a value of 'Y' in this field, the fields STREET in CUSTOMER and STREET.ADDR in DE.ADDRESS (for PRINT carrier) applications would be non mandatory. For customers associated with this CUSTOMER.DEFAULT record and with a value of 'N' or no-value (Null) in this field, the fields STREET in CUSTOMER and STREET.ADDR in DE.ADDRESS (for PRINT carrier) applications would be mandatory. This also applies to Customers for whom no associated CUSTOMER.DEFAULT record exists. Validation Rules: Allowed values are 'Y' and 'N' Default value is Null. |
+| 9 | `EB.CDE.DUPLICATE.CHECK` | `CustomerDefault_DuplicateCheck` |  |  |  |
+| 10 | `EB.CDE.MAINT.PREV.ADD` | `CustomerDefault_MaintPrevAdd` | TField |  | Indicates whether to maintain the previous address of the customer in PREV.CUST.ADDRESS table or not. Blank value indicates that it should not maintain the address history. Any value other than blank indicates up to what occurrences the address need to be maintained Validation: Blank,1,2,3,4,5,6,7,8,9 |
+| 11 | `EB.CDE.RESERVED3` | `CustomerDefault_Reserved3` | TField |  |  |
+| 12 | `EB.CDE.LOCAL.REF` | `CustomerDefault_LocalRef` |  |  |  |
+| 13 | `EB.CDE.OVERRIDE` | `CustomerDefault_Override` |  |  |  |
+| 14 | `EB.CDE.RECORD.STATUS` | `CustomerDefault_RecordStatus` | String |  |  |
+| 15 | `EB.CDE.CURR.NO` | `CustomerDefault_CurrNo` | String |  |  |
+| 16 | `EB.CDE.INPUTTER` | `CustomerDefault_Inputter` |  |  |  |
+| 17 | `EB.CDE.DATE.TIME` | `CustomerDefault_DateTime` |  |  |  |
+| 18 | `EB.CDE.AUTHORISER` | `CustomerDefault_Authoriser` | String |  |  |
+| 19 | `EB.CDE.CO.CODE` | `CustomerDefault_CoCode` | String |  |  |
+| 20 | `EB.CDE.DEPT.CODE` | `CustomerDefault_DeptCode` | String |  |  |
+| 21 | `EB.CDE.AUDITOR.CODE` | `CustomerDefault_AuditorCode` | String |  |  |
+| 22 | `EB.CDE.AUDIT.DATE.TIME` | `CustomerDefault_AuditDateTime` | String |  |  |

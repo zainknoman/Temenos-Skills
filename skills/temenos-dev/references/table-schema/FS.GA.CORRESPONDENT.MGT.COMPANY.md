@@ -1,0 +1,34 @@
+# FS.GA.CORRESPONDENT.MGT.COMPANY — Table Schema
+
+> Source: `INSERTS/I_F.FS.GA.CORRESPONDENT.MGT.COMPANY` in `FS_GlobalAccounting.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `FS.GA.CORRESPONDENT.MGT.COMPANY.PARENT.REF.ID` | `FsGaCorrespondentMgtCompany_ParentRefId` |  |  |  |
+| 2 | `FS.GA.CORRESPONDENT.MGT.COMPANY.ORA.ROWID` | `FsGaCorrespondentMgtCompany_OraRowid` |  |  |  |
+| 3 | `FS.GA.CORRESPONDENT.MGT.COMPANY.CORRESPONDENT` | `FsGaCorrespondentMgtCompany_Correspondent` |  |  |  |
+| 4 | `FS.GA.CORRESPONDENT.MGT.COMPANY.CORRESPONDENT.NUMBER` | `FsGaCorrespondentMgtCompany_CorrespondentNumber` |  |  |  |
+| 5 | `FS.GA.CORRESPONDENT.MGT.COMPANY.COMPANY.TYPE` | `FsGaCorrespondentMgtCompany_CompanyType` |  |  |  |
+| 6 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED10` | `FsGaCorrespondentMgtCompany_Reserved10` |  |  |  |
+| 7 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED9` | `FsGaCorrespondentMgtCompany_Reserved9` |  |  |  |
+| 8 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED8` | `FsGaCorrespondentMgtCompany_Reserved8` |  |  |  |
+| 9 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED7` | `FsGaCorrespondentMgtCompany_Reserved7` |  |  |  |
+| 10 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED6` | `FsGaCorrespondentMgtCompany_Reserved6` |  |  |  |
+| 11 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED5` | `FsGaCorrespondentMgtCompany_Reserved5` |  |  |  |
+| 12 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED4` | `FsGaCorrespondentMgtCompany_Reserved4` |  |  |  |
+| 13 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED3` | `FsGaCorrespondentMgtCompany_Reserved3` |  |  |  |
+| 14 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED2` | `FsGaCorrespondentMgtCompany_Reserved2` |  |  |  |
+| 15 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RESERVED1` | `FsGaCorrespondentMgtCompany_Reserved1` |  |  |  |
+| 16 | `FS.GA.CORRESPONDENT.MGT.COMPANY.LOCAL.REF` | `FsGaCorrespondentMgtCompany_LocalRef` |  |  |  |
+| 17 | `FS.GA.CORRESPONDENT.MGT.COMPANY.OVERRIDE` | `FsGaCorrespondentMgtCompany_Override` |  |  |  |
+| 18 | `FS.GA.CORRESPONDENT.MGT.COMPANY.RECORD.STATUS` | `FsGaCorrespondentMgtCompany_RecordStatus` |  |  |  |
+| 19 | `FS.GA.CORRESPONDENT.MGT.COMPANY.CURR.NO` | `FsGaCorrespondentMgtCompany_CurrNo` |  |  |  |
+| 20 | `FS.GA.CORRESPONDENT.MGT.COMPANY.INPUTTER` | `FsGaCorrespondentMgtCompany_Inputter` |  |  |  |
+| 21 | `FS.GA.CORRESPONDENT.MGT.COMPANY.DATE.TIME` | `FsGaCorrespondentMgtCompany_DateTime` |  |  |  |
+| 22 | `FS.GA.CORRESPONDENT.MGT.COMPANY.AUTHORISER` | `FsGaCorrespondentMgtCompany_Authoriser` |  |  |  |
+| 23 | `FS.GA.CORRESPONDENT.MGT.COMPANY.CO.CODE` | `FsGaCorrespondentMgtCompany_CoCode` |  |  |  |
+| 24 | `FS.GA.CORRESPONDENT.MGT.COMPANY.DEPT.CODE` | `FsGaCorrespondentMgtCompany_DeptCode` |  |  |  |
+| 25 | `FS.GA.CORRESPONDENT.MGT.COMPANY.AUDITOR.CODE` | `FsGaCorrespondentMgtCompany_AuditorCode` |  |  |  |
+| 26 | `FS.GA.CORRESPONDENT.MGT.COMPANY.AUDIT.DATE.TIME` | `FsGaCorrespondentMgtCompany_AuditDateTime` |  |  |  |

@@ -1,0 +1,94 @@
+# AA.SIM.STATEMENT — Table Schema
+
+> Source: `INSERTS/I_F.AA.SIM.STATEMENT` in `AA_Statement.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.STMT.ACTIVITY` | `AaSimStatement_Activity` |  |  |  |
+| 2 | `AA.STMT.ACTION` | `AaSimStatement_Action` |  |  |  |
+| 3 | `AA.STMT.STMT.FQU.1` | `AaSimStatement_StmtFqu1` |  |  |  |
+| 4 | `AA.STMT.SPECIAL.STATEMENT` | `AaSimStatement_SpecialStatement` |  |  |  |
+| 5 | `AA.STMT.IF.NO.MOVEMENT` | `AaSimStatement_IfNoMovement` |  |  |  |
+| 6 | `AA.STMT.DESCRIPT.STATEMENT` | `AaSimStatement_DescriptStatement` |  |  |  |
+| 7 | `AA.STMT.INT.CLOSING.ADVICE` | `AaSimStatement_IntClosingAdvice` |  |  |  |
+| 8 | `AA.STMT.INTEREST.SCALE` | `AaSimStatement_InterestScale` |  |  |  |
+| 9 | `AA.STMT.TAX.ADVICE` | `AaSimStatement_TaxAdvice` |  |  |  |
+| 10 | `AA.STMT.SWIFT.STMT.TYPE` | `AaSimStatement_SwiftStmtType` |  |  |  |
+| 11 | `AA.STMT.STMT.FQU.2` | `AaSimStatement_StmtFqu2` |  |  |  |
+| 12 | `AA.STMT.FREQ.NO` | `AaSimStatement_FreqNo` |  |  |  |
+| 13 | `AA.STMT.SPL.STMT.FQU2` | `AaSimStatement_SplStmtFqu2` |  |  |  |
+| 14 | `AA.STMT.IF.NO.MVMT.FQU2` | `AaSimStatement_IfNoMvmtFqu2` |  |  |  |
+| 15 | `AA.STMT.SW.STMT2.TYP` | `AaSimStatement_SwStmt2Typ` |  |  |  |
+| 16 | `AA.STMT.MESSAGE.TIME` | `AaSimStatement_MessageTime` |  |  |  |
+| 17 | `AA.STMT.DR.FLOOR.LIMIT` | `AaSimStatement_DrFloorLimit` |  |  |  |
+| 18 | `AA.STMT.CR.FLOOR.LIMIT` | `AaSimStatement_CrFloorLimit` |  |  |  |
+| 19 | `AA.STMT.MESSAGE.TYPE` | `AaSimStatement_MessageType` |  |  |  |
+| 20 | `AA.STMT.SEND.MSG.TYPE` | `AaSimStatement_SendMsgType` |  |  |  |
+| 21 | `AA.STMT.PRINT.STMT` | `AaSimStatement_PrintStmt` |  |  |  |
+| 22 | `AA.STMT.CONS.SB.PASSBOOK` | `AaSimStatement_ConsSbPassbook` |  |  |  |
+| 23 | `AA.STMT.CYCLE.NO` | `AaSimStatement_CycleNo` |  |  |  |
+| 24 | `AA.STMT.NEW.STMT.NO` | `AaSimStatement_NewStmtNo` |  |  |  |
+| 25 | `AA.STMT.RESERVED.7` | `AaSimStatement_Reserved7` |  |  |  |
+| 26 | `AA.STMT.INTRA.EFFECTIVE.DATE` | `AaSimStatement_IntraEffectiveDate` |  |  |  |
+| 27 | `AA.STMT.RATE.INFO.RTN` | `AaSimStatement_RateInfoRtn` |  |  |  |
+| 28 | `AA.STMT.STMT.INFO.PROPERTY` | `AaSimStatement_StmtInfoProperty` |  |  |  |
+| 29 | `AA.STMT.INT.STMT.NAME` | `AaSimStatement_IntStmtName` |  |  |  |
+| 30 | `AA.STMT.INT.STMT.PROPERTY` | `AaSimStatement_IntStmtProperty` |  |  |  |
+| 31 | `AA.STMT.INT.STMT.FREQ` | `AaSimStatement_IntStmtFreq` |  |  |  |
+| 32 | `AA.STMT.RESERVED.6` | `AaSimStatement_Reserved6` |  |  |  |
+| 33 | `AA.STMT.RESERVED.5` | `AaSimStatement_Reserved5` |  |  |  |
+| 34 | `AA.STMT.RESERVED.4` | `AaSimStatement_Reserved4` |  |  |  |
+| 35 | `AA.STMT.RESERVED.3` | `AaSimStatement_Reserved3` |  |  |  |
+| 36 | `AA.STMT.RESERVED.2` | `AaSimStatement_Reserved2` |  |  |  |
+| 37 | `AA.STMT.RESERVED.1` | `AaSimStatement_Reserved1` |  |  |  |
+| 38 | `AA.STMT.LOCAL.REF` | `AaSimStatement_LocalRef` |  |  |  |
+| 39 | `AA.STMT.PR.ATTRIBUTE` | `AaSimStatement_PrAttribute` |  |  |  |
+| 40 | `AA.STMT.PR.VALUE` | `AaSimStatement_PrValue` |  |  |  |
+| 41 | `AA.STMT.PR.BRK.RES` | `AaSimStatement_PrBrkRes` |  |  |  |
+| 42 | `AA.STMT.PR.BRK.MSG` | `AaSimStatement_PrBrkMsg` |  |  |  |
+| 43 | `AA.STMT.PR.BRK.CHARGE` | `AaSimStatement_PrBrkCharge` |  |  |  |
+| 44 | `AA.STMT.PR.RESERVED.3` | `AaSimStatement_PrReserved3` |  |  |  |
+| 45 | `AA.STMT.PR.RESERVED.2` | `AaSimStatement_PrReserved2` |  |  |  |
+| 46 | `AA.STMT.PR.RESERVED.1` | `AaSimStatement_PrReserved1` |  |  |  |
+| 47 | `AA.STMT.PR.APP.METHOD` | `AaSimStatement_PrAppMethod` |  |  |  |
+| 48 | `AA.STMT.PR.APP.PERIOD` | `AaSimStatement_PrAppPeriod` |  |  |  |
+| 49 | `AA.STMT.SYS.RESERVE7` | `AaSimStatement_SysReserve7` |  |  |  |
+| 50 | `AA.STMT.SYS.RESERVE6` | `AaSimStatement_SysReserve6` |  |  |  |
+| 51 | `AA.STMT.OWNING.COMPANY` | `AaSimStatement_OwningCompany` |  |  |  |
+| 52 | `AA.STMT.SYS.RESERVE4` | `AaSimStatement_SysReserve4` |  |  |  |
+| 53 | `AA.STMT.SYS.RESERVE3` | `AaSimStatement_SysReserve3` |  |  |  |
+| 54 | `AA.STMT.SYS.RESERVE2` | `AaSimStatement_SysReserve2` |  |  |  |
+| 55 | `AA.STMT.SYS.RESERVE1` | `AaSimStatement_SysReserve1` |  |  |  |
+| 56 | `AA.STMT.DEFAULT.ATTR.OPTION` | `AaSimStatement_DefaultAttrOption` |  |  |  |
+| 57 | `AA.STMT.DEFAULT.NEGOTIABLE` | `AaSimStatement_DefaultNegotiable` |  |  |  |
+| 58 | `AA.STMT.NR.ATTRIBUTE` | `AaSimStatement_NrAttribute` |  |  |  |
+| 59 | `AA.STMT.NR.OPTIONS` | `AaSimStatement_NrOptions` |  |  |  |
+| 60 | `AA.STMT.NR.RESERVED2` | `AaSimStatement_NrReserved2` |  |  |  |
+| 61 | `AA.STMT.NR.RESERVED1` | `AaSimStatement_NrReserved1` |  |  |  |
+| 62 | `AA.STMT.NR.STD.COMP` | `AaSimStatement_NrStdComp` |  |  |  |
+| 63 | `AA.STMT.NR.TYPE` | `AaSimStatement_NrType` |  |  |  |
+| 64 | `AA.STMT.NR.VALUE` | `AaSimStatement_NrValue` |  |  |  |
+| 65 | `AA.STMT.NR.MESSAGE` | `AaSimStatement_NrMessage` |  |  |  |
+| 66 | `AA.STMT.CHANGED.FIELDS` | `AaSimStatement_ChangedFields` |  |  |  |
+| 67 | `AA.STMT.NEGOTIATED.FLDS` | `AaSimStatement_NegotiatedFlds` |  |  |  |
+| 68 | `AA.STMT.ID.COMP.1` | `AaSimStatement_IdComp1` |  |  |  |
+| 69 | `AA.STMT.ID.COMP.2` | `AaSimStatement_IdComp2` |  |  |  |
+| 70 | `AA.STMT.ID.COMP.3` | `AaSimStatement_IdComp3` |  |  |  |
+| 71 | `AA.STMT.ID.COMP.4` | `AaSimStatement_IdComp4` |  |  |  |
+| 72 | `AA.STMT.ID.COMP.5` | `AaSimStatement_IdComp5` |  |  |  |
+| 73 | `AA.STMT.ID.COMP.6` | `AaSimStatement_IdComp6` |  |  |  |
+| 74 | `AA.STMT.RESERVED2.ID` | `AaSimStatement_Reserved2Id` |  |  |  |
+| 75 | `AA.STMT.TARGET.PRODUCT` | `AaSimStatement_TargetProduct` |  |  |  |
+| 76 | `AA.STMT.STMT.NOS` | `AaSimStatement_StmtNos` |  |  |  |
+| 77 | `AA.STMT.OVERRIDE` | `AaSimStatement_Override` |  |  |  |
+| 78 | `AA.STMT.RECORD.STATUS` | `AaSimStatement_RecordStatus` |  |  |  |
+| 79 | `AA.STMT.CURR.NO` | `AaSimStatement_CurrNo` |  |  |  |
+| 80 | `AA.STMT.INPUTTER` | `AaSimStatement_Inputter` |  |  |  |
+| 81 | `AA.STMT.DATE.TIME` | `AaSimStatement_DateTime` |  |  |  |
+| 82 | `AA.STMT.AUTHORISER` | `AaSimStatement_Authoriser` |  |  |  |
+| 83 | `AA.STMT.CO.CODE` | `AaSimStatement_CoCode` |  |  |  |
+| 84 | `AA.STMT.DEPT.CODE` | `AaSimStatement_DeptCode` |  |  |  |
+| 85 | `AA.STMT.AUDITOR.CODE` | `AaSimStatement_AuditorCode` |  |  |  |
+| 86 | `AA.STMT.AUDIT.DATE.TIME` | `AaSimStatement_AuditDateTime` |  |  |  |

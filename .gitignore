@@ -3,15 +3,19 @@ cache/
 jar/
 T24.javadoc/
 docs/
+vectordb/
 superpowers/
 .superpowers/
+
+# Generated knowledge DB (~200MB, regenerate via pipeline/insert_parse.py + pipeline/html_parse.py)
+temenos_knowledge.db
 
 # Python bytecode
 __pycache__/
 *.pyc
 *.pyo
 
-# Pipeline generated output (regenerable via pipeline/pdf_extractor.py)
+# Pipeline generated output (regenerable via pipeline/pdf_extract.py)
 cache/pdf_extracts/
 
 # IDE

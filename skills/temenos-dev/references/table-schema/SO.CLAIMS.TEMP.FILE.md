@@ -1,0 +1,14 @@
+# SO.CLAIMS.TEMP.FILE — Table Schema
+
+> Source: `INSERTS/I_F.SO.CLAIMS.TEMP.FILE` in `PP_SwiftOutService.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `SOCT.CompanyID` | `SoClaimsTempFile_Companyid` |  |  |  |
+| 2 | `SOCT.FTNumber` | `SoClaimsTempFile_Ftnumber` |  |  |  |
+| 3 | `SOCT.TotalLineProcessed` | `SoClaimsTempFile_Totallineprocessed` |  |  |  |
+| 4 | `SOCT.ActualInfoLineCnt` | `SoClaimsTempFile_Actualinfolinecnt` |  |  |  |
+| 5 | `SOCT.TotalSentMsges` | `SoClaimsTempFile_Totalsentmsges` |  |  |  |
+| 6 | `SOCT.TotalMsgToSent` | `SoClaimsTempFile_Totalmsgtosent` |  |  |  |

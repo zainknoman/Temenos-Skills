@@ -1,0 +1,96 @@
+# ACH.ENTRIES.HIST — Table Schema
+
+> Source: `INSERTS/I_F.ACH.ENTRIES.HIST` in `ACHFRM_Foundation.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `ACHENT.HIST.STATUS` | `AchEntriesHist_Status` | TField |  | Status of the Entry. Valid values are ACK, Cancelled, Cleared, Data Error, Death Notification, Delivered, Exception, Loaded, Nack, Pending, Rejected, Returned, Validated, Validation Error, or Voided. |
+| 2 | `ACHENT.HIST.BATCH.ID` | `AchEntriesHist_BatchId` | TField |  | Id of the batch that contains this entry. |
+| 3 | `ACHENT.HIST.REC.TYPE.CODE` | `AchEntriesHist_RecTypeCode` | TField |  | ACH Entry Detail record type code always equal to 6. |
+| 4 | `ACHENT.HIST.TRANSACTION.CODE` | `AchEntriesHist_TransactionCode` | TField |  | Identifies various types of debits and credit entries. See NACHA Guidelines for list of Transaction Codes. |
+| 5 | `ACHENT.HIST.RECEIVING.DFI.ID` | `AchEntriesHist_ReceivingDfiId` | TField | Yes | 8 Positions &#45; Entry Detail Record &#45; Mandatory. The standard routing number as assigned by Accuity (with Check Digit) is used to identify the DFI in which the Receiver maintains his account or a routing number assigned to a Federal Government agency by the Federal Reserve. For IAT Entries, this field contains the bank identification number of the DFI at which the Receiver maintains his account. |
+| 6 | `ACHENT.HIST.CHECK.DIGIT` | `AchEntriesHist_CheckDigit` | TField | Yes | 1 Position &#45; Entry Detail Record, Corporate Entry Detail Record &#45; Mandatory (all entries). See the NACHA Guidelines for additional details. |
+| 7 | `ACHENT.HIST.DFI.ACCOUNT.NO` | `AchEntriesHist_DfiAccountNo` | TField |  | 17 Positions &#45; Entry Detail Record &#45; Required. The DFI Account Number is the RDFI &#39; s customer&#39;s account number. It is usually obtained from: (1) the on-us field of the MICR line of a Check; (2) account statement; (3) passbook; or (4) other source document provided by the RDFI that specifically designates the account number to be used for ACH purposes. |
+| 8 | `ACHENT.HIST.CUS.CLEAR.ACCT` | `AchEntriesHist_CusClearAcct` | TField |  | Customer account where transaction is posted/cleared. |
+| 9 | `ACHENT.HIST.AMOUNT` | `AchEntriesHist_Amount` | TField |  | Amount of the entry to be posted to the customer account. |
+| 10 | `ACHENT.HIST.INDIVIDUAL.ID.NO` | `AchEntriesHist_IndividualIdNo` | TField |  | Customer's account number. |
+| 11 | `ACHENT.HIST.INDIVIDUAL.NAME` | `AchEntriesHist_IndividualName` | TField |  | Customer's name. |
+| 12 | `ACHENT.HIST.DISCRETIONARY.DATA` | `AchEntriesHist_DiscretionaryData` | TField | No | 2 Positions &#45; Entry Detail Record, Corporate Entry Detail Record &#45; Optional. This field in the Entry Detail Record allows ODFIs to include codes, of significance to them, to enable specialized handling of the Entry. |
+| 13 | `ACHENT.HIST.ADDENDA.REC.ID` | `AchEntriesHist_AddendaRecId` | TField | Yes | Indicator: 1 Position &#45; Entry Detail Record and Corporate Entry Detail - Mandatory. This field indicates the existence of an Addenda Record. |
+| 14 | `ACHENT.HIST.TRACE.NUMBER` | `AchEntriesHist_TraceNumber` | TField | Yes | 15 Positions &#45; Entry Detail Record, Corporate Entry Detail Record, and Addenda Records &#45; Mandatory. A Trace Number, assigned by the ODFI in ascending sequence, is included in each Entry Detail Record, Corporate Entry Detail Record, and Addenda Record. A Trace Number uniquely identifies each Entry Detail Record within a batch in an ACH input File. In association with the Batch Number, Transmission (File Creation) Date, and File ID Modifier, the Trace Number uniquely identifies an Entry within a specific File. For Addenda Records, the Trace Number is identical to the Trace Number in the associated Entry Detail Record. |
+| 15 | `ACHENT.HIST.CHECK.SERIAL.NO` | `AchEntriesHist_CheckSerialNo` | TField | No | 15 Positions &#45; Entry Detail Record &#45; Optional. This field contains the Check Serial Number of a Check. |
+| 16 | `ACHENT.HIST.ROUTING.NO` | `AchEntriesHist_RoutingNo` | TField | Yes | Routing Number of ACH Operator: 8 Positions &#45; Entry Detail Record &#45; Mandatory (ADV). This field contains the routing number of the ACH Operator that is Transmitting the File. |
+| 17 | `ACHENT.HIST.FILE.ID` | `AchEntriesHist_FileId` | TField |  | ID of the ACH file. |
+| 18 | `ACHENT.HIST.ACH.OP.DATA` | `AchEntriesHist_AchOpData` | TField | No | 1 Position &#45; Entry Detail Record &#45; Optional (ADV). This field is used as specified by the ACH Operator. |
+| 19 | `ACHENT.HIST.ACH.OP.ROUTING` | `AchEntriesHist_AchOpRouting` | TField | Yes | Operator: 8 Positions &#45; Entry Detail Record &#45; Mandatory (ADV). This field contains the routing number of the ACH Operator that is Transmitting the File. |
+| 20 | `ACHENT.HIST.JULIAN.DATE` | `AchEntriesHist_JulianDate` | TField | Yes | 3 positions &#45; Entry Detail Record &#45; Mandatory (ADV). This field contains the Julian date on which an Automated Accounting Advice is created. |
+| 21 | `ACHENT.HIST.NO.ADD.REC` | `AchEntriesHist_NoAddRec` | TField | Yes | 4 Positions &#45; Corporate Entry Detail Record/Entry Detail Record &#45; Mandatory (ATX, CTX, ENR, IAT, TRX, COR (IAT entries), refused ATX); 4 Positions &#45; Corporate Entry Detail Record &#45; Required (COR (except IAT), refused COR). CTX: This number represents the number of Addenda Records associated with the Corporate Entry Detail Record. This field will be zero filled if Field 12 (Addenda Record Indicator Value) of the related Corporate Entry Detail Record contains a value of &#39;0&#39; . ATX, ENR, IAT, TRX: This number represents the number of Addenda Records associated with the Entry Detail Record. |
+| 22 | `ACHENT.HIST.TERMINAL.CITY` | `AchEntriesHist_TerminalCity` | TField | Yes | 15 Positions &#45; Addenda Record &#45; Required (MTE, POS, SHR); 4 Positions &#45; Entry Detail Record &#45; Mandatory (POP). This field identifies the city, town, village, or township in which an Electronic terminal is located. |
+| 23 | `ACHENT.HIST.TERMINAL.STATE` | `AchEntriesHist_TerminalState` | TField | Yes | State: 2 Positions &#45; Addenda Record &#45; Required (MTE, POS, SHR); 2 Positions &#45; Entry Detail Record &#45; Mandatory (POP). This field identifies the state of the United States in which an Electronic terminal is located. |
+| 24 | `ACHENT.HIST.LOAD.DATE` | `AchEntriesHist_LoadDate` | TField |  | Date the file was loaded into the ACH Warehouse. |
+| 25 | `ACHENT.HIST.DEBIT.CREDIT.IND` | `AchEntriesHist_DebitCreditInd` | TField |  | Valid values None, Credit, or Debit. |
+| 26 | `ACHENT.HIST.BATCH.ORIGINATOR` | `AchEntriesHist_BatchOriginator` | TField |  | Company ID from the Batch Record |
+| 27 | `ACHENT.HIST.OFAC.INDICATOR` | `AchEntriesHist_OfacIndicator` | TField | No | This field contains the Gateway operator OFAC screening indicator (optional field for IAT) |
+| 28 | `ACHENT.HIST.SECONDARY.OFAC.IND` | `AchEntriesHist_SecondaryOfacInd` | TField | No | This field contains the Secondary OFAC screening indicator (optional field for IAT) |
+| 29 | `ACHENT.HIST.PAYMENT.TYPE.CODE` | `AchEntriesHist_PaymentTypeCode` | TField | No | Code: 2 Positions &#45; Entry Detail Record &#45; Required (WEB, Returns, dishonored Returns, contested dishonored Returns); Optional. This field is used to indicate whether an Entry is a recurring or Single-Entry payment. |
+| 30 | `ACHENT.HIST.RESERVED.21` | `AchEntriesHist_Reserved21` | TField |  | Reserved Field |
+| 31 | `ACHENT.HIST.IMMEDIATE.ORIGIN` | `AchEntriesHist_ImmediateOrigin` | TField |  | This field contains the routing number of the ACH Operator or Sending Point that is Transmitting the File. The 10 character field begins with a blank in the first position, followed by the four digit Federal Reserve Routing Symbol, the four digit ABA Institution Identifier, and the Check Digit. |
+| 32 | `ACHENT.HIST.T24.TXN.CODE` | `AchEntriesHist_T24TxnCode` | TField |  | T24 Transaction code that corresponds with the ACH Transaction code of the entry. |
+| 33 | `ACHENT.HIST.CURRENCY` | `AchEntriesHist_Currency` | TField |  | Type of currency for this entry. |
+| 34 | `ACHENT.HIST.VALUE.DATE` | `AchEntriesHist_ValueDate` | TField |  | ACH Effective Entry Date. The date specified by the originator on which it intends a batch of entries to be settled. For ACH credits, the effective entry date must be one or two banking days following the processing date. |
+| 35 | `ACHENT.HIST.ENTRY.TYPE` | `AchEntriesHist_EntryType` | TField |  | Valid values None, Accounting, Death Notification, or Notification |
+| 36 | `ACHENT.HIST.NARRATIVE` | `AchEntriesHist_Narrative` |  |  |  |
+| 37 | `ACHENT.HIST.ACH.RET.CODE` | `AchEntriesHist_AchRetCode` | TField | Yes | 3 Positions &#45; Addenda Record &#45; Mandatory (Returns); 2 Positions &#45; Addenda Record &#45; Mandatory (dishonored Returns, contested dishonored Returns). This field contains a standard code used by an ACH Operator or RDFI to describe the reason for returning an Entry. In a dishonored Return Entry and contested dishonored Return Entry, only the numeric portion of the code is used. See NACHA Guidelines for a complete listing of Return Reason Codes. |
+| 38 | `ACHENT.HIST.ORIG.US.ACH.ENTRY` | `AchEntriesHist_OrigUsAchEntry` | TField |  | Future use |
+| 39 | `ACHENT.HIST.ORIG.TRACE.NO` | `AchEntriesHist_OrigTraceNo` | TField | Yes | 15 Positions &#45; Addenda Record &#45; Mandatory (Returns, dishonored Returns, contested dishonored Returns, COR, refused COR, ACK, refused ACK, ATX, refused. This field contains the Trace Number as originally included on the forward Entry or Prenotification. The RDFI must include the Original Entry Trace Number in the Addenda Record of an Entry being returned to an ODFI, in the Addenda Record of an NOC, within an Acknowledgment Entry, or with an RDFI request for a copy of an authorization. |
+| 40 | `ACHENT.HIST.ORIG.RECV.DFI.ID` | `AchEntriesHist_OrigRecvDfiId` | TField |  | 8 Positions &#45; Addenda Record &#45; Required (Returns, dishonored Returns, contested dishonored Returns, COR, refused COR). This field contains the Receiving DFI identification as originally included on the forward Entry or Prenotification that the RDFI is returning or correcting. This field must be included in the Addenda Record for an Entry being returned to an ODFI, or within the Addenda Record accompanying a Notification of Change. |
+| 41 | `ACHENT.HIST.T24.ENTRY.AC` | `AchEntriesHist_T24EntryAc` | TField |  | Future use |
+| 42 | `ACHENT.HIST.RETURN.DATE` | `AchEntriesHist_ReturnDate` | TField |  | Date of the return entry. |
+| 43 | `ACHENT.HIST.CARD.TXN.CODE` | `AchEntriesHist_CardTxnCode` | TField | Yes | 2 Positions &#45; Entry Detail Record &#45; Mandatory (POS, SHR, Returns, dishonored Returns, contested dishonored Returns). See NACHA Guidelines for valid values. |
+| 44 | `ACHENT.HIST.RECEIVING.CO.NAME` | `AchEntriesHist_ReceivingCoName` | TField | No | 22 positions &#45; Entry Detail Record &#45; Required (ACK, CCD, refused ACK, Returns, dishonored Returns, contested dishonored Returns, COR, refused COR); 22 Positions &#45; Entry Detail Record &#45; Optional (ARC, BOC, POP). This field is entered by the Originator to provide additional identification of the Receiver and may be helpful in identifying Return Entries. |
+| 45 | `ACHENT.HIST.AC.INWARD.ENTRY.ID` | `AchEntriesHist_AcInwardEntryId` |  |  |  |
+| 46 | `ACHENT.HIST.TAPE.REF` | `AchEntriesHist_TapeRef` | TField |  | Name of the file. |
+| 47 | `ACHENT.HIST.ZERO.DOLLAR.ENTRY` | `AchEntriesHist_ZeroDollarEntry` | TField |  | Valid values are None, No, or Yes. |
+| 48 | `ACHENT.HIST.CARD.EXPIRY.DATE` | `AchEntriesHist_CardExpiryDate` | TField | No | 4 Positions &#45; Entry Detail Record &#45; Required (SHR); 6 Positions &#45; Addenda Record &#45; Optional (POS, SHR). POS, SHR: This code is used by cardholder processors and cardholder Financial Institutions to verify that the card remains valid and that certain security procedures required by various card authorization systems have been met. |
+| 49 | `ACHENT.HIST.DOCUMENT.REF.NO` | `AchEntriesHist_DocumentRefNo` | TField |  | 11 Positions &#45; Entry Detail Record &#45; Required (SHR). This field further defines the transaction in the event of a Receiver&#39;s inquiry. An example is an Electronic sequence number. |
+| 50 | `ACHENT.HIST.INDV.CARD.ACCT.NO` | `AchEntriesHist_IndvCardAcctNo` | TField |  | 22 Positions &#45; Entry Detail Record &#45; Required (SHR). The Individual Card Account Number is the number assigned by the card issuer and is obtained from the card itself. |
+| 51 | `ACHENT.HIST.PROCESS.CTRL.FLD` | `AchEntriesHist_ProcessCtrlFld` | TField | No | 6 Positions &#45; Entry Detail Record &#45; Required (TRC, XCK). This field contains an optional code, as obtained from a Check or sharedraft, which generally identifies the document type. The field is usually located to the right of the account number in the on-us field of the MICR line and is sometimes called a transaction code. |
+| 52 | `ACHENT.HIST.ITEM.RESEARCH.NO` | `AchEntriesHist_ItemResearchNo` | TField |  | 16 Positions &#45; Entry Detail Record &#45; Required (TRC, XCK). This field contains the MICR locator number for Check item research. |
+| 53 | `ACHENT.HIST.ITEM.TYPE.INDI` | `AchEntriesHist_ItemTypeIndi` | TField | No | 2 Positions &#45; Entry Detail Record &#45; Optional (TRC, TRX). This field indicates the type of items being truncated. See NACHA Guidelines for code values. |
+| 54 | `ACHENT.HIST.MSG.TYPE` | `AchEntriesHist_MsgType` | TField |  | Valid values are None, Inward, or Outward. |
+| 55 | `ACHENT.HIST.ENTRY.CLASS.CODE` | `AchEntriesHist_EntryClassCode` | TField | Yes | 3 positions, mandatory for all batches. This field contains a three-character code used to identify various types of entries. See the NACHA Guidelines for a list of Standard Entry Class Codes. |
+| 56 | `ACHENT.HIST.ROUTING.CUSTOMER` | `AchEntriesHist_RoutingCustomer` | TField |  | Name of customer receivng the file. |
+| 57 | `ACHENT.HIST.CUSTOMER.FILE` | `AchEntriesHist_CustomerFile` | TField |  | System populated file. This is updated as ""FED"" if the file is received from FED, otherwise this will be blank. |
+| 58 | `ACHENT.HIST.REVERSAL.TRANSACTION` | `AchEntriesHist_ReversalTransaction` | TField |  | Future use |
+| 59 | `ACHENT.HIST.SETTLEMENT.DATE` | `AchEntriesHist_SettlementDate` | TField |  | The date specified by the originator on which it intends a batch of entries to be settled. For ACH credits, the effective entry date must be one or two banking days following the processing date. |
+| 60 | `ACHENT.HIST.AML.RESPONSE` | `AchEntriesHist_AmlResponse` | TField |  | Response from AML system. Valid values are Null, 0, 1, Clean, or Hit. |
+| 61 | `ACHENT.HIST.AML.REJ.REASON` | `AchEntriesHist_AmlRejReason` | TField |  | Reason from the AML system that the batch was rejected. |
+| 62 | `ACHENT.HIST.AML.VERIFICATION` | `AchEntriesHist_AmlVerification` | TField |  | Field that determines if AML verification is used for this file |
+| 63 | `ACHENT.HIST.AML.LEVELS` | `AchEntriesHist_AmlLevels` | TField |  | Level set in ACH.AML.PARAMETER. Values are Null, 0, 1, or 2. |
+| 64 | `ACHENT.HIST.AML.RESERVED.3` | `AchEntriesHist_AmlReserved3` | TField |  | Reserved Field |
+| 65 | `ACHENT.HIST.AML.RESERVED.2` | `AchEntriesHist_AmlReserved2` | TField |  | Reserved Field |
+| 66 | `ACHENT.HIST.AML.RESERVED.1` | `AchEntriesHist_AmlReserved1` | TField |  | Reserved Field |
+| 67 | `ACHENT.HIST.ENTRIES.XREF` | `AchEntriesHist_EntriesXref` | TField |  | System populated field. This field holds the inward AchEntries ID for a transit entry |
+| 68 | `ACHENT.HIST.ENTRIES.RECORD` | `AchEntriesHist_EntriesRecord` | TField |  | System Populated field. This field stores entire entry record for an outward file |
+| 69 | `ACHENT.HIST.REMARKS` | `AchEntriesHist_Remarks` |  |  |  |
+| 70 | `ACHENT.HIST.RELEASE.DATE` | `AchEntriesHist_ReleaseDate` | TField |  | Date the file was released from the ACH Warehouse. |
+| 71 | `ACHENT.HIST.RETRY.ATTEMPTS` | `AchEntriesHist_RetryAttempts` | TField |  | This field displays the number of times a retry payment has been attempted. One of the following three values will be displayed: a. Blank (null) indicates that the Retry Payment functionality is turned off. b. 1 indicates that a Retry Payments was attempted 1 time c. 2 indicates that a Retry Payments was attempted 2 times |
+| 72 | `ACHENT.HIST.LAST.UPDATE.DATE` | `AchEntriesHist_LastUpdateDate` | TField |  | Date the file was loaded into the ACH Warehouse. |
+| 73 | `ACHENT.HIST.RETURN.TYPE` | `AchEntriesHist_ReturnType` | TField |  | Type of returns, valid values are None, Contested, Dishonored, or Return |
+| 74 | `ACHENT.HIST.TXN.ADDL.INFO` | `AchEntriesHist_TxnAddlInfo` | TField |  | System populated field. This will be updated as ""DUPRET"" when a duplicate return entry is received. |
+| 75 | `ACHENT.HIST.ORIG.ACCOUNT` | `AchEntriesHist_OrigAccount` | TField |  | System populated field. For each incoming return entry, this field will be updated with the account of the originator. |
+| 76 | `ACHENT.HIST.ORIG.DD.ITEM.REF` | `AchEntriesHist_OrigDdItemRef` | TField |  | This field will be used to store the original DD.ITEM record reference when a DD.ITEM is initiated as an outward ACH. This will be used by TPH to create DD.RETURN for originally created direct debit item. |
+| 77 | `ACHENT.HIST.LARGE.DOLLAR` | `AchEntriesHist_LargeDollar` | TField |  | The field will be set to YES in ACH.ENTRIES for any entry that is more than the amount defined in ACH.CLEARING.PARAMETER for any files that is originated by a corporate originator. |
+| 78 | `ACHENT.HIST.EARLY.DEPOSIT` | `AchEntriesHist_EarlyDeposit` | TField |  | The field would hold a value of Y if this entry qualifies for early deposit. |
+| 79 | `ACHENT.HIST.RESERVED.8` | `AchEntriesHist_Reserved8` |  |  |  |
+| 80 | `ACHENT.HIST.RESERVED.7` | `AchEntriesHist_Reserved7` | TField |  | Reserved Field |
+| 81 | `ACHENT.HIST.RESERVED.6` | `AchEntriesHist_Reserved6` | TField |  | Reserved Field |
+| 82 | `ACHENT.HIST.RESERVED.5` | `AchEntriesHist_Reserved5` | TField |  | Reserved Field |
+| 83 | `ACHENT.HIST.RESERVED.4` | `AchEntriesHist_Reserved4` | TField |  | Reserved Field |
+| 84 | `ACHENT.HIST.RESERVED.3` | `AchEntriesHist_Reserved3` | TField |  | Reserved Field |
+| 85 | `ACHENT.HIST.RESERVED.2` | `AchEntriesHist_Reserved2` | TField |  | Reserved Field |
+| 86 | `ACHENT.HIST.RESERVED.1` | `AchEntriesHist_Reserved1` | TField |  | Reserved Field |
+| 87 | `ACHENT.HIST.LOCAL.REF` | `AchEntriesHist_LocalRef` |  |  |  |
+| 88 | `ACHENT.HIST.OVERRIDE` | `AchEntriesHist_Override` |  |  |  |

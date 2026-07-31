@@ -1,0 +1,94 @@
+# AA.PRD.PRF.STATEMENT — Table Schema
+
+> Source: `INSERTS/I_F.AA.PRD.PRF.STATEMENT` in `AA_Statement.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.STMT.DESCRIPTION` | `AaPrdPrfStatement_Description` |  |  |  |
+| 2 | `AA.STMT.FULL.DESCRIPTION` | `AaPrdPrfStatement_FullDescription` |  |  |  |
+| 3 | `AA.STMT.STMT.FQU.1` | `AaPrdPrfStatement_StmtFqu1` |  |  |  |
+| 4 | `AA.STMT.SPECIAL.STATEMENT` | `AaPrdPrfStatement_SpecialStatement` |  |  |  |
+| 5 | `AA.STMT.IF.NO.MOVEMENT` | `AaPrdPrfStatement_IfNoMovement` |  |  |  |
+| 6 | `AA.STMT.DESCRIPT.STATEMENT` | `AaPrdPrfStatement_DescriptStatement` |  |  |  |
+| 7 | `AA.STMT.INT.CLOSING.ADVICE` | `AaPrdPrfStatement_IntClosingAdvice` |  |  |  |
+| 8 | `AA.STMT.INTEREST.SCALE` | `AaPrdPrfStatement_InterestScale` |  |  |  |
+| 9 | `AA.STMT.TAX.ADVICE` | `AaPrdPrfStatement_TaxAdvice` |  |  |  |
+| 10 | `AA.STMT.SWIFT.STMT.TYPE` | `AaPrdPrfStatement_SwiftStmtType` |  |  |  |
+| 11 | `AA.STMT.STMT.FQU.2` | `AaPrdPrfStatement_StmtFqu2` |  |  |  |
+| 12 | `AA.STMT.FREQ.NO` | `AaPrdPrfStatement_FreqNo` |  |  |  |
+| 13 | `AA.STMT.SPL.STMT.FQU2` | `AaPrdPrfStatement_SplStmtFqu2` |  |  |  |
+| 14 | `AA.STMT.IF.NO.MVMT.FQU2` | `AaPrdPrfStatement_IfNoMvmtFqu2` |  |  |  |
+| 15 | `AA.STMT.SW.STMT2.TYP` | `AaPrdPrfStatement_SwStmt2Typ` |  |  |  |
+| 16 | `AA.STMT.MESSAGE.TIME` | `AaPrdPrfStatement_MessageTime` |  |  |  |
+| 17 | `AA.STMT.DR.FLOOR.LIMIT` | `AaPrdPrfStatement_DrFloorLimit` |  |  |  |
+| 18 | `AA.STMT.CR.FLOOR.LIMIT` | `AaPrdPrfStatement_CrFloorLimit` |  |  |  |
+| 19 | `AA.STMT.MESSAGE.TYPE` | `AaPrdPrfStatement_MessageType` |  |  |  |
+| 20 | `AA.STMT.SEND.MSG.TYPE` | `AaPrdPrfStatement_SendMsgType` |  |  |  |
+| 21 | `AA.STMT.PRINT.STMT` | `AaPrdPrfStatement_PrintStmt` |  |  |  |
+| 22 | `AA.STMT.CONS.SB.PASSBOOK` | `AaPrdPrfStatement_ConsSbPassbook` |  |  |  |
+| 23 | `AA.STMT.CYCLE.NO` | `AaPrdPrfStatement_CycleNo` |  |  |  |
+| 24 | `AA.STMT.NEW.STMT.NO` | `AaPrdPrfStatement_NewStmtNo` |  |  |  |
+| 25 | `AA.STMT.RESERVED.7` | `AaPrdPrfStatement_Reserved7` |  |  |  |
+| 26 | `AA.STMT.INTRA.EFFECTIVE.DATE` | `AaPrdPrfStatement_IntraEffectiveDate` |  |  |  |
+| 27 | `AA.STMT.RATE.INFO.RTN` | `AaPrdPrfStatement_RateInfoRtn` |  |  |  |
+| 28 | `AA.STMT.STMT.INFO.PROPERTY` | `AaPrdPrfStatement_StmtInfoProperty` |  |  |  |
+| 29 | `AA.STMT.INT.STMT.NAME` | `AaPrdPrfStatement_IntStmtName` |  |  |  |
+| 30 | `AA.STMT.INT.STMT.PROPERTY` | `AaPrdPrfStatement_IntStmtProperty` |  |  |  |
+| 31 | `AA.STMT.INT.STMT.FREQ` | `AaPrdPrfStatement_IntStmtFreq` |  |  |  |
+| 32 | `AA.STMT.RESERVED.6` | `AaPrdPrfStatement_Reserved6` |  |  |  |
+| 33 | `AA.STMT.RESERVED.5` | `AaPrdPrfStatement_Reserved5` |  |  |  |
+| 34 | `AA.STMT.RESERVED.4` | `AaPrdPrfStatement_Reserved4` |  |  |  |
+| 35 | `AA.STMT.RESERVED.3` | `AaPrdPrfStatement_Reserved3` |  |  |  |
+| 36 | `AA.STMT.RESERVED.2` | `AaPrdPrfStatement_Reserved2` |  |  |  |
+| 37 | `AA.STMT.RESERVED.1` | `AaPrdPrfStatement_Reserved1` |  |  |  |
+| 38 | `AA.STMT.LOCAL.REF` | `AaPrdPrfStatement_LocalRef` |  |  |  |
+| 39 | `AA.STMT.PR.ATTRIBUTE` | `AaPrdPrfStatement_PrAttribute` |  |  |  |
+| 40 | `AA.STMT.PR.VALUE` | `AaPrdPrfStatement_PrValue` |  |  |  |
+| 41 | `AA.STMT.PR.BRK.RES` | `AaPrdPrfStatement_PrBrkRes` |  |  |  |
+| 42 | `AA.STMT.PR.BRK.MSG` | `AaPrdPrfStatement_PrBrkMsg` |  |  |  |
+| 43 | `AA.STMT.PR.BRK.CHARGE` | `AaPrdPrfStatement_PrBrkCharge` |  |  |  |
+| 44 | `AA.STMT.PR.RESERVED.3` | `AaPrdPrfStatement_PrReserved3` |  |  |  |
+| 45 | `AA.STMT.PR.RESERVED.2` | `AaPrdPrfStatement_PrReserved2` |  |  |  |
+| 46 | `AA.STMT.PR.RESERVED.1` | `AaPrdPrfStatement_PrReserved1` |  |  |  |
+| 47 | `AA.STMT.PR.APP.METHOD` | `AaPrdPrfStatement_PrAppMethod` |  |  |  |
+| 48 | `AA.STMT.PR.APP.PERIOD` | `AaPrdPrfStatement_PrAppPeriod` |  |  |  |
+| 49 | `AA.STMT.SYS.RESERVE7` | `AaPrdPrfStatement_SysReserve7` |  |  |  |
+| 50 | `AA.STMT.SYS.RESERVE6` | `AaPrdPrfStatement_SysReserve6` |  |  |  |
+| 51 | `AA.STMT.OWNING.COMPANY` | `AaPrdPrfStatement_OwningCompany` |  |  |  |
+| 52 | `AA.STMT.SYS.RESERVE4` | `AaPrdPrfStatement_SysReserve4` |  |  |  |
+| 53 | `AA.STMT.SYS.RESERVE3` | `AaPrdPrfStatement_SysReserve3` |  |  |  |
+| 54 | `AA.STMT.SYS.RESERVE2` | `AaPrdPrfStatement_SysReserve2` |  |  |  |
+| 55 | `AA.STMT.SYS.RESERVE1` | `AaPrdPrfStatement_SysReserve1` |  |  |  |
+| 56 | `AA.STMT.DEFAULT.ATTR.OPTION` | `AaPrdPrfStatement_DefaultAttrOption` |  |  |  |
+| 57 | `AA.STMT.DEFAULT.NEGOTIABLE` | `AaPrdPrfStatement_DefaultNegotiable` |  |  |  |
+| 58 | `AA.STMT.NR.ATTRIBUTE` | `AaPrdPrfStatement_NrAttribute` |  |  |  |
+| 59 | `AA.STMT.NR.OPTIONS` | `AaPrdPrfStatement_NrOptions` |  |  |  |
+| 60 | `AA.STMT.NR.RESERVED2` | `AaPrdPrfStatement_NrReserved2` |  |  |  |
+| 61 | `AA.STMT.NR.RESERVED1` | `AaPrdPrfStatement_NrReserved1` |  |  |  |
+| 62 | `AA.STMT.NR.STD.COMP` | `AaPrdPrfStatement_NrStdComp` |  |  |  |
+| 63 | `AA.STMT.NR.TYPE` | `AaPrdPrfStatement_NrType` |  |  |  |
+| 64 | `AA.STMT.NR.VALUE` | `AaPrdPrfStatement_NrValue` |  |  |  |
+| 65 | `AA.STMT.NR.MESSAGE` | `AaPrdPrfStatement_NrMessage` |  |  |  |
+| 66 | `AA.STMT.CHANGED.FIELDS` | `AaPrdPrfStatement_ChangedFields` |  |  |  |
+| 67 | `AA.STMT.NEGOTIATED.FLDS` | `AaPrdPrfStatement_NegotiatedFlds` |  |  |  |
+| 68 | `AA.STMT.ID.COMP.1` | `AaPrdPrfStatement_IdComp1` |  |  |  |
+| 69 | `AA.STMT.ID.COMP.2` | `AaPrdPrfStatement_IdComp2` |  |  |  |
+| 70 | `AA.STMT.ID.COMP.3` | `AaPrdPrfStatement_IdComp3` |  |  |  |
+| 71 | `AA.STMT.ID.COMP.4` | `AaPrdPrfStatement_IdComp4` |  |  |  |
+| 72 | `AA.STMT.ID.COMP.5` | `AaPrdPrfStatement_IdComp5` |  |  |  |
+| 73 | `AA.STMT.ID.COMP.6` | `AaPrdPrfStatement_IdComp6` |  |  |  |
+| 74 | `AA.STMT.RESERVED2.ID` | `AaPrdPrfStatement_Reserved2Id` |  |  |  |
+| 75 | `AA.STMT.TARGET.PRODUCT` | `AaPrdPrfStatement_TargetProduct` |  |  |  |
+| 76 | `AA.STMT.STMT.NOS` | `AaPrdPrfStatement_StmtNos` |  |  |  |
+| 77 | `AA.STMT.OVERRIDE` | `AaPrdPrfStatement_Override` |  |  |  |
+| 78 | `AA.STMT.RECORD.STATUS` | `AaPrdPrfStatement_RecordStatus` |  |  |  |
+| 79 | `AA.STMT.CURR.NO` | `AaPrdPrfStatement_CurrNo` |  |  |  |
+| 80 | `AA.STMT.INPUTTER` | `AaPrdPrfStatement_Inputter` |  |  |  |
+| 81 | `AA.STMT.DATE.TIME` | `AaPrdPrfStatement_DateTime` |  |  |  |
+| 82 | `AA.STMT.AUTHORISER` | `AaPrdPrfStatement_Authoriser` |  |  |  |
+| 83 | `AA.STMT.CO.CODE` | `AaPrdPrfStatement_CoCode` |  |  |  |
+| 84 | `AA.STMT.DEPT.CODE` | `AaPrdPrfStatement_DeptCode` |  |  |  |
+| 85 | `AA.STMT.AUDITOR.CODE` | `AaPrdPrfStatement_AuditorCode` |  |  |  |
+| 86 | `AA.STMT.AUDIT.DATE.TIME` | `AaPrdPrfStatement_AuditDateTime` |  |  |  |

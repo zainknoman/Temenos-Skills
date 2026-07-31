@@ -53,7 +53,7 @@ Type:
 
 > "List the available T24 sub-skills"
 
-You should see t24-dev, infobasic, temenos-l3-java, jbc-componentise, temenos-de.
+You should see temenos-dev, temenos-infobasic, temenos-l3, temenos-jbc, temenos-de.
 
 ---
 
@@ -64,10 +64,10 @@ Open a terminal in VS Code (Ctrl+`) and run:
 ```bash
 pip install javatools
 python pipeline/extract.py --jars jar --cache cache --workers 8
-python pipeline/aggregate.py --cache cache --out skills/t24-dev/references
+python pipeline/aggregate.py --cache cache --out skills/temenos-dev/references
 ```
 
-After this, `skills/t24-dev/references/` will be populated with the real class indexes.
+After this, `skills/temenos-dev/references/` will be populated with the real class indexes.
 
 ---
 
@@ -80,7 +80,7 @@ You can now give Claude Code requirements like:
 
 Claude Code will:
 1. Load CLAUDE.md context automatically
-2. Activate the infobasic sub-skill
+2. Activate the temenos-infobasic sub-skill
 3. Look up the CUSTOMER field schema
 4. Verify NATIONALITY exists before writing code
 5. Generate a complete, compilable VVR with header, $PACKAGE, error handling

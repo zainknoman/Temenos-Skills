@@ -3,11 +3,11 @@
 aggregate.py — Phase 2 of the Temenos T24 knowledge pipeline.
 
 Reads all JSON cache files produced by extract.py, merges them into
-a set of structured Markdown reference files that the t24-dev skill
+a set of structured Markdown reference files that the temenos-dev skill
 loads at code-generation time.
 
 Usage:
-    python aggregate.py --cache cache --out skills/t24-dev/references
+    python aggregate.py --cache cache --out skills/temenos-dev/references
 
 Output files (all relative to --out):
     classes/class-index.md          — master index: all 77k+ classes

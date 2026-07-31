@@ -1,0 +1,90 @@
+# AA.PROXY.PERMISSIONS — Table Schema
+
+> Source: `INSERTS/I_F.AA.PROXY.PERMISSIONS` in `AP_ARC.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.PXY.PER.ACTIVITY` | `AaArrProxyPermissions_Activity` |  |  |  |
+| 2 | `AA.PXY.PER.ACTION` | `AaArrProxyPermissions_Action` |  |  |  |
+| 3 | `AA.PXY.PER.PROXY` | `AaArrProxyPermissions_Proxy` |  |  |  |
+| 4 | `AA.PXY.PER.ACCT.CAT` | `AaArrProxyPermissions_AcctCat` |  |  |  |
+| 5 | `AA.PXY.PER.ACCT.CAT.SEE` | `AaArrProxyPermissions_AcctCatSee` |  |  |  |
+| 6 | `AA.PXY.PER.ACCOUNT` | `AaArrProxyPermissions_Account` |  |  |  |
+| 7 | `AA.PXY.PER.ACCT.SEE` | `AaArrProxyPermissions_AcctSee` |  |  |  |
+| 8 | `AA.PXY.PER.ACCT.EXCLUDE` | `AaArrProxyPermissions_AcctExclude` |  |  |  |
+| 9 | `AA.PXY.PER.PROD.GRP` | `AaArrProxyPermissions_ProdGrp` |  |  |  |
+| 10 | `AA.PXY.PER.PROD.GRP.SEE` | `AaArrProxyPermissions_ProdGrpSee` |  |  |  |
+| 11 | `AA.PXY.PER.PROD` | `AaArrProxyPermissions_Prod` |  |  |  |
+| 12 | `AA.PXY.PER.PROD.SEE` | `AaArrProxyPermissions_ProdSee` |  |  |  |
+| 13 | `AA.PXY.PER.PROD.EXCLUDE` | `AaArrProxyPermissions_ProdExclude` |  |  |  |
+| 14 | `AA.PXY.PER.ARRANGEMENT` | `AaArrProxyPermissions_Arrangement` |  |  |  |
+| 15 | `AA.PXY.PER.ARRGT.SEE` | `AaArrProxyPermissions_ArrgtSee` |  |  |  |
+| 16 | `AA.PXY.PER.ARRGT.EXCLUDE` | `AaArrProxyPermissions_ArrgtExclude` |  |  |  |
+| 17 | `AA.PXY.PER.CONTRACT` | `AaArrProxyPermissions_Contract` |  |  |  |
+| 18 | `AA.PXY.PER.CONTRACT.SEE` | `AaArrProxyPermissions_ContractSee` |  |  |  |
+| 19 | `AA.PXY.PER.PORT.MAN.ACCT` | `AaArrProxyPermissions_PortManAcct` |  |  |  |
+| 20 | `AA.PXY.PER.PORT.MAN.ACCT.SEE` | `AaArrProxyPermissions_PortManAcctSee` |  |  |  |
+| 21 | `AA.PXY.PER.PORTFOLIO` | `AaArrProxyPermissions_Portfolio` |  |  |  |
+| 22 | `AA.PXY.PER.PORTFOLIO.SEE` | `AaArrProxyPermissions_PortfolioSee` |  |  |  |
+| 23 | `AA.PXY.PER.PORTFOLIO.EXCLUDE` | `AaArrProxyPermissions_PortfolioExclude` |  |  |  |
+| 24 | `AA.PXY.PER.RESERVED10` | `AaArrProxyPermissions_Reserved10` |  |  |  |
+| 25 | `AA.PXY.PER.RESERVED9` | `AaArrProxyPermissions_Reserved9` |  |  |  |
+| 26 | `AA.PXY.PER.RESERVED8` | `AaArrProxyPermissions_Reserved8` |  |  |  |
+| 27 | `AA.PXY.PER.RESERVED7` | `AaArrProxyPermissions_Reserved7` |  |  |  |
+| 28 | `AA.PXY.PER.RESERVED6` | `AaArrProxyPermissions_Reserved6` |  |  |  |
+| 29 | `AA.PXY.PER.RESERVED5` | `AaArrProxyPermissions_Reserved5` |  |  |  |
+| 30 | `AA.PXY.PER.RESERVED4` | `AaArrProxyPermissions_Reserved4` |  |  |  |
+| 31 | `AA.PXY.PER.RESERVED3` | `AaArrProxyPermissions_Reserved3` |  |  |  |
+| 32 | `AA.PXY.PER.RESERVED2` | `AaArrProxyPermissions_Reserved2` |  |  |  |
+| 33 | `AA.PXY.PER.RESERVED1` | `AaArrProxyPermissions_Reserved1` |  |  |  |
+| 34 | `AA.PXY.PER.LOCAL.REF` | `AaArrProxyPermissions_LocalRef` |  |  |  |
+| 35 | `AA.PXY.PER.PR.ATTRIBUTE` | `AaArrProxyPermissions_PrAttribute` |  |  |  |
+| 36 | `AA.PXY.PER.PR.VALUE` | `AaArrProxyPermissions_PrValue` |  |  |  |
+| 37 | `AA.PXY.PER.PR.BRK.RES` | `AaArrProxyPermissions_PrBrkRes` |  |  |  |
+| 38 | `AA.PXY.PER.PR.BRK.MSG` | `AaArrProxyPermissions_PrBrkMsg` |  |  |  |
+| 39 | `AA.PXY.PER.PR.BRK.CHARGE` | `AaArrProxyPermissions_PrBrkCharge` |  |  |  |
+| 40 | `AA.PXY.PER.PR.RESERVED.3` | `AaArrProxyPermissions_PrReserved3` |  |  |  |
+| 41 | `AA.PXY.PER.PR.RESERVED.2` | `AaArrProxyPermissions_PrReserved2` |  |  |  |
+| 42 | `AA.PXY.PER.PR.RESERVED.1` | `AaArrProxyPermissions_PrReserved1` |  |  |  |
+| 43 | `AA.PXY.PER.PR.APP.METHOD` | `AaArrProxyPermissions_PrAppMethod` |  |  |  |
+| 44 | `AA.PXY.PER.PR.APP.PERIOD` | `AaArrProxyPermissions_PrAppPeriod` |  |  |  |
+| 45 | `AA.PXY.PER.SYS.RESERVE7` | `AaArrProxyPermissions_SysReserve7` |  |  |  |
+| 46 | `AA.PXY.PER.SYS.RESERVE6` | `AaArrProxyPermissions_SysReserve6` |  |  |  |
+| 47 | `AA.PXY.PER.OWNING.COMPANY` | `AaArrProxyPermissions_OwningCompany` |  |  |  |
+| 48 | `AA.PXY.PER.API.ATTRIBUTE` | `AaArrProxyPermissions_ApiAttribute` |  |  |  |
+| 49 | `AA.PXY.PER.SYS.RESERVE3` | `AaArrProxyPermissions_SysReserve3` |  |  |  |
+| 50 | `AA.PXY.PER.SYS.RESERVE2` | `AaArrProxyPermissions_SysReserve2` |  |  |  |
+| 51 | `AA.PXY.PER.SYS.RESERVE1` | `AaArrProxyPermissions_SysReserve1` |  |  |  |
+| 52 | `AA.PXY.PER.DEFAULT.ATTR.OPTION` | `AaArrProxyPermissions_DefaultAttrOption` |  |  |  |
+| 53 | `AA.PXY.PER.DEFAULT.NEGOTIABLE` | `AaArrProxyPermissions_DefaultNegotiable` |  |  |  |
+| 54 | `AA.PXY.PER.NR.ATTRIBUTE` | `AaArrProxyPermissions_NrAttribute` |  |  |  |
+| 55 | `AA.PXY.PER.NR.OPTIONS` | `AaArrProxyPermissions_NrOptions` |  |  |  |
+| 56 | `A.PXY.PER.NR.ATTRIBUTE.RULE` | `AaArrProxyPermissions_NrAttributeRule` |  |  |  |
+| 57 | `AA.PXY.PER.NR.VALUE.SOURCE` | `AaArrProxyPermissions_NrValueSource` |  |  |  |
+| 58 | `AA.PXY.PER.NR.STD.COMP` | `AaArrProxyPermissions_NrStdComp` |  |  |  |
+| 59 | `AA.PXY.PER.NR.TYPE` | `AaArrProxyPermissions_NrType` |  |  |  |
+| 60 | `AA.PXY.PER.NR.VALUE` | `AaArrProxyPermissions_NrValue` |  |  |  |
+| 61 | `AA.PXY.PER.NR.MESSAGE` | `AaArrProxyPermissions_NrMessage` |  |  |  |
+| 62 | `AA.PXY.PER.CHANGED.FIELDS` | `AaArrProxyPermissions_ChangedFields` |  |  |  |
+| 63 | `AA.PXY.PER.NEGOTIATED.FLDS` | `AaArrProxyPermissions_NegotiatedFlds` |  |  |  |
+| 64 | `AA.PXY.PER.ID.COMP.1` | `AaArrProxyPermissions_IdComp1` |  |  |  |
+| 65 | `AA.PXY.PER.ID.COMP.2` | `AaArrProxyPermissions_IdComp2` |  |  |  |
+| 66 | `AA.PXY.PER.ID.COMP.3` | `AaArrProxyPermissions_IdComp3` |  |  |  |
+| 67 | `AA.PXY.PER.ID.COMP.4` | `AaArrProxyPermissions_IdComp4` |  |  |  |
+| 68 | `AA.PXY.PER.ID.COMP.5` | `AaArrProxyPermissions_IdComp5` |  |  |  |
+| 69 | `AA.PXY.PER.ID.COMP.6` | `AaArrProxyPermissions_IdComp6` |  |  |  |
+| 70 | `AA.PXY.PER.RESERVED2.ID` | `AaArrProxyPermissions_Reserved2Id` |  |  |  |
+| 71 | `AA.PXY.PER.TARGET.PRODUCT` | `AaArrProxyPermissions_TargetProduct` |  |  |  |
+| 72 | `AA.PXY.PER.STMT.NOS` | `AaArrProxyPermissions_StmtNos` |  |  |  |
+| 73 | `AA.PXY.PER.OVERRIDE` | `AaArrProxyPermissions_Override` |  |  |  |
+| 74 | `AA.PXY.PER.RECORD.STATUS` | `AaArrProxyPermissions_RecordStatus` |  |  |  |
+| 75 | `AA.PXY.PER.CURR.NO` | `AaArrProxyPermissions_CurrNo` |  |  |  |
+| 76 | `AA.PXY.PER.INPUTTER` | `AaArrProxyPermissions_Inputter` |  |  |  |
+| 77 | `AA.PXY.PER.DATE.TIME` | `AaArrProxyPermissions_DateTime` |  |  |  |
+| 78 | `AA.PXY.PER.AUTHORISER` | `AaArrProxyPermissions_Authoriser` |  |  |  |
+| 79 | `AA.PXY.PER.CO.CODE` | `AaArrProxyPermissions_CoCode` |  |  |  |
+| 80 | `AA.PXY.PER.DEPT.CODE` | `AaArrProxyPermissions_DeptCode` |  |  |  |
+| 81 | `AA.PXY.PER.AUDITOR.CODE` | `AaArrProxyPermissions_AuditorCode` |  |  |  |
+| 82 | `AA.PXY.PER.AUDIT.DATE.TIME` | `AaArrProxyPermissions_AuditDateTime` |  |  |  |

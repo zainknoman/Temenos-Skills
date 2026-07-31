@@ -1,0 +1,93 @@
+# AA.SPLITS.MERGES — Table Schema
+
+> Source: `INSERTS/I_F.AA.SPLITS.MERGES` in `AA_SplitsMerges.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.SAM.ACTIVITY` | `AaSimSplitsMerges_Activity` |  |  |  |
+| 2 | `AA.SAM.ACTION` | `AaSimSplitsMerges_Action` |  |  |  |
+| 3 | `AA.SAM.ROLLOVER.TYPE` | `AaSimSplitsMerges_RolloverType` |  |  |  |
+| 4 | `AA.SAM.SOURCE.ARRANGEMENT` | `AaSimSplitsMerges_SourceArrangement` |  |  |  |
+| 5 | `AA.SAM.SOURCE.ARR.PRODUCT` | `AaSimSplitsMerges_SourceArrProduct` |  |  |  |
+| 6 | `AA.SAM.SOURCE.CURRENCY` | `AaSimSplitsMerges_SourceCurrency` |  |  |  |
+| 7 | `AA.SAM.OUTSTANDING.PRINCIPAL` | `AaSimSplitsMerges_OutstandingPrincipal` |  |  |  |
+| 8 | `AA.SAM.REPAY.AMOUNT` | `AaSimSplitsMerges_RepayAmount` |  |  |  |
+| 9 | `AA.SAM.SOURCE.ROLLOVER.AMT` | `AaSimSplitsMerges_SourceRolloverAmount` |  |  |  |
+| 10 | `AA.SAM.SOURCE.ROLLOVER.CHANGE.AMOUNT` | `AaSimSplitsMerges_SourceRolloverChangeAmount` |  |  |  |
+| 11 | `AA.SAM.RESERVED.19` | `AaSimSplitsMerges_Reserved19` |  |  |  |
+| 12 | `AA.SAM.RESERVED.18` | `AaSimSplitsMerges_Reserved18` |  |  |  |
+| 13 | `AA.SAM.RESERVED.17` | `AaSimSplitsMerges_Reserved17` |  |  |  |
+| 14 | `AA.SAM.RESERVED.16` | `AaSimSplitsMerges_Reserved16` |  |  |  |
+| 15 | `AA.SAM.TARGET.ARRANGEMENT` | `AaSimSplitsMerges_TargetArrangement` |  |  |  |
+| 16 | `AA.SAM.TARGET.ARR.PRODUCT` | `AaSimSplitsMerges_TargetArrProduct` |  |  |  |
+| 17 | `AA.SAM.TARGET.CURRENCY` | `AaSimSplitsMerges_TargetCurrency` |  |  |  |
+| 18 | `AA.SAM.TARGET.ROLLOVER.AMOUNT` | `AaSimSplitsMerges_TargetRolloverAmount` |  |  |  |
+| 19 | `AA.SAM.COMMITMENT.INCREASE` | `AaSimSplitsMerges_CommitmentIncrease` |  |  |  |
+| 20 | `AA.SAM.TOTAL.TARGET.AMOUNT` | `AaSimSplitsMerges_TotalTargetAmount` |  |  |  |
+| 21 | `AA.SAM.TARGET.REPRICING.PERIOD` | `AaSimSplitsMerges_TargetRepricingPeriod` |  |  |  |
+| 22 | `AA.SAM.TARGET.ROLLOVER.CHANGE.AMOUNT` | `AaSimSplitsMerges_TargetRolloverChangeAmount` |  |  |  |
+| 23 | `AA.SAM.RESERVED.14` | `AaSimSplitsMerges_Reserved14` |  |  |  |
+| 24 | `AA.SAM.RESERVED.13` | `AaSimSplitsMerges_Reserved13` |  |  |  |
+| 25 | `AA.SAM.RESERVED.12` | `AaSimSplitsMerges_Reserved12` |  |  |  |
+| 26 | `AA.SAM.RESERVED.11` | `AaSimSplitsMerges_Reserved11` |  |  |  |
+| 27 | `AA.SAM.RESERVED.10` | `AaSimSplitsMerges_Reserved10` |  |  |  |
+| 28 | `AA.SAM.RESERVED.9` | `AaSimSplitsMerges_Reserved9` |  |  |  |
+| 29 | `AA.SAM.RESERVED.8` | `AaSimSplitsMerges_Reserved8` |  |  |  |
+| 30 | `AA.SAM.RESERVED.7` | `AaSimSplitsMerges_Reserved7` |  |  |  |
+| 31 | `AA.SAM.RESERVED.6` | `AaSimSplitsMerges_Reserved6` |  |  |  |
+| 32 | `AA.SAM.RESERVED.5` | `AaSimSplitsMerges_Reserved5` |  |  |  |
+| 33 | `AA.SAM.RESERVED.4` | `AaSimSplitsMerges_Reserved4` |  |  |  |
+| 34 | `AA.SAM.RESERVED.3` | `AaSimSplitsMerges_Reserved3` |  |  |  |
+| 35 | `AA.SAM.RESERVED.2` | `AaSimSplitsMerges_Reserved2` |  |  |  |
+| 36 | `AA.SAM.RESERVED.1` | `AaSimSplitsMerges_Reserved1` |  |  |  |
+| 37 | `AA.SAM.LOCAL.REF` | `AaSimSplitsMerges_LocalRef` |  |  |  |
+| 38 | `AA.SAM.PR.ATTRIBUTE` | `AaSimSplitsMerges_PrAttribute` |  |  |  |
+| 39 | `AA.SAM.PR.VALUE` | `AaSimSplitsMerges_PrValue` |  |  |  |
+| 40 | `AA.SAM.PR.BRK.RES` | `AaSimSplitsMerges_PrBrkRes` |  |  |  |
+| 41 | `AA.SAM.PR.BRK.MSG` | `AaSimSplitsMerges_PrBrkMsg` |  |  |  |
+| 42 | `AA.SAM.PR.BRK.CHARGE` | `AaSimSplitsMerges_PrBrkCharge` |  |  |  |
+| 43 | `AA.SAM.PR.RESERVED.3` | `AaSimSplitsMerges_PrReserved3` |  |  |  |
+| 44 | `AA.SAM.PR.RESERVED.2` | `AaSimSplitsMerges_PrReserved2` |  |  |  |
+| 45 | `AA.SAM.PR.RESERVED.1` | `AaSimSplitsMerges_PrReserved1` |  |  |  |
+| 46 | `AA.SAM.PR.APP.METHOD` | `AaSimSplitsMerges_PrAppMethod` |  |  |  |
+| 47 | `AA.SAM.PR.APP.PERIOD` | `AaSimSplitsMerges_PrAppPeriod` |  |  |  |
+| 48 | `AA.SAM.SYS.RESERVE7` | `AaSimSplitsMerges_SysReserve7` |  |  |  |
+| 49 | `AA.SAM.SYS.RESERVE6` | `AaSimSplitsMerges_SysReserve6` |  |  |  |
+| 50 | `AA.SAM.OWNING.COMPANY` | `AaSimSplitsMerges_OwningCompany` |  |  |  |
+| 51 | `AA.SAM.API.ATTRIBUTE` | `AaSimSplitsMerges_ApiAttribute` |  |  |  |
+| 52 | `AA.SAM.SYS.RESERVE3` | `AaSimSplitsMerges_SysReserve3` |  |  |  |
+| 53 | `AA.SAM.SYS.RESERVE2` | `AaSimSplitsMerges_SysReserve2` |  |  |  |
+| 54 | `AA.SAM.SYS.RESERVE1` | `AaSimSplitsMerges_SysReserve1` |  |  |  |
+| 55 | `AA.SAM.DEFAULT.ATTR.OPTION` | `AaSimSplitsMerges_DefaultAttrOption` |  |  |  |
+| 56 | `AA.SAM.DEFAULT.NEGOTIABLE` | `AaSimSplitsMerges_DefaultNegotiable` |  |  |  |
+| 57 | `AA.SAM.NR.ATTRIBUTE` | `AaSimSplitsMerges_NrAttribute` |  |  |  |
+| 58 | `AA.SAM.NR.OPTIONS` | `AaSimSplitsMerges_NrOptions` |  |  |  |
+| 59 | `AA.SAM.NR.ATTRIBUTE.RULE` | `AaSimSplitsMerges_NrAttributeRule` |  |  |  |
+| 60 | `AA.SAM.NR.VALUE.SOURCE` | `AaSimSplitsMerges_NrValueSource` |  |  |  |
+| 61 | `AA.SAM.NR.STD.COMP` | `AaSimSplitsMerges_NrStdComp` |  |  |  |
+| 62 | `AA.SAM.NR.TYPE` | `AaSimSplitsMerges_NrType` |  |  |  |
+| 63 | `AA.SAM.NR.VALUE` | `AaSimSplitsMerges_NrValue` |  |  |  |
+| 64 | `AA.SAM.NR.MESSAGE` | `AaSimSplitsMerges_NrMessage` |  |  |  |
+| 65 | `AA.SAM.CHANGED.FIELDS` | `AaSimSplitsMerges_ChangedFields` |  |  |  |
+| 66 | `AA.SAM.NEGOTIATED.FLDS` | `AaSimSplitsMerges_NegotiatedFlds` |  |  |  |
+| 67 | `AA.SAM.ID.COMP.1` | `AaSimSplitsMerges_IdComp1` |  |  |  |
+| 68 | `AA.SAM.ID.COMP.2` | `AaSimSplitsMerges_IdComp2` |  |  |  |
+| 69 | `AA.SAM.ID.COMP.3` | `AaSimSplitsMerges_IdComp3` |  |  |  |
+| 70 | `AA.SAM.ID.COMP.4` | `AaSimSplitsMerges_IdComp4` |  |  |  |
+| 71 | `AA.SAM.ID.COMP.5` | `AaSimSplitsMerges_IdComp5` |  |  |  |
+| 72 | `AA.SAM.ID.COMP.6` | `AaSimSplitsMerges_IdComp6` |  |  |  |
+| 73 | `AA.SAM.RESERVED2.ID` | `AaSimSplitsMerges_Reserved2Id` |  |  |  |
+| 74 | `AA.SAM.TARGET.PRODUCT` | `AaSimSplitsMerges_TargetProduct` |  |  |  |
+| 75 | `AA.SAM.STMT.NOS` | `AaSimSplitsMerges_StmtNos` |  |  |  |
+| 76 | `AA.SAM.OVERRIDE` | `AaSimSplitsMerges_Override` |  |  |  |
+| 77 | `AA.SAM.RECORD.STATUS` | `AaSimSplitsMerges_RecordStatus` |  |  |  |
+| 78 | `AA.SAM.CURR.NO` | `AaSimSplitsMerges_CurrNo` |  |  |  |
+| 79 | `AA.SAM.INPUTTER` | `AaSimSplitsMerges_Inputter` |  |  |  |
+| 80 | `AA.SAM.DATE.TIME` | `AaSimSplitsMerges_DateTime` |  |  |  |
+| 81 | `AA.SAM.AUTHORISER` | `AaSimSplitsMerges_Authoriser` |  |  |  |
+| 82 | `AA.SAM.CO.CODE` | `AaSimSplitsMerges_CoCode` |  |  |  |
+| 83 | `AA.SAM.DEPT.CODE` | `AaSimSplitsMerges_DeptCode` |  |  |  |
+| 84 | `AA.SAM.AUDITOR.CODE` | `AaSimSplitsMerges_AuditorCode` |  |  |  |
+| 85 | `AA.SAM.AUDIT.DATE.TIME` | `AaSimSplitsMerges_AuditDateTime` |  |  |  |

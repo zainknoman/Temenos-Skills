@@ -1,0 +1,91 @@
+# AA.TERM.AMOUNT — Table Schema
+
+> Source: `INSERTS/I_F.AA.TERM.AMOUNT` in `AA_TermAmount.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.AMT.ACTIVITY` | `AaSimTermAmount_Activity` |  |  |  |
+| 2 | `AA.AMT.ACTION` | `AaSimTermAmount_Action` |  |  |  |
+| 3 | `AA.AMT.AMOUNT` | `AaSimTermAmount_Amount` |  |  |  |
+| 4 | `AA.AMT.CHANGE.AMOUNT` | `AaSimTermAmount_ChangeAmount` |  |  |  |
+| 5 | `AA.AMT.TERM` | `AaSimTermAmount_Term` |  |  |  |
+| 6 | `AA.AMT.REVOLVING` | `AaSimTermAmount_Revolving` |  |  |  |
+| 7 | `AA.AMT.UPDATE.COMMT.LIMIT` | `AaSimTermAmount_UpdateCommtLimit` |  |  |  |
+| 8 | `AA.AMT.MATURITY.DATE` | `AaSimTermAmount_MaturityDate` |  |  |  |
+| 9 | `AA.AMT.MAT.DATE.CONVENTION` | `AaSimTermAmount_MatDateConvention` |  |  |  |
+| 10 | `AA.AMT.TERM.TOL.DAYS` | `AaSimTermAmount_TermTolDays` |  |  |  |
+| 11 | `AA.AMT.COMMITMENT.DRAWDOWN` | `AaSimTermAmount_CommitmentDrawdown` |  |  |  |
+| 12 | `AA.AMT.ON.MATURITY` | `AaSimTermAmount_OnMaturity` |  |  |  |
+| 13 | `AA.AMT.CANCEL.PERIOD` | `AaSimTermAmount_CancelPeriod` |  |  |  |
+| 14 | `AA.AMT.COOLING.PERIOD` | `AaSimTermAmount_CoolingPeriod` |  |  |  |
+| 15 | `AA.AMT.FULL.COMMITTMENT.ACTIVITY` | `AaSimTermAmount_FullCommittmentActivity` |  |  |  |
+| 16 | `AA.AMT.TRANCHES` | `AaSimTermAmount_Tranches` |  |  |  |
+| 17 | `AA.AMT.TRANCHE.START.DATE` | `AaSimTermAmount_TrancheStartDate` |  |  |  |
+| 18 | `AA.AMT.TRANCHE.END.DATE` | `AaSimTermAmount_TrancheEndDate` |  |  |  |
+| 19 | `AA.AMT.TRANCHE.AMOUNT` | `AaSimTermAmount_TrancheAmount` |  |  |  |
+| 20 | `AA.AMT.AVAILABILITY.DATE` | `AaSimTermAmount_AvailabilityDate` |  |  |  |
+| 21 | `AA.AMT.LOCAL.REF` | `AaSimTermAmount_LocalRef` |  |  |  |
+| 22 | `AA.AMT.PR.ATTRIBUTE` | `AaSimTermAmount_PrAttribute` |  |  |  |
+| 23 | `AA.AMT.PR.VALUE` | `AaSimTermAmount_PrValue` |  |  |  |
+| 24 | `AA.AMT.PR.BRK.RES` | `AaSimTermAmount_PrBrkRes` |  |  |  |
+| 25 | `AA.AMT.PR.BRK.MSG` | `AaSimTermAmount_PrBrkMsg` |  |  |  |
+| 26 | `AA.AMT.PR.BRK.CHARGE` | `AaSimTermAmount_PrBrkCharge` |  |  |  |
+| 27 | `AA.AMT.PR.RESERVED.3` | `AaSimTermAmount_PrReserved3` |  |  |  |
+| 28 | `AA.AMT.PR.RESERVED.2` | `AaSimTermAmount_PrReserved2` |  |  |  |
+| 29 | `AA.AMT.PR.RESERVED.1` | `AaSimTermAmount_PrReserved1` |  |  |  |
+| 30 | `AA.AMT.PR.APP.METHOD` | `AaSimTermAmount_PrAppMethod` |  |  |  |
+| 31 | `AA.AMT.PR.APP.PERIOD` | `AaSimTermAmount_PrAppPeriod` |  |  |  |
+| 32 | `AA.AMT.SYS.RESERVE7` | `AaSimTermAmount_SysReserve7` |  |  |  |
+| 33 | `AA.AMT.SYS.RESERVE6` | `AaSimTermAmount_SysReserve6` |  |  |  |
+| 34 | `AA.AMT.OWNING.COMPANY` | `AaSimTermAmount_OwningCompany` |  |  |  |
+| 35 | `AA.AMT.API.ATTRIBUTE` | `AaSimTermAmount_ApiAttribute` |  |  |  |
+| 36 | `AA.AMT.SYS.RESERVE3` | `AaSimTermAmount_SysReserve3` |  |  |  |
+| 37 | `AA.AMT.SYS.RESERVE2` | `AaSimTermAmount_SysReserve2` |  |  |  |
+| 38 | `AA.AMT.SYS.RESERVE1` | `AaSimTermAmount_SysReserve1` |  |  |  |
+| 39 | `AA.AMT.DEFAULT.ATTR.OPTION` | `AaSimTermAmount_DefaultAttrOption` |  |  |  |
+| 40 | `AA.AMT.DEFAULT.NEGOTIABLE` | `AaSimTermAmount_DefaultNegotiable` |  |  |  |
+| 41 | `AA.AMT.NR.ATTRIBUTE` | `AaSimTermAmount_NrAttribute` |  |  |  |
+| 42 | `AA.AMT.NR.OPTIONS` | `AaSimTermAmount_NrOptions` |  |  |  |
+| 43 | `AA.AMT.NR.ATTRIBUTE.RULE` | `AaSimTermAmount_NrAttributeRule` |  |  |  |
+| 44 | `AA.AMT.NR.VALUE.SOURCE` | `AaSimTermAmount_NrValueSource` |  |  |  |
+| 45 | `AA.AMT.NR.STD.COMP` | `AaSimTermAmount_NrStdComp` |  |  |  |
+| 46 | `AA.AMT.NR.TYPE` | `AaSimTermAmount_NrType` |  |  |  |
+| 47 | `AA.AMT.NR.VALUE` | `AaSimTermAmount_NrValue` |  |  |  |
+| 48 | `AA.AMT.NR.MESSAGE` | `AaSimTermAmount_NrMessage` |  |  |  |
+| 49 | `AA.AMT.CHANGED.FIELDS` | `AaSimTermAmount_ChangedFields` |  |  |  |
+| 50 | `AA.AMT.NEGOTIATED.FLDS` | `AaSimTermAmount_NegotiatedFlds` |  |  |  |
+| 51 | `AA.AMT.ID.COMP.1` | `AaSimTermAmount_IdComp1` |  |  |  |
+| 52 | `AA.AMT.ID.COMP.2` | `AaSimTermAmount_IdComp2` |  |  |  |
+| 53 | `AA.AMT.ID.COMP.3` | `AaSimTermAmount_IdComp3` |  |  |  |
+| 54 | `AA.AMT.ID.COMP.4` | `AaSimTermAmount_IdComp4` |  |  |  |
+| 55 | `AA.AMT.ID.COMP.5` | `AaSimTermAmount_IdComp5` |  |  |  |
+| 56 | `AA.AMT.ID.COMP.6` | `AaSimTermAmount_IdComp6` |  |  |  |
+| 57 | `AA.AMT.RESERVED2.ID` | `AaSimTermAmount_Reserved2Id` |  |  |  |
+| 58 | `AA.AMT.TARGET.PRODUCT` | `AaSimTermAmount_TargetProduct` |  |  |  |
+| 59 | `AA.AMT.STMT.NOS` | `AaSimTermAmount_StmtNos` |  |  |  |
+| 60 | `AA.AMT.OVERRIDE` | `AaSimTermAmount_Override` |  |  |  |
+| 61 | `AA.AMT.RECORD.STATUS` | `AaSimTermAmount_RecordStatus` |  |  |  |
+| 62 | `AA.AMT.CURR.NO` | `AaSimTermAmount_CurrNo` |  |  |  |
+| 63 | `AA.AMT.INPUTTER` | `AaSimTermAmount_Inputter` |  |  |  |
+| 64 | `AA.AMT.DATE.TIME` | `AaSimTermAmount_DateTime` |  |  |  |
+| 65 | `AA.AMT.AUTHORISER` | `AaSimTermAmount_Authoriser` |  |  |  |
+| 66 | `AA.AMT.CO.CODE` | `AaSimTermAmount_CoCode` |  |  |  |
+| 67 | `AA.AMT.DEPT.CODE` | `AaSimTermAmount_DeptCode` |  |  |  |
+| 68 | `AA.AMT.AUDITOR.CODE` | `AaSimTermAmount_AuditorCode` |  |  |  |
+| 69 | `AA.AMT.AUDIT.DATE.TIME` | `AaSimTermAmount_AuditDateTime` |  |  |  |
+| 70 | `AA.AMT.MAT.DATE.TYPE` | `AaSimTermAmount_MatDateType` |  |  |  |
+| 71 | `AA.AMT.UPDATE.UTILISATION` | `AaSimTermAmount_UpdateUtilisation` |  |  |  |
+| 72 | `AA.AMT.UPDATE.COMMIT.ON.CAP` | `AaSimTermAmount_UpdateCommitOnCap` |  |  |  |
+| 73 | `AA.AMT.COMMITMENT.TYPE` | `AaSimTermAmount_CommitmentType` |  |  |  |
+| 74 | `AA.AMT.COMMT.START.DATE` | `AaSimTermAmount_CommtStartDate` |  |  |  |
+| 75 | `AA.AMT.COMMT.END.DATE` | `AaSimTermAmount_CommtEndDate` |  |  |  |
+| 76 | `AA.AMT.COMMT.AMOUNT` | `AaSimTermAmount_CommtAmount` |  |  |  |
+| 77 | `AA.AMT.RESERVED7` | `AaSimTermAmount_Reserved7` |  |  |  |
+| 78 | `AA.AMT.RESERVED8` | `AaSimTermAmount_Reserved8` |  |  |  |
+| 79 | `AA.AMT.FACILITY.TYPE` | `AaSimTermAmount_FacilityType` |  |  |  |
+| 80 | `AA.AMT.EXPIRY.DATE` | `AaSimTermAmount_ExpiryDate` |  |  |  |
+| 81 | `AA.AMT.EXPIRE.TO.MATURITY.PERIOD` | `AaSimTermAmount_ExpireToMaturityPeriod` |  |  |  |
+| 82 | `AA.AMT.FWD.ACCTING` | `AaSimTermAmount_FwdAccting` |  |  |  |
+| 83 | `AA.AMT.COMMITMENT.REVERSAL` | `AaSimTermAmount_CommitmentReversal` |  |  |  |

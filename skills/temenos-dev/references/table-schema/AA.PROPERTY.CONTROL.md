@@ -1,0 +1,89 @@
+# AA.PROPERTY.CONTROL — Table Schema
+
+> Source: `INSERTS/I_F.AA.PROPERTY.CONTROL` in `AA_PropertyControl.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.PCON.ACTIVITY` | `AaSimPropertyControl_Activity` |  |  |  |
+| 2 | `AA.PCON.ACTION` | `AaSimPropertyControl_Action` |  |  |  |
+| 3 | `AA.PCON.PRODUCT.GROUP` | `AaSimPropertyControl_ProductGroup` |  |  |  |
+| 4 | `AA.PCON.PRODUCT` | `AaSimPropertyControl_Product` |  |  |  |
+| 5 | `AA.PCON.PROPERTY.CLASS` | `AaSimPropertyControl_PropertyClass` |  |  |  |
+| 6 | `AA.PCON.PROPERTY` | `AaSimPropertyControl_Property` |  |  |  |
+| 7 | `AA.PCON.CURRENCY` | `AaSimPropertyControl_Currency` |  |  |  |
+| 8 | `AA.PCON.PROPERTY.CONDITION` | `AaSimPropertyControl_PropertyCondition` |  |  |  |
+| 9 | `AA.PCON.CONTROL.MASTER` | `AaSimPropertyControl_ControlMaster` |  |  |  |
+| 10 | `AA.PCON.CONTROL.SECONDARY` | `AaSimPropertyControl_ControlSecondary` |  |  |  |
+| 11 | `AA.PCON.RESERVED20` | `AaSimPropertyControl_Reserved20` |  |  |  |
+| 12 | `AA.PCON.RESERVED19` | `AaSimPropertyControl_Reserved19` |  |  |  |
+| 13 | `AA.PCON.RESERVED18` | `AaSimPropertyControl_Reserved18` |  |  |  |
+| 14 | `AA.PCON.RESERVED17` | `AaSimPropertyControl_Reserved17` |  |  |  |
+| 15 | `AA.PCON.SOURCE.PRODUCT` | `AaSimPropertyControl_SourceProduct` |  |  |  |
+| 16 | `AA.PCON.RESERVED15` | `AaSimPropertyControl_Reserved15` |  |  |  |
+| 17 | `AA.PCON.RESERVED14` | `AaSimPropertyControl_Reserved14` |  |  |  |
+| 18 | `AA.PCON.RESERVED13` | `AaSimPropertyControl_Reserved13` |  |  |  |
+| 19 | `AA.PCON.RESERVED12` | `AaSimPropertyControl_Reserved12` |  |  |  |
+| 20 | `AA.PCON.RESERVED11` | `AaSimPropertyControl_Reserved11` |  |  |  |
+| 21 | `AA.PCON.RESERVED10` | `AaSimPropertyControl_Reserved10` |  |  |  |
+| 22 | `AA.PCON.RESERVED9` | `AaSimPropertyControl_Reserved9` |  |  |  |
+| 23 | `AA.PCON.RESERVED8` | `AaSimPropertyControl_Reserved8` |  |  |  |
+| 24 | `AA.PCON.RESERVED7` | `AaSimPropertyControl_Reserved7` |  |  |  |
+| 25 | `AA.PCON.RESERVED6` | `AaSimPropertyControl_Reserved6` |  |  |  |
+| 26 | `AA.PCON.RESERVED5` | `AaSimPropertyControl_Reserved5` |  |  |  |
+| 27 | `AA.PCON.RESERVED4` | `AaSimPropertyControl_Reserved4` |  |  |  |
+| 28 | `AA.PCON.RESERVED3` | `AaSimPropertyControl_Reserved3` |  |  |  |
+| 29 | `AA.PCON.RESERVED2` | `AaSimPropertyControl_Reserved2` |  |  |  |
+| 30 | `AA.PCON.RESERVED1` | `AaSimPropertyControl_Reserved1` |  |  |  |
+| 31 | `AA.PCON.LOCAL.REF` | `AaSimPropertyControl_LocalRef` |  |  |  |
+| 32 | `AA.PCON.PR.ATTRIBUTE` | `AaSimPropertyControl_PrAttribute` |  |  |  |
+| 33 | `AA.PCON.PR.VALUE` | `AaSimPropertyControl_PrValue` |  |  |  |
+| 34 | `AA.PCON.PR.BRK.RES` | `AaSimPropertyControl_PrBrkRes` |  |  |  |
+| 35 | `AA.PCON.PR.BRK.MSG` | `AaSimPropertyControl_PrBrkMsg` |  |  |  |
+| 36 | `AA.PCON.PR.BRK.CHARGE` | `AaSimPropertyControl_PrBrkCharge` |  |  |  |
+| 37 | `AA.PCON.PR.RESERVED.3` | `AaSimPropertyControl_PrReserved3` |  |  |  |
+| 38 | `AA.PCON.PR.RESERVED.2` | `AaSimPropertyControl_PrReserved2` |  |  |  |
+| 39 | `AA.PCON.PR.RESERVED.1` | `AaSimPropertyControl_PrReserved1` |  |  |  |
+| 40 | `AA.PCON.PR.APP.METHOD` | `AaSimPropertyControl_PrAppMethod` |  |  |  |
+| 41 | `AA.PCON.PR.APP.PERIOD` | `AaSimPropertyControl_PrAppPeriod` |  |  |  |
+| 42 | `AA.PCON.SYS.RESERVE7` | `AaSimPropertyControl_SysReserve7` |  |  |  |
+| 43 | `AA.PCON.SYS.RESERVE6` | `AaSimPropertyControl_SysReserve6` |  |  |  |
+| 44 | `AA.PCON.OWNING.COMPANY` | `AaSimPropertyControl_OwningCompany` |  |  |  |
+| 45 | `AA.PCON.API.ATTRIBUTE` | `AaSimPropertyControl_ApiAttribute` |  |  |  |
+| 46 | `AA.PCON.SYS.RESERVE3` | `AaSimPropertyControl_SysReserve3` |  |  |  |
+| 47 | `AA.PCON.SYS.RESERVE2` | `AaSimPropertyControl_SysReserve2` |  |  |  |
+| 48 | `AA.PCON.SYS.RESERVE1` | `AaSimPropertyControl_SysReserve1` |  |  |  |
+| 49 | `AA.PCON.DEFAULT.ATTR.OPTION` | `AaSimPropertyControl_DefaultAttrOption` |  |  |  |
+| 50 | `AA.PCON.DEFAULT.NEGOTIABLE` | `AaSimPropertyControl_DefaultNegotiable` |  |  |  |
+| 51 | `AA.PCON.NR.ATTRIBUTE` | `AaSimPropertyControl_NrAttribute` |  |  |  |
+| 52 | `AA.PCON.NR.OPTIONS` | `AaSimPropertyControl_NrOptions` |  |  |  |
+| 53 | `AA.PCON.NR.ATTRIBUTE.RULE` | `AaSimPropertyControl_NrAttributeRule` |  |  |  |
+| 54 | `AA.PCON.NR.VALUE.SOURCE` | `AaSimPropertyControl_NrValueSource` |  |  |  |
+| 55 | `AA.PCON.NR.STD.COMP` | `AaSimPropertyControl_NrStdComp` |  |  |  |
+| 56 | `AA.PCON.NR.TYPE` | `AaSimPropertyControl_NrType` |  |  |  |
+| 57 | `AA.PCON.NR.VALUE` | `AaSimPropertyControl_NrValue` |  |  |  |
+| 58 | `AA.PCON.NR.MESSAGE` | `AaSimPropertyControl_NrMessage` |  |  |  |
+| 59 | `AA.PCON.CHANGED.FIELDS` | `AaSimPropertyControl_ChangedFields` |  |  |  |
+| 60 | `AA.PCON.NEGOTIATED.FLDS` | `AaSimPropertyControl_NegotiatedFlds` |  |  |  |
+| 61 | `AA.PCON.ID.COMP.1` | `AaSimPropertyControl_IdComp1` |  |  |  |
+| 62 | `AA.PCON.ID.COMP.2` | `AaSimPropertyControl_IdComp2` |  |  |  |
+| 63 | `AA.PCON.ID.COMP.3` | `AaSimPropertyControl_IdComp3` |  |  |  |
+| 64 | `AA.PCON.ID.COMP.4` | `AaSimPropertyControl_IdComp4` |  |  |  |
+| 65 | `AA.PCON.ID.COMP.5` | `AaSimPropertyControl_IdComp5` |  |  |  |
+| 66 | `AA.PCON.ID.COMP.6` | `AaSimPropertyControl_IdComp6` |  |  |  |
+| 67 | `AA.PCON.RESERVED2.ID` | `AaSimPropertyControl_Reserved2Id` |  |  |  |
+| 68 | `AA.PCON.TARGET.PRODUCT` | `AaSimPropertyControl_TargetProduct` |  |  |  |
+| 69 | `AA.PCON.STMT.NOS` | `AaSimPropertyControl_StmtNos` |  |  |  |
+| 70 | `AA.PCON.OVERRIDE` | `AaSimPropertyControl_Override` |  |  |  |
+| 71 | `AA.PCON.RECORD.STATUS` | `AaSimPropertyControl_RecordStatus` |  |  |  |
+| 72 | `AA.PCON.CURR.NO` | `AaSimPropertyControl_CurrNo` |  |  |  |
+| 73 | `AA.PCON.INPUTTER` | `AaSimPropertyControl_Inputter` |  |  |  |
+| 74 | `AA.PCON.DATE.TIME` | `AaSimPropertyControl_DateTime` |  |  |  |
+| 75 | `AA.PCON.AUTHORISER` | `AaSimPropertyControl_Authoriser` |  |  |  |
+| 76 | `AA.PCON.CO.CODE` | `AaSimPropertyControl_CoCode` |  |  |  |
+| 77 | `AA.PCON.DEPT.CODE` | `AaSimPropertyControl_DeptCode` |  |  |  |
+| 78 | `AA.PCON.AUDITOR.CODE` | `AaSimPropertyControl_AuditorCode` |  |  |  |
+| 79 | `AA.PCON.AUDIT.DATE.TIME` | `AaSimPropertyControl_AuditDateTime` |  |  |  |
+| 80 | `AA.PCON.EPP.PRODUCT.LINE` | `AaSimPropertyControl_EppProductLine` |  |  |  |
+| 81 | `AA.PCON.EPP.PRODUCT.GROUP` | `AaSimPropertyControl_EppProductGroup` |  |  |  |

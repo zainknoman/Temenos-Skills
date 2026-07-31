@@ -1,12 +1,17 @@
-# Temenos Skills — T24 JAR Analysis Pipeline
+# Temenos Skills — T24 Development Intelligence
 
-A two-phase Python pipeline that decompiles 2,050 Temenos T24 JAR files and parses existing T24 JavaDoc HTML to populate the `t24-dev` Claude skill with accurate, structured knowledge of the T24/Transact Java API.
+A Temenos T24/Transact customisation and operations skill system for Claude
+Code, backed by a three-layer knowledge base built from real T24 product
+JARs, JavaDoc, business-rule documentation, and a real installed R25 Model
+Bank — not invented field names, guessed API signatures, or guessed config.
 
 ---
 
 ## Install the Skills
 
-Install all five T24 skills into Claude Code:
+Install all ten T24 skills into Claude Code — four code-generation sub-skills
+plus `temenos-dev` itself, and five domain/operations skills (admin, migration,
+integration, devsecops, architecture):
 
 ```
 /plugin marketplace add zainknoman/Temenos-Skills
@@ -19,64 +24,243 @@ Or browse and install from the Claude Code plugin directory:
 Once installed, the skills activate automatically when you work on T24 artifacts. You can also invoke the entry-point skill directly:
 
 ```
-/t24-dev
+/temenos-dev
+```
+
+| Scope | How |
+|-------|-----|
+| Current project only | Run the install commands inside that project directory |
+| All projects (global) | Install from the Claude.ai admin settings directory — applies org-wide |
+
+Skills live under `~/.claude/plugins/` after install.
+
+---
+
+## How to Use After Install
+
+**Auto-trigger (passive)** — skills detect context from your words, just describe what you're building:
+
+> "Write a RecordLifecycle hook for CUSTOMER validation"
+> "Create a jBC component to read ACCOUNT balance"
+> "Write a VVR routine for FUNDS.TRANSFER"
+
+Claude routes automatically:
+- RecordLifecycle / ActivityLifecycle / Java hook → `temenos-l3`
+- $PACKAGE / .b file / .component → `temenos-jbc`
+- VVR / VIR / VAR / Infobasic → `temenos-infobasic`
+- DE handoff / ApplicationHandoff → `temenos-de`
+
+The five domain/operations skills auto-trigger the same way, on their own
+description keywords — they aren't code-generation artefacts, so they sit
+alongside `temenos-dev` rather than being routed through it:
+
+> "Why does my compile fail with a tools.jar error?"
+> "What directories does a TAFJ patch touch?"
+> "List the ESB payment-integration packages"
+> "How do I set up the JBC precompiler / remote debugger?"
+> "Explain the T24 componentisation model"
+
+- Install/runtime/config/observability → `temenos-admin`
+- Patch/upgrade/ChangeSet installation → `temenos-migration`
+- ESB/integration packages, MQ/JMS, Email/SMS → `temenos-integration`
+- Build/test/debug tooling, security, multi-tenancy → `temenos-devsecops`
+- Componentisation architecture, package/routine structure → `temenos-architect`
+
+**Manual invoke (explicit):**
+
+```
+/temenos-dev         ← master entry point, routes to code-gen sub-skills
+/temenos-infobasic   ← Infobasic/jBASE BASIC direct
+/temenos-l3          ← L3 Java hooks direct
+/temenos-jbc         ← jBC component workflow direct
+/temenos-de          ← Delivery Engine direct
+/temenos-admin       ← install, runtime config, DB/app-server admin
+/temenos-migration   ← patching, version upgrade, ChangeSet installs
+/temenos-integration ← ESB/non-ESB packages, service extensions, MQ/JMS
+/temenos-devsecops   ← build/test/debug tooling, security, multi-tenancy
+/temenos-architect   ← componentisation architecture, package structure
 ```
 
 ---
 
-## What Was Built
+## Knowledge Base: Three Layers
 
-### The Problem
+The skill never invents a T24 field name or API signature — everything is
+verified against a knowledge base built from real T24 artifacts.
 
-The `t24-dev` Claude skill ships with 30 reference stub files containing `(populate)` placeholders. Without real API knowledge, Claude cannot reliably write correct T24 hook implementations, know which JAR a class lives in, or validate method signatures.
+| Layer | What | Built from | Query |
+|-------|------|------------|-------|
+| **A — exact lookup** | Field name, position, Java alias, type/mandatory/description per T24 application | `INSERTS/I_F.*` inside the JARs + JavaDoc HTML | `skills/temenos-dev/references/table-schema/<APP>.md`, or `pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER"` |
+| **B — semantic search** | Business rules and module documentation ("what controls dormancy in ACCOUNT?") | T24 PDF documentation, chunked and TF-IDF embedded (fully offline, no model download) | `pipeline/query_docs.py "<question>" [--topic ACCOUNT]` |
+| **C — skill context** | Routine templates, coding standards, hook patterns, API examples | Curated + JAR/JavaDoc extraction | `skills/*/references/*.md`, loaded automatically at generation time |
 
-### The Solution
+Layer A is the ground truth for field names — if a field isn't in
+`table-schema/<APP>.md`, the skill halts and asks rather than guessing (see
+[Field Verification Gate](#field-verification-gate) below).
 
-A pipeline that reads the actual T24 product JARs and JavaDoc and generates populated reference files that Claude loads when answering T24 questions.
+An optional MCP server (`mcp_server/server.py`) exposes Layer A/B as
+structured tool calls instead of file reads — see [MCP Server](#mcp-server-optional).
+
+---
+
+## Pipeline
 
 ```
-jar/t24lib/          T24.javadoc/
-  (2,050 JARs)         (35,222 HTML)
-       |                     |
-       v                     v
-   Phase 1: extract.py  ──────────────>  cache/*.json
-                                              |
-                                              v
-                                    Phase 2: aggregate.py
-                                              |
-                                              v
-                                    skills/t24-dev/references/
+jar/                    T24.javadoc/              docs/
+  (T24 product JARs)      (JavaDoc HTML)             (T24 PDF documentation)
+       |                        |                          |
+       v                        v                          v
+  extract.py            insert_parse.py            pdf_extract.py
+  (Phase 1: classes)    (Phase 1b: field schema)    (Phase 1d: chunk + embed)
+       |                        |                          |
+       v                        v                          v
+   cache/*.json         temenos_knowledge.db          vectordb/
+                          (table `fields`)          (Chroma, TF-IDF)
+       |                        ^
+       v                        |
+  aggregate.py           html_parse.py
+  (Phase 2: reference    (Phase 1c: backfill
+   markdown)              type/mandatory/desc)
+       |
+       v
+  skills/temenos-dev/references/
 ```
 
 ### Results
 
 | Metric | Value |
 |--------|-------|
-| JARs processed | 2,050 / 2,050 (0 errors) |
+| JARs processed | 2,050 |
 | Classes extracted | 77,762 |
-| JavaDoc pages parsed | 387 |
-| Reference files populated | 20 / 30 |
+| T24 fields catalogued (Layer A) | 162,842, across 4,596 applications |
+| Fields enriched with type/mandatory/description | 96,159 (59% — remainder are MV fields with no no-arg getter, or apps with no `Record.html`) |
+| Business-rule PDFs indexed (Layer B) | 3,534 — 3,481 from the original training/doc archive (4 corrupt source files skipped) + 53 official Temenos install/admin/migration/integration/devsecops/componentisation PDFs added 2026-07-31 from a real installed R25 Model Bank's `TAFJ_HOME/doc` |
+| Vector chunks embedded | 32,507 |
 | Cache size | ~620 MB (incremental, SHA-256 hashed) |
-| Phase 1 first-run time | ~90 min (subsequent runs: ~2 min, incremental) |
-| Phase 2 run time | ~2 min |
-| Test suite | 89 / 89 passing |
 
-The 10 remaining stub files (ATM, Customer, Deposits, TPH, OFS API, object relationships, architecture diagrams) require manual curation — they cover areas not derivable from JAR bytecode alone.
+`jar/`, `T24.javadoc/`, and `docs/` are not shipped in this repo (large
+binaries) — supply your own T24 product JARs, JavaDoc HTML export, and PDF
+documentation to regenerate the knowledge base for your release.
+
+The 53 R25-sourced PDFs live under five new topic folders —
+`docs/TAFJ-Admin/`, `docs/TAFJ-Migration/`, `docs/TAFJ-Integration/`,
+`docs/TAFJ-DevSecOps/`, `docs/T24-Componentisation/` — queryable the same
+way as any other topic: `pipeline/query_docs.py "<question>" --topic TAFJ-Admin`.
+See `plan/state/r25-scan-report.md` for the full recon of what was and
+wasn't indexed (e.g. `bnk/t24lib`'s compiled JARs and the 8.7GB
+`3rdParty/Database/MBR25.bak` were deliberately excluded).
+
+---
+
+## The Knowledge DB
+
+`temenos_knowledge.db` lives at the repo root — gitignored, regenerable, not committed.
+
+Tables:
+- `classes` — Java API classes: qualified name, package, jar, module
+- `methods` — method name/params/return per class
+- `fields` — T24 field name, position, Java alias, source jar, plus `field_type` / `mandatory` / `description` where backfilled from JavaDoc
+- `*_fts` — full-text search indexes on classes/methods
+
+### Querying
+
+```bash
+sqlite3 temenos_knowledge.db
+
+-- all fields for an app, in position order
+SELECT position, field_name, java_alias, field_type, mandatory FROM fields WHERE app='ACCOUNT' ORDER BY position;
+
+-- does a field exist anywhere?
+SELECT app, position FROM fields WHERE field_name='AC.CUSTOMER';
+
+-- find a class
+SELECT qualified, jar FROM classes WHERE simple_name='AaArrAccountRecord';
+
+-- methods on a class
+SELECT name, params_json FROM methods WHERE class_qualified LIKE '%ActivityLifecycle';
+
+-- full-text search across class descriptions
+SELECT * FROM classes_fts WHERE classes_fts MATCH 'validation';
+```
+
+```python
+import sqlite3
+conn = sqlite3.connect("temenos_knowledge.db")
+rows = conn.execute("SELECT * FROM fields WHERE app=?", ("CUSTOMER",)).fetchall()
+```
+
+---
+
+## Field Verification Gate
+
+Every field the skill uses in generated code is checked mechanically, not
+eyeballed:
+
+```bash
+python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGORY"
+```
+
+Exit 0 = every field verified (prints position/alias/type/mandatory for
+each). Exit 1 = at least one field not found, with the exact missing names
+listed — the skill halts and asks rather than guessing.
+
+---
+
+## MCP Server (optional)
+
+`mcp_server/server.py` exposes the knowledge base as two MCP tools:
+
+- `lookup_fields(app)` — Layer A field lookup (same data as `table-schema/<APP>.md`)
+- `search_rules(query, topic=None, n_results=5)` — Layer B semantic search
+
+This is an accelerator, not a dependency — the skill works with zero setup
+by reading `table-schema/*.md` and running `pipeline/query_docs.py` /
+`pipeline/validate_fields.py` directly. Register it only if you want
+structured tool calls instead:
+
+```bash
+claude mcp add t24-knowledge -- python mcp_server/server.py
+```
 
 ---
 
 ## Skill Architecture
 
-`t24-dev` is the single entry point. It detects context and delegates to one of four specialist sub-skills:
+`temenos-dev` is the single entry point. It detects context and delegates to one of four specialist sub-skills:
 
 | Sub-skill | Covers | Triggers |
 |-----------|--------|----------|
-| `temenos-l3-java` | L3 Java hooks: RecordLifecycle, ServiceLifecycle, ActivityLifecycle, Enquiry; Core APIs (Amount, Date, ExchangeRate, Customer, Limit, Session, AA Contract) | `L3 java`, `RecordLifecycle`, `validateRecord`, `checkId`, `com.temenos` |
-| `jbc-componentise` | jBC component authoring — full 5-phase DEVELOP workflow, 8 artefact templates (GET_API, WRITE_API, ENQUIRY, VALIDATION, TEMPLATE, DE_HANDLER), Phase 5 checklist | `jBC`, `.component`, `.b file`, `metamodelVersion`, `$PACKAGE` |
-| `infobasic` | Infobasic/jBASE BASIC routines: VVR, VIR, VAR, VCRR, NoFile Enquiry, AA calculation/getter/check, service routines, batch programs | `VVR`, `VIR`, `VAR`, `VCRR`, `NoFile`, `Infobasic`, `GOSUB` |
+| `temenos-l3` | L3 Java hooks: RecordLifecycle, ServiceLifecycle, ActivityLifecycle, Enquiry; Core APIs (Amount, Date, ExchangeRate, Customer, Limit, Session, AA Contract) | `L3 java`, `RecordLifecycle`, `validateRecord`, `checkId`, `com.temenos` |
+| `temenos-jbc` | jBC component authoring — full 5-phase DEVELOP workflow, 8 artefact templates (GET_API, WRITE_API, ENQUIRY, VALIDATION, TEMPLATE, DE_HANDLER), Phase 5 checklist | `jBC`, `.component`, `.b file`, `metamodelVersion`, `$PACKAGE` |
+| `temenos-infobasic` | Infobasic/jBASE BASIC routines: VVR, VIR, VAR, VCRR, NoFile Enquiry, AA calculation/getter/check, service routines, batch programs | `VVR`, `VIR`, `VAR`, `VCRR`, `NoFile`, `Infobasic`, `GOSUB` |
 | `temenos-de` | Delivery Engine pipeline: ApplicationHandoff routines, Array.5 mapping, event mapping table, print interface carrier, document-data FUNCTIONs | `DE handoff`, `ApplicationHandoff`, `Array.5`, `DE.API` |
 
-The `t24-dev` skill itself handles Java API reference lookups, impact analysis, EXPLAIN/REVIEW/ANALYZE modes, and any domain not covered by a sub-skill.
+The `temenos-dev` skill itself handles Java API reference lookups, field
+verification, semantic business-rule search, impact analysis, and
+EXPLAIN/REVIEW/ANALYZE modes.
+
+### Domain / Operations Skills (standalone, auto-triggered)
+
+Five further skills cover installation, operations, and architecture
+knowledge that isn't code generation, so they sit alongside `temenos-dev` rather
+than being routed through its Step-3 artefact table. Each is grounded in a
+real installed R25 Model Bank (`C:\R25`) rather than general T24 knowledge —
+every config key, script name, or PDF cited in these skills traces back to a
+file actually found there; see `plan/state/r25-scan-report.md` for the recon.
+
+| Skill | Covers | Triggers | Deep-dive topic |
+|-------|--------|----------|------------------|
+| `temenos-admin` | TAFJ install, `tafj.properties`/runtime config, app-server (JBoss EAP/WebLogic/WebSphere Liberty), DB drivers & provisioning, TemnMonitor observability stack (Grafana/Prometheus/Jaeger/ELK/OpenTelemetry), TemnXACML entitlements, the JDK21 `tools.jar` compile-bug fix | `TAFJ install`, `tafj.properties`, `JBoss EAP`, `DB driver`, `TemnMonitor`, `XACML`, `tools.jar error` | `TAFJ-Admin` |
+| `temenos-migration` | `Patch.xml` directory-scoped patch contract, `RELEASE` manifest, GIT/RTC ChangeSet installation, `DSPackageInstaller`, version-upgrade evidence (`tafj.properties.pre-v8.4.1.bak`) | `T24 upgrade`, `Patch.xml`, `ChangeSet installation`, `DSPackageInstaller` | `TAFJ-Migration` |
+| `temenos-integration` | 72 ESB + 11 non-ESB payment-integration packages, `bnk/Extensions` service modules (`EB_*`/`IF_*`), `ofsml`, T24Email/T24Sms, IBM MQ/JMS, CALLJEE | `ESB project`, `payment scheme`, `IBM MQ`, `T24Email`, `CALLJEE` | `TAFJ-Integration` |
+| `temenos-devsecops` | JBC precompiler rules, remote debugger, unit test framework, Maven plugin, SonarQube/code coverage, Rules Engine, multi-tenancy, Keycloak/Kerberos auth | `JBC precompiler`, `remote debugger`, `SonarQube`, `Rules Engine`, `Keycloak`, `multi-tenant` | `TAFJ-DevSecOps` |
+| `temenos-architect` | Componentisation architecture (jBC components, REST exposure), the 2,955-routine `T24_BP` naming-convention structure, package/extension packaging pattern | `T24 architecture`, `componentisation architecture`, `T24_BP`, `routine naming convention` | `T24-Componentisation` |
+
+Each of these skills routes deep-dive questions to Layer B rather than
+duplicating PDF content into markdown:
+```bash
+python pipeline/query_docs.py "<question>" --topic TAFJ-Admin -n 5
+```
 
 ---
 
@@ -84,44 +268,58 @@ The `t24-dev` skill itself handles Java API reference lookups, impact analysis, 
 
 ```
 Temenos-Skills/
+├── CLAUDE.md                          ← architecture decisions, read every session
 ├── pipeline/
-│   ├── classify.py          # Component type detector (11 rules)
-│   ├── javap_parser.py      # javap output parser + batched JAR extractor
-│   ├── javadoc_parser.py    # Regex-based HTML parser (threaded)
-│   ├── cache_utils.py       # SHA-256 incremental cache helpers
-│   ├── extract.py           # Phase 1 CLI: JARs + JavaDoc → cache/
-│   ├── aggregate.py         # Phase 2 CLI: cache/ → references/
-│   ├── requirements.txt
-│   └── templates/
-│       ├── product.md.j2    # Per-domain product reference
-│       ├── hooks.md.j2      # Hook reference (lifecycle / validation / event)
-│       ├── class-index.md.j2
-│       ├── api-catalog.md.j2
-│       └── package-index.md.j2
-├── cache/                   # Phase 1 output (git-ignored, ~620 MB)
-│   ├── AA_Account.json      # One file per JAR
-│   ├── ...
-│   └── javadoc.json         # Merged JavaDoc descriptions
+│   ├── extract.py                     ← Phase 1: extract classes from JARs
+│   ├── aggregate.py                   ← Phase 2: generate reference .md files
+│   ├── insert_parse.py                ← Phase 1b: field name/position schema from INSERTS/I_F.*
+│   ├── html_parse.py                  ← Phase 1c: backfill type/mandatory/description from JavaDoc HTML
+│   ├── pdf_extract.py                 ← Phase 1d: chunk + TF-IDF embed PDFs into Chroma (Layer B)
+│   ├── query_docs.py                  ← Query Layer B (CLI)
+│   └── validate_fields.py             ← Field Verification Gate (CLI)
+├── mcp_server/
+│   └── server.py                      ← Optional MCP server: lookup_fields, search_rules
+├── cache/                             ← SHA-256 incremental cache (git-ignored)
+├── jar/                                ← T24 JAR files (not in repo — supply your own)
+├── T24.javadoc/                        ← T24 JavaDoc HTML (not in repo — supply your own)
+├── docs/                               ← T24 PDF documentation (not in repo — supply your own)
+│   ├── <business-topic folders>        ← original training/doc archive (AA, ACCOUNT, DE, OFS, ...)
+│   ├── TAFJ-Admin/                     ← 28 install/runtime PDFs, sourced from a real R25 install
+│   ├── TAFJ-Migration/                 ←
+│   ├── TAFJ-Integration/                ←
+│   ├── TAFJ-DevSecOps/                 ←
+│   └── T24-Componentisation/           ←
+├── vectordb/                            ← Layer B Chroma DB (git-ignored, generated)
+├── plan/state/                          ← state-persistence files (e.g. r25-scan-report.md)
 ├── tests/
-│   └── pipeline/            # 89 pytest tests
-├── jar/t24lib/              # Source JARs (not in repo)
-├── T24.javadoc/             # Source JavaDoc HTML (not in repo)
+│   └── pipeline/                       ← pytest tests
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest — enables /plugin install
-└── skills/                  # Plugin skills directory (standard agentskills.io layout)
-    ├── t24-dev/             # Entry-point skill — routes to sub-skills below
+│   └── plugin.json                     ← Plugin manifest — enables /plugin install
+└── skills/                             ← Plugin skills directory (agentskills.io layout)
+    ├── temenos-dev/         ← Entry-point skill — routes to code-gen sub-skills below
     │   └── references/
-    │       ├── products/    # aa.md, payments.md, accounts.md, ...
-    │       ├── hooks/       # lifecycle-hooks.md, validation-hooks.md, event-hooks.md
-    │       ├── apis/        # java-api.md (157 classes), rest-api.md
-    │       ├── classes/     # class-index.md (77,762 entries)
-    │       ├── packages/    # package-index.md (137 packages)
-    │       ├── architecture/# application-map.md (1,453 classes)
-    │       └── relationships/ # dependency-graph.md (2,048 JARs)
-    ├── temenos-l3-java/     # Sub-skill: L3 Java hooks & Core APIs
-    ├── jbc-componentise/    # Sub-skill: jBC component authoring (5-phase workflow)
-    ├── infobasic/           # Sub-skill: Infobasic/jBASE BASIC routines
-    └── temenos-de/          # Sub-skill: Delivery Engine pipeline
+    │       ├── table-schema/           ← Layer A: one .md per T24 application
+    │       ├── products/               ← aa.md, payments.md, accounts.md, ...
+    │       ├── hooks/                  ← lifecycle-hooks.md, validation-hooks.md, event-hooks.md
+    │       ├── apis/                   ← java-api.md, rest-api.md, ofs-api.md
+    │       ├── classes/                ← class-index.md
+    │       ├── packages/               ← package-index.md
+    │       ├── architecture/           ← application-map.md, dependency-graph.md
+    │       └── relationships/
+    ├── temenos-l3/          ← Sub-skill: L3 Java hooks & Core APIs
+    ├── temenos-jbc/         ← Sub-skill: jBC component authoring
+    ├── temenos-infobasic/   ← Sub-skill: Infobasic/jBASE BASIC routines
+    ├── temenos-de/          ← Sub-skill: Delivery Engine pipeline
+    ├── temenos-admin/       ← Domain skill: install, runtime config, DB/app-server admin
+    │   └── references/                 ← install-and-runtime.md, database-and-config.md, observability-and-security.md
+    ├── temenos-migration/   ← Domain skill: patching, version upgrade, ChangeSet installs
+    │   └── references/                 ← patch-and-release.md, changeset-and-upgrade.md
+    ├── temenos-integration/ ← Domain skill: ESB/non-ESB packages, service extensions, MQ/JMS
+    │   └── references/                 ← esb-packages.md, service-extensions-and-messaging.md
+    ├── temenos-devsecops/   ← Domain skill: build/test/debug tooling, security, multi-tenancy
+    │   └── references/                 ← build-test-debug.md, security-multitenancy-rules.md
+    └── temenos-architect/   ← Domain skill: componentisation architecture, package structure
+        └── references/                 ← componentisation-model.md, package-and-routine-structure.md
 ```
 
 ---
@@ -129,48 +327,46 @@ Temenos-Skills/
 ## Prerequisites
 
 - Python 3.10+
-- JDK with `javap` on PATH (verify: `javap -version`)
-- T24 JAR files in `jar/t24lib/`
+- JDK with `javap` on PATH (verify: `javap -version`) — for `extract.py` only
+- T24 JAR files in `jar/`
 - T24 JavaDoc HTML in `T24.javadoc/T24.javadoc/`
+- T24 PDF documentation in `docs/` (optional — only needed for Layer B)
 
 ```bash
-pip install -r pipeline/requirements.txt
+pip install javatools pdfplumber beautifulsoup4 lxml chromadb scikit-learn joblib mcp
 ```
 
 ---
 
 ## How to Run
 
-### Phase 1 — Extract (first run ~90 min, subsequent runs ~2 min)
-
 ```bash
-python pipeline/extract.py \
-  --jars jar/t24lib \
-  --javadoc T24.javadoc/T24.javadoc \
-  --cache cache \
-  --workers 8
+# Phase 1a — extract classes from JARs (~90 min first run, ~2 min incremental)
+python pipeline/extract.py --jars jar --cache cache --workers 8
+
+# Phase 1b — extract field schemas from INSERTS/I_F.* (Layer A ground truth)
+python pipeline/insert_parse.py --jars jar --db temenos_knowledge.db --out skills/temenos-dev/references/table-schema
+
+# Phase 1c — backfill type/mandatory/description from JavaDoc HTML
+python pipeline/html_parse.py --html T24.javadoc/T24.javadoc --db temenos_knowledge.db --out skills/temenos-dev/references/table-schema
+
+# Phase 1d — chunk + embed PDF business rules (Layer B, offline TF-IDF)
+python pipeline/pdf_extract.py --pdfs docs --vectordb vectordb --cache cache/pdf_extracts
+
+# Phase 2 — generate class/API reference markdown (~2 min)
+python pipeline/aggregate.py --cache cache --out skills/temenos-dev/references
+
+# Query Layer B
+python pipeline/query_docs.py "what controls dormancy in ACCOUNT?" --topic ACCOUNT -n 5
+
+# Verify fields before generating code
+python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGORY"
 ```
 
-This processes all JARs in parallel using 8 worker threads. Each JAR is cached as `cache/<name>.json` with a SHA-256 hash; re-runs skip unchanged JARs (incremental). JavaDoc is parsed last and written to `cache/javadoc.json`.
-
-**Options:**
-
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--jars` | required | Directory containing T24 JARs |
-| `--javadoc` | required | Root of JavaDoc HTML tree |
-| `--cache` | required | Output directory for cache JSON |
-| `--workers` | 8 | Parallel worker threads |
-
-### Phase 2 — Aggregate (~2 min)
-
-```bash
-python pipeline/aggregate.py \
-  --cache cache \
-  --output skills/t24-dev/references
-```
-
-Reads all cache JSON files, classifies every class (lifecycle-hook, service-hook, public-api, record-model, etc.), groups by domain, and renders the reference markdown files via Jinja2 templates.
+Each phase caches its own inputs by SHA-256, so re-running after adding JARs,
+JavaDoc, or PDFs only reprocesses what changed — except Phase 1d's embedding
+step, which always rebuilds the full Chroma collection (TF-IDF's vocabulary
+has to reflect the whole corpus, not just the newly-changed files).
 
 ### Run Tests
 
@@ -181,6 +377,12 @@ python -m pytest tests/pipeline/ -v
 ---
 
 ## What the Reference Files Contain
+
+### `references/table-schema/<APP>.md`
+
+One file per T24 application (Layer A) — field name, position, Java alias,
+and type/mandatory/description where backfilled from JavaDoc. This is the
+file the skill checks before ever emitting a field name in generated code.
 
 ### `references/products/<domain>.md`
 
@@ -193,8 +395,6 @@ Per-domain breakdown of all classes in that T24 product area:
 - **Record Models** — class + public fields
 - **JAR Inventory** — every JAR in the domain, class count, component types present
 
-Domains: `aa`, `payments`, `accounts`, `lending`, `securities`, `asset-management`, `teller`, `cob`, `dx`, `regulatory`, `misc`
-
 ### `references/hooks/*.md`
 
 Cross-domain hook catalogs:
@@ -203,11 +403,11 @@ Cross-domain hook catalogs:
 - `validation-hooks.md` — validation and auth hook classes
 - `event-hooks.md` — event hook classes
 
-> Note: T24 product JARs ship hook *interfaces*, not customer implementations. The hooks files document the T24 API contracts (method signatures, when each fires) so Claude can guide you to implement them correctly. Concrete implementations are written in L3 customization code, not shipped in the product.
+> T24 product JARs ship hook *interfaces*, not customer implementations. The hooks files document the T24 API contracts (method signatures, when each fires) so Claude can guide you to implement them correctly.
 
 ### `references/apis/java-api.md`
 
-157 public API classes with full method signatures and parameter lists, enriched with JavaDoc descriptions where available. Example:
+Public API classes with full method signatures and parameter lists, enriched with JavaDoc descriptions where available:
 
 ```
 ActivityLifecycle.validateRecord(AaAccountDetailsRecord, AaArrangementActivityRecord, ...)
@@ -217,18 +417,6 @@ ActivityLifecycle.validateRecord(AaAccountDetailsRecord, AaArrangementActivityRe
 ### `references/classes/class-index.md`
 
 Master index of all 77,762 classes across all JARs — class name, JAR, package, domain, component type.
-
-### `references/packages/package-index.md`
-
-137 unique packages with canonical JAR and domain.
-
-### `references/relationships/dependency-graph.md`
-
-All 2,048 JARs with domain and class count.
-
-### `references/architecture/application-map.md`
-
-1,453 classes whose names contain key domain terms (Account, Payment, Arrangement, etc.) — a cross-cutting view of core T24 object types.
 
 ---
 
@@ -255,40 +443,23 @@ Every class is classified into one of these types:
 
 ## Incremental Caching
 
-The cache uses SHA-256 hashes stored as `"sha256:<64-char-hex>"`. If a JAR's hash matches its cache file, Phase 1 skips it entirely. When T24 ships a new release, only changed JARs are re-processed — a typical patch run takes 2–5 minutes instead of 90.
+Each pipeline phase caches its own input by SHA-256:
 
-To force a full re-extract, delete the `cache/` directory.
+- `extract.py`: one `cache/<jar>.json` per JAR — unchanged JARs are skipped entirely
+- `insert_parse.py` / `html_parse.py`: rerun in full each time (fast enough not to need caching — a few minutes over the whole JAR/JavaDoc set)
+- `pdf_extract.py`: `cache/pdf_extracts/<sha256>.json` per PDF, tracked in a manifest — unchanged PDFs skip re-extraction; the embedding step always rebuilds the full Chroma collection
+
+To force a full re-extract of a given phase, delete its cache directory (`cache/`, or `cache/pdf_extracts/`).
 
 ---
 
 ## Re-running After a T24 Upgrade
 
 ```bash
-# Re-run Phase 1 (only changed JARs will be processed)
-python pipeline/extract.py --jars jar/t24lib --javadoc T24.javadoc/T24.javadoc --cache cache --workers 8
-
-# Re-render reference files
-python pipeline/aggregate.py --cache cache --output skills/t24-dev/references
+python pipeline/extract.py --jars jar --cache cache --workers 8
+python pipeline/insert_parse.py --jars jar --db temenos_knowledge.db --out skills/temenos-dev/references/table-schema
+python pipeline/html_parse.py --html T24.javadoc/T24.javadoc --db temenos_knowledge.db --out skills/temenos-dev/references/table-schema
+python pipeline/aggregate.py --cache cache --out skills/temenos-dev/references
 ```
 
----
-
-## Coverage Notes
-
-**Fully auto-populated (20 files):** All product domain files, hooks, java-api, class-index, package-index, dependency-graph, application-map.
-
-**Skeleton / manual curation needed (10 files):**
-
-| File | Reason |
-|------|--------|
-| `products/atm.md` | ATM module uses a separate integration layer |
-| `products/customer.md` | CIF data not modelled in product JARs |
-| `products/deposits.md` | Deposits often overlap with AA module |
-| `products/tph.md` | TPH is a separate product tier |
-| `apis/ofs-api.md` | OFS (Online Financial Service) is TAFC-based, not Java |
-| `apis/rest-api.md` | REST endpoints detected: 0 in analysed JARs |
-| `architecture/dependencies.md` | Requires runtime dependency tracing |
-| `architecture/frameworks.md` | Framework docs are not in product JARs |
-| `architecture/products.md` | High-level product map — manual |
-| `relationships/object-relationships.md` | Runtime object graph — not in bytecode |
-| `javadocs/javadoc-index.md` | JavaDoc index — manual or separate scrape |
+Re-run `pdf_extract.py` separately whenever `docs/` changes — it's independent of the JAR/JavaDoc release cycle.

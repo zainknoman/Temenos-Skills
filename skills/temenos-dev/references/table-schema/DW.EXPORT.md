@@ -1,0 +1,43 @@
+# DW.EXPORT — Table Schema
+
+> Source: `INSERTS/I_F.DW.EXPORT` in `DW_BiExportFramework.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `DW.E.DESCRIPTION` | `DwExport_Description` |  |  |  |
+| 2 | `DW.E.RESERVED.17` | `DwExport_Reserved17` | TField |  |  |
+| 3 | `DW.E.SELECTION.RTN` | `DwExport_SelectionRtn` | TField |  | A routine or a Java method implementing the super class DataExporter can be attached in this field. In cases where not all the records are necessary for processing, this routine/class can be used for selectingrecordsthat are needed for the extract. * 1. BASIC Implementation The routine should have a valid entry in EB.API with SOURCE.TYPE as BASIC. A sample routine DW.SAMPLE.SELECT.API is provided by Temenos. * 2. JAVA Implementation The class should have a valid entry in EB.API with SOURCE.TYPE as METHOD which implements an interface definedinthe EB.API record DW.EXPORT.SELECTION.RTN.HOOK. This field supports the getIds method from the super class DataExporter which is available in thecom.temenos.t24.api.hook.system package under DW_DataExportHook.jar shipped with Transact. A sample Java implementation SampleSelectHookImpl.java is provided by Temenos. |
+| 4 | `DW.E.PROCESS.RTN` | `DwExport_ProcessRtn` | TField |  | A JBC routine or a Java method implementing the super class DataExporter can be attached in this field. This will control the data that will be extracted. When the field SYSTEM.FIELD is NULL this routine/class will control the fields that are to be extracted. * 1. BASIC Implementation The routine should have a valid entry in EB.API with SOURCE.TYPE as BASIC. A sample routine DW.SAMPLE.PROCESS.API is provided by Temenos. * 2. JAVA Implementation The class should have a valid entry in EB.API with SOURCE.TYPE as METHOD which implements an interface defined inthe EB.API record DW.EXPORT.PROCESS.RTN.HOOK. This field supports the getRows method from the super class DataExporter which is available in thecom.temenos.t24.api.hook.system package under DW_DataExportHook.jar shipped with Transact. A sample Java implementation SampleProcessHookImpl.java is provided by Temenos. |
+| 5 | `DW.E.FIELD.NAME` | `DwExport_FieldName` |  |  |  |
+| 6 | `DW.E.TRANSFORM.RTN` | `DwExport_TransformRtn` | TField |  | A routine or a Java method implementing the super class DataExporter can be attached in this field. In cases where the user wants additional data in the extract, this routine/class can be used to add new headerand newdata. * 1. BASIC Implementation The routine should have a valid entry in EB.API with SOURCE.TYPE as BASIC. A sample routine DW.SAMPLE.TRANSFORM.API is provided by Temenos. * 2. JAVA Implementation The class should have a valid entry in EB.API with SOURCE.TYPE as METHOD which implements an interface defined inthe EB.API record DW.EXPORT.TRANSFORM.RTN.HOOK. This field supports the getCustomFields method from the super class DataExporter which is available in thecom.temenos.t24.api.hook.system package under DW_DataExportHook.jar shipped with Transact. A sample Java implementation SampleTransformHookImpl.java is provided by Temenos. |
+| 7 | `DW.E.EXTRACT.FILE` | `DwExport_ExtractFile` | TField |  | This field is used in cases where the T24 file specified in the record ID need not be processed and a differentfile is to be processed instead of it. e.g. CATEG.ENTRY CATEG.ENTRY is a file that grows always and doing a select on it is not recommended, instead the fileCATEG.ENT.LWORK.DAY can be selected. This file has all the CATEG.ENTRY records created on the previous day. If this field has a value then the TAKEOVER field for that DW.EXPORT record should be &apos;DAILY&apos; |
+| 8 | `DW.E.TAKEOVER` | `DwExport_Takeover` |  |  |  |
+| 9 | `DW.E.OL.FILTER.CRITERIA` | `DwExport_OlFilterCriteria` | TField |  |  |
+| 10 | `DW.E.HASH.TOT.FLD` | `DwExport_HashTotFld` | TField |  | This will hold the field name of type numeric, normally ID of the respective application. This is used for the reconcilation purpose once the extraction is done using, the total of IDs/value given inthis field that is being extracted for this application. |
+| 11 | `DW.E.OL.TARGET.DATABASE` | `DwExport_OlTargetDatabase` | TField |  | This field will be used when the TAKEOVER field is specified as &apos;ONLINE&apos; The value in this field is the database that will be updated when a record of the current DW.EXPORT record ismodified or created. The table information will be obtained from the OL.TARGET.TABLE field. |
+| 12 | `DW.E.OL.TARGET.TABLE` | `DwExport_OlTargetTable` | TField |  | This field will be used when the TAKEOVER field is specified as &apos;ONLINE&apos; The value in this field is the table that will be updated when a record of the current DW.EXPORT record ismodified or created.The database information will be obtained from the OL.TARGET.DATABASE field. |
+| 13 | `DW.E.INCR.KEY.FIELD` | `DwExport_IncrKeyField` | TField |  | This will be used when the TAKEOVER field is specified as &apos;INCREMENTAL&apos;. The field defined in this field will be used to update the particular row in the Insight Database. |
+| 14 | `DW.E.PRODUCT` | `DwExport_Product` |  |  |  |
+| 15 | `DW.E.FILTER.RTN` | `DwExport_FilterRtn` | TField |  | A routine or a Java method implementing the super class DataExporter can be attached in this field. In cases where not all the records are necessary for processing, this routine/class can be used for selectingrecordsthat are needed for the extract based on @ID. * 1. BASIC Implementation The routine should have a valid entry in EB.API with SOURCE.TYPE as BASIC. A sample routine DW.SAMPLE.FILTER.API is provided by Temenos. * 2. JAVA Implementation The class should have a valid entry in EB.API with SOURCE.TYPE as METHOD which implements an interface defined inthe EB.API record DW.EXPORT.FILTER.RTN.HOOK. This field supports the excludeId method from the super class DataExporter which is available in thecom.temenos.t24.api.hook.system package under DW_DataExportHook.jar shipped with Transact. A sample Java implementation SampleFilterHookImpl.java is provided by Temenos. |
+| 16 | `DW.E.OVERRIDE.READONLY.SETTING` | `DwExport_OverrideReadOnlySetting` |  |  |  |
+| 17 | `DW.E.OVERRIDE.ADVANCED.SETTINGS` | `DwExport_OverrideAdvancedSettings` |  |  |  |
+| 18 | `DW.E.RESERVED.8` | `DwExport_Reserved8` | TField |  |  |
+| 19 | `DW.E.RESERVED.7` | `DwExport_Reserved7` | TField |  |  |
+| 20 | `DW.E.RESERVED.6` | `DwExport_Reserved6` | TField |  |  |
+| 21 | `DW.E.RESERVED.5` | `DwExport_Reserved5` | TField |  |  |
+| 22 | `DW.E.YEAR.MONTH` | `DwExport_YearMonth` | TField |  | This field will be used for files like CATEG.ENTRY and ACCT.ACTIVITY. For the very first extract historical data is needed for CATEG.ENTRY and ACCT.ACTIVITY, this field will allow theuser to specify the YEAR and MONTH from which these files will be extracted. |
+| 23 | `DW.E.EXCLUDE.RECON` | `DwExport_ExcludeRecon` | TField |  | This field is used to exclude from DW.EXPORT Reconciliation process This field will accept only YES or NO or Null(" "),Both NULL and NO are same and default value is NULL. |
+| 24 | `DW.E.USE.LEGACY.API` | `DwExport_UseLegacyApi` | TField |  | This field will de-activate the DW.LITE version for the current table definition alone This field can set as YES or ''(NULL), Null is equalent to 'NO' If this field is set to YES, it will take legacy api to process |
+| 25 | `DW.E.RESERVED.2` | `DwExport_Reserved2` | TField |  |  |
+| 26 | `DW.E.RESERVED.1` | `DwExport_Reserved1` | TField |  |  |
+| 27 | `DW.E.RECORD.STATUS` | `DwExport_RecordStatus` | String |  |  |
+| 28 | `DW.E.CURR.NO` | `DwExport_CurrNo` | String |  |  |
+| 29 | `DW.E.INPUTTER` | `DwExport_Inputter` |  |  |  |
+| 30 | `DW.E.DATE.TIME` | `DwExport_DateTime` |  |  |  |
+| 31 | `DW.E.AUTHORISER` | `DwExport_Authoriser` | String |  |  |
+| 32 | `DW.E.CO.CODE` | `DwExport_CoCode` | String |  |  |
+| 33 | `DW.E.DEPT.CODE` | `DwExport_DeptCode` | String |  |  |
+| 34 | `DW.E.AUDITOR.CODE` | `DwExport_AuditorCode` | String |  |  |
+| 35 | `DW.E.AUDIT.DATE.TIME` | `DwExport_AuditDateTime` | String |  |  |

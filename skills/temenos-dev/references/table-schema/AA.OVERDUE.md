@@ -1,0 +1,89 @@
+# AA.OVERDUE — Table Schema
+
+> Source: `INSERTS/I_F.AA.OVERDUE` in `AA_Overdue.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.OD.ACTIVITY` | `AaSimOverdue_Activity` |  |  |  |
+| 2 | `AA.OD.ACTION` | `AaSimOverdue_Action` |  |  |  |
+| 3 | `AA.OD.BILL.TYPE` | `AaSimOverdue_BillType` |  |  |  |
+| 4 | `AA.OD.RESERVED.14` | `AaSimOverdue_Reserved14` |  |  |  |
+| 5 | `AA.OD.RESERVED.13` | `AaSimOverdue_Reserved13` |  |  |  |
+| 6 | `AA.OD.RESERVED.12` | `AaSimOverdue_Reserved12` |  |  |  |
+| 7 | `AA.OD.RESERVED.11` | `AaSimOverdue_Reserved11` |  |  |  |
+| 8 | `AA.OD.RESERVED.10` | `AaSimOverdue_Reserved10` |  |  |  |
+| 9 | `AA.OD.OVERDUE.STATUS` | `AaSimOverdue_OverdueStatus` |  |  |  |
+| 10 | `AA.OD.AGEING.TYPE` | `AaSimOverdue_AgeingType` |  |  |  |
+| 11 | `AA.OD.AGEING` | `AaSimOverdue_Ageing` |  |  |  |
+| 12 | `AA.OD.NOTICE.DAYS` | `AaSimOverdue_NoticeDays` |  |  |  |
+| 13 | `AA.OD.NOTICE.FREQ` | `AaSimOverdue_NoticeFreq` |  |  |  |
+| 14 | `AA.OD.RESERVED.9` | `AaSimOverdue_Reserved9` |  |  |  |
+| 15 | `AA.OD.RESERVED.8` | `AaSimOverdue_Reserved8` |  |  |  |
+| 16 | `AA.OD.RESERVED.7` | `AaSimOverdue_Reserved7` |  |  |  |
+| 17 | `AA.OD.RESERVED.6` | `AaSimOverdue_Reserved6` |  |  |  |
+| 18 | `AA.OD.RESERVED.5` | `AaSimOverdue_Reserved5` |  |  |  |
+| 19 | `AA.OD.MANUAL.CHANGE` | `AaSimOverdue_ManualChange` |  |  |  |
+| 20 | `AA.OD.AGE.ALL.BILLS` | `AaSimOverdue_AgeAllBills` |  |  |  |
+| 21 | `AA.OD.SUSPEND` | `AaSimOverdue_Suspend` |  |  |  |
+| 22 | `AA.OD.STATUS.MVMT` | `AaSimOverdue_StatusMvmt` |  |  |  |
+| 23 | `AA.OD.MOVE.BALANCE` | `AaSimOverdue_MoveBalance` |  |  |  |
+| 24 | `AA.OD.EFFECTIVE.DATE` | `AaSimOverdue_EffectiveDate` |  |  |  |
+| 25 | `AA.OD.PAY.TOLERANCE` | `AaSimOverdue_PayTolerance` |  |  |  |
+| 26 | `AA.OD.TOL.ACTION` | `AaSimOverdue_TolAction` |  |  |  |
+| 27 | `AA.OD.TOL.CCY` | `AaSimOverdue_TolCcy` |  |  |  |
+| 28 | `AA.OD.TOL.AMOUNT` | `AaSimOverdue_TolAmount` |  |  |  |
+| 29 | `AA.OD.BILL.SETTLEMENT` | `AaSimOverdue_BillSettlement` |  |  |  |
+| 30 | `AA.OD.AGE.BILLS` | `AaSimOverdue_AgeBills` |  |  |  |
+| 31 | `AA.OD.ARR.BILL.TYPE` | `AaSimOverdue_ArrBillType` |  |  |  |
+| 32 | `AA.OD.PRE.GRACE` | `AaSimOverdue_PreGrace` |  |  |  |
+| 33 | `AA.OD.LOCAL.REF` | `AaSimOverdue_LocalRef` |  |  |  |
+| 34 | `AA.OD.PR.ATTRIBUTE` | `AaSimOverdue_PrAttribute` |  |  |  |
+| 35 | `AA.OD.PR.VALUE` | `AaSimOverdue_PrValue` |  |  |  |
+| 36 | `AA.OD.PR.BRK.RES` | `AaSimOverdue_PrBrkRes` |  |  |  |
+| 37 | `AA.OD.PR.BRK.MSG` | `AaSimOverdue_PrBrkMsg` |  |  |  |
+| 38 | `AA.OD.PR.BRK.CHARGE` | `AaSimOverdue_PrBrkCharge` |  |  |  |
+| 39 | `AA.OD.PR.RESERVED.3` | `AaSimOverdue_PrReserved3` |  |  |  |
+| 40 | `AA.OD.PR.RESERVED.2` | `AaSimOverdue_PrReserved2` |  |  |  |
+| 41 | `AA.OD.PR.RESERVED.1` | `AaSimOverdue_PrReserved1` |  |  |  |
+| 42 | `AA.OD.PR.APP.METHOD` | `AaSimOverdue_PrAppMethod` |  |  |  |
+| 43 | `AA.OD.PR.APP.PERIOD` | `AaSimOverdue_PrAppPeriod` |  |  |  |
+| 44 | `AA.OD.SYS.RESERVE7` | `AaSimOverdue_SysReserve7` |  |  |  |
+| 45 | `AA.OD.SYS.RESERVE6` | `AaSimOverdue_SysReserve6` |  |  |  |
+| 46 | `AA.OD.OWNING.COMPANY` | `AaSimOverdue_OwningCompany` |  |  |  |
+| 47 | `AA.OD.API.ATTRIBUTE` | `AaSimOverdue_ApiAttribute` |  |  |  |
+| 48 | `AA.OD.SYS.RESERVE3` | `AaSimOverdue_SysReserve3` |  |  |  |
+| 49 | `AA.OD.SYS.RESERVE2` | `AaSimOverdue_SysReserve2` |  |  |  |
+| 50 | `AA.OD.SYS.RESERVE1` | `AaSimOverdue_SysReserve1` |  |  |  |
+| 51 | `AA.OD.DEFAULT.ATTR.OPTION` | `AaSimOverdue_DefaultAttrOption` |  |  |  |
+| 52 | `AA.OD.DEFAULT.NEGOTIABLE` | `AaSimOverdue_DefaultNegotiable` |  |  |  |
+| 53 | `AA.OD.NR.ATTRIBUTE` | `AaSimOverdue_NrAttribute` |  |  |  |
+| 54 | `AA.OD.NR.OPTIONS` | `AaSimOverdue_NrOptions` |  |  |  |
+| 55 | `AA.OD.NR.ATTRIBUTE.RULE` | `AaSimOverdue_NrAttributeRule` |  |  |  |
+| 56 | `AA.OD.NR.VALUE.SOURCE` | `AaSimOverdue_NrValueSource` |  |  |  |
+| 57 | `AA.OD.NR.STD.COMP` | `AaSimOverdue_NrStdComp` |  |  |  |
+| 58 | `AA.OD.NR.TYPE` | `AaSimOverdue_NrType` |  |  |  |
+| 59 | `AA.OD.NR.VALUE` | `AaSimOverdue_NrValue` |  |  |  |
+| 60 | `AA.OD.NR.MESSAGE` | `AaSimOverdue_NrMessage` |  |  |  |
+| 61 | `AA.OD.CHANGED.FIELDS` | `AaSimOverdue_ChangedFields` |  |  |  |
+| 62 | `AA.OD.NEGOTIATED.FLDS` | `AaSimOverdue_NegotiatedFlds` |  |  |  |
+| 63 | `AA.OD.ID.COMP.1` | `AaSimOverdue_IdComp1` |  |  |  |
+| 64 | `AA.OD.ID.COMP.2` | `AaSimOverdue_IdComp2` |  |  |  |
+| 65 | `AA.OD.ID.COMP.3` | `AaSimOverdue_IdComp3` |  |  |  |
+| 66 | `AA.OD.ID.COMP.4` | `AaSimOverdue_IdComp4` |  |  |  |
+| 67 | `AA.OD.ID.COMP.5` | `AaSimOverdue_IdComp5` |  |  |  |
+| 68 | `AA.OD.ID.COMP.6` | `AaSimOverdue_IdComp6` |  |  |  |
+| 69 | `AA.OD.RESERVED2.ID` | `AaSimOverdue_Reserved2Id` |  |  |  |
+| 70 | `AA.OD.TARGET.PRODUCT` | `AaSimOverdue_TargetProduct` |  |  |  |
+| 71 | `AA.OD.STMT.NOS` | `AaSimOverdue_StmtNos` |  |  |  |
+| 72 | `AA.OD.OVERRIDE` | `AaSimOverdue_Override` |  |  |  |
+| 73 | `AA.OD.RECORD.STATUS` | `AaSimOverdue_RecordStatus` |  |  |  |
+| 74 | `AA.OD.CURR.NO` | `AaSimOverdue_CurrNo` |  |  |  |
+| 75 | `AA.OD.INPUTTER` | `AaSimOverdue_Inputter` |  |  |  |
+| 76 | `AA.OD.DATE.TIME` | `AaSimOverdue_DateTime` |  |  |  |
+| 77 | `AA.OD.AUTHORISER` | `AaSimOverdue_Authoriser` |  |  |  |
+| 78 | `AA.OD.CO.CODE` | `AaSimOverdue_CoCode` |  |  |  |
+| 79 | `AA.OD.DEPT.CODE` | `AaSimOverdue_DeptCode` |  |  |  |
+| 80 | `AA.OD.AUDITOR.CODE` | `AaSimOverdue_AuditorCode` |  |  |  |
+| 81 | `AA.OD.AUDIT.DATE.TIME` | `AaSimOverdue_AuditDateTime` |  |  |  |

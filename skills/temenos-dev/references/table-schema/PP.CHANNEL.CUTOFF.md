@@ -1,0 +1,44 @@
+# PP.CHANNEL.CUTOFF — Table Schema
+
+> Source: `INSERTS/I_F.PP.CHANNEL.CUTOFF` in `PP_RoutingAndSettlementService.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `PP.LCC.CompanyID` | `PpChannelCutoff_Companyid` | TField |  | Indicates the Financial Table Descriptive(FTD) company for which the record is created. This is NoInput field It gets autopopulated after validation Example : BNK,GB1 |
+| 2 | `PP.LCC.ChannelName` | `PpChannelCutoff_Channelname` | TField | Yes | Indicates the name of the channel through which the payment is sent to the credit bank. Validation Rules: Mandatory field. 10 alphanumeric characters. Value links to field 'ChannelName', in PPT.CHANNELNAME |
+| 3 | `PP.LCC.CurrencyCode` | `PpChannelCutoff_Currencycode` | TField |  | Indicates the ISO currency code against which credit currency is matched. Validation Rules: 2 alphanumeric characters. Value links to field, 'CurrencyCode' in PPT.CURRENCY |
+| 4 | `PP.LCC.CTRBTRIndicator` | `PpChannelCutoff_Ctrbtrindicator` | TField |  | Indicates the type of transaction. Possible values: C - CTR meaning customer transfer B - BTR meaning bank transfer |
+| 5 | `PP.LCC.PaymentDirection` | `PpChannelCutoff_Paymentdirection` | TField |  | Indicates the direction of the payment for which the cutoff details are defined. Possible Values: I - Incoming. O - Outgoing. B - Book. R - Redirect. |
+| 6 | `PP.LCC.Priority` | `PpChannelCutoff_Priority` | TField |  | Mentions the priority of the payment for which the cutoff details are defined. Validation Rules: 1 alphanumeric character. |
+| 7 | `PP.LCC.MessageType` | `PpChannelCutoff_Messagetype` | TField |  | Indicates the type of the message for which the channel cutoff details are defined. Validation Rules: 10 alphanumeric characters. |
+| 8 | `PP.LCC.Source` | `PpChannelCutoff_Source` | TField |  | Indicates the source of the channel for which the cutoff details are defined. Validation Rules: 10 alphanumeric characters. |
+| 9 | `PP.LCC.CutoffTime` | `PpChannelCutoff_Cutofftime` | TField |  | Specifies the time after which the channel cannot be used for routing payments on a given day. The value will be used in Routing &amp; Settlement processing and Dates processing to determine if a payment has passed cut-off time for a particular channel or not. Routing &amp; Settlement can decide to find alternative channel to settle the payment or bump the due date by 1 day so that it can be processed on next day. Action to be taken will be setup driven and defined in Routing &amp; Settlement. In case of incoming payments, CVD (Credit Value Date) is increased by cut-off shift and the payment is processed on the same day. Validation Rules: 5 characters of type TIME. Value will be in HH:MM format. |
+| 10 | `PP.LCC.CutoffTimeWithFX` | `PpChannelCutoff_Cutofftimewithfx` | TField |  | Similar to the cut-off time but this will be applicable only when currency conversion is required. Validation Rules: 5 characters of type TIME. Value will be in HH:MM format. |
+| 11 | `PP.LCC.SettlementShift` | `PpChannelCutoff_Settlementshift` | TField | Yes | Indicates the number of settlement days to be bumped in order to determine the next processing date, when a payment can be routed through the channel defined. In certain cases clearing takes a day or two to settle the payment before it can be available to the beneficiary. This holds true for OUR correspondents who are operating in another time zone and can process out payments next day only (JPY). So the settlement shift indicates the time which is required to settle a payment through a particular channel. If CutOffShift and FXShift(if applicable) are also specified, the days will be bumped further. Validation Rules: Mandatory field. 2 numeric characters. |
+| 12 | `PP.LCC.FXShift` | `PpChannelCutoff_Fxshift` | TField | Yes | Indicates the FX Shift number of days to be bumped in order to determine the next processing date, when a payment can be routed through the channel defined. When payments hub receives a payment in foreign currency which requires currency conversion, treasury might require some time to buy or sell the foreign currency from the market. FXShift ensures that treasury gets some time for this. This is applied on a transaction only when debit and credit currencies are different. If CutOffShift and SettlementShift are also specified, the days will be bumped further. Validation Rules: Mandatory field. 2 numeric characters. |
+| 13 | `PP.LCC.CutoffShift` | `PpChannelCutoff_Cutoffshift` | TField | Yes | Indicates the number of CutoffShift days to be bumped in order to determine the next processing date, when a payment can be routed through the channel defined. If SettlementShift and FXShift(If applicable) are also specified, the days will be bumped further. Validation Rules: Mandatory field. 2 numeric characters. |
+| 14 | `PP.LCC.ASAPALAP` | `PpChannelCutoff_Asapalap` | TField |  | Indicates the priority to be considered for the setup. This will applicable only for CT payments Possible values: ASAP-for As Soon As Possible processing(High priority) ALAP-for As Late As Possible processing(Low priority) |
+| 15 | `PP.LCC.StartDate` | `PpChannelCutoff_Startdate` | TField |  | Specifies the date from which the record is to be considered as active for payments processing. Validation Rules: No Input Field If the start date is given in ID then the start date gets populated from the id Or else start date gets populated from the field TODAY in the table DATES |
+| 16 | `PP.LCC.EndDate` | `PpChannelCutoff_Enddate` | TField |  | Specifies the date until which the record is to be considered as active for payments processing.Post this date, the record will be set as Inactive by the payments hub. |
+| 17 | `PP.LCC.CPCurrencyCode` | `PpChannelCutoff_Cpcurrencycode` |  |  |  |
+| 18 | `PP.LCC.CPFXShift` | `PpChannelCutoff_Cpfxshift` |  |  |  |
+| 19 | `PP.LCC.CPCutoffTimeFX` | `PpChannelCutoff_Cpcutofftimefx` |  |  |  |
+| 20 | `PP.LCC.RepairCutOffTime` | `PpChannelCutoff_Repaircutofftime` | TField | Yes | RepairCutOffTime is used to capture the cut-off time to be considered for processing payments in repair queue Repair Cut-off time field is Non-Mandatory and has 'Blank' as the default. If not defined, TPH should consider the normal cut-off time defined as per existing functionality. |
+| 21 | `PP.LCC.RepairCutOffTimeFX` | `PpChannelCutoff_Repaircutofftimefx` | TField | Yes | RepairCutOffTimeFX is used to capture the cut-off time to be considered for processing FX payments in repair queue. Repair Cut-off time field is Non-Mandatory and has 'Blank' as the default. If not defined, TPH should consider the normal cut-off time with FX defined as per existing functionality. |
+| 22 | `PP.LCC.ClearingNatureCode` | `PpChannelCutoff_Clearingnaturecode` |  |  |  |
+| 23 | `PP.LCC.MaxInstTimeOut` | `PpChannelCutoff_Maxinsttimeout` |  |  |  |
+| 24 | `PP.LCC.WarehouseReleaseTime` | `PpChannelCutoff_Warehousereleasetime` | TField |  | When this field is set with a particular time and if payments processed before this time, then payments will be parked in a "Warehouse" queue(Status Code = 19) and then executed when a service is run after this time. The time should be always less than the channel cut-off time. Value entered here will be defaulted in the Releasetime field in the POR.TRANSACTION application as the next available Execution time of the day. |
+| 25 | `PP.LCC.LOCAL.REF` | `PpChannelCutoff_LocalRef` |  |  |  |
+| 26 | `PP.LCC.LinkID` | `PpChannelCutoff_Linkid` | TField |  |  |
+| 27 | `PP.LCC.OVERRIDE` | `PpChannelCutoff_Override` |  |  |  |
+| 28 | `PP.LCC.RECORD.STATUS` | `PpChannelCutoff_RecordStatus` | String |  |  |
+| 29 | `PP.LCC.CURR.NO` | `PpChannelCutoff_CurrNo` | String |  |  |
+| 30 | `PP.LCC.INPUTTER` | `PpChannelCutoff_Inputter` |  |  |  |
+| 31 | `PP.LCC.DATE.TIME` | `PpChannelCutoff_DateTime` |  |  |  |
+| 32 | `PP.LCC.AUTHORISER` | `PpChannelCutoff_Authoriser` | String |  |  |
+| 33 | `PP.LCC.CO.CODE` | `PpChannelCutoff_CoCode` | String |  |  |
+| 34 | `PP.LCC.DEPT.CODE` | `PpChannelCutoff_DeptCode` | String |  |  |
+| 35 | `PP.LCC.AUDITOR.CODE` | `PpChannelCutoff_AuditorCode` | String |  |  |
+| 36 | `PP.LCC.AUDIT.DATE.TIME` | `PpChannelCutoff_AuditDateTime` | String |  |  |

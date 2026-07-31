@@ -1,0 +1,92 @@
+# AA.PRICING.GRID — Table Schema
+
+> Source: `INSERTS/I_F.AA.PRICING.GRID` in `AA_PricingGrid.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.GRID.ACTIVITY` | `AaSimPricingGrid_Activity` |  |  |  |
+| 2 | `AA.GRID.ACTION` | `AaSimPricingGrid_Action` |  |  |  |
+| 3 | `AA.GRID.CRITERION.ID` | `AaSimPricingGrid_CriterionId` |  |  |  |
+| 4 | `AA.GRID.TARGET.ID` | `AaSimPricingGrid_TargetId` |  |  |  |
+| 5 | `AA.GRID.DEFAULT` | `AaSimPricingGrid_Default` |  |  |  |
+| 6 | `AA.GRID.RESERVED.3` | `AaSimPricingGrid_Reserved3` |  |  |  |
+| 7 | `AA.GRID.RESERVED.2` | `AaSimPricingGrid_Reserved2` |  |  |  |
+| 8 | `AA.GRID.RESERVED.1` | `AaSimPricingGrid_Reserved1` |  |  |  |
+| 9 | `AA.GRID.TIER.TYPE` | `AaSimPricingGrid_TierType` |  |  |  |
+| 10 | `AA.GRID.CRITERION.1` | `AaSimPricingGrid_Criterion1` |  |  |  |
+| 11 | `AA.GRID.CRITERION.2` | `AaSimPricingGrid_Criterion2` |  |  |  |
+| 12 | `AA.GRID.CRITERION.3` | `AaSimPricingGrid_Criterion3` |  |  |  |
+| 13 | `AA.GRID.CRITERION.4` | `AaSimPricingGrid_Criterion4` |  |  |  |
+| 14 | `AA.GRID.CRITERION.5` | `AaSimPricingGrid_Criterion5` |  |  |  |
+| 15 | `AA.GRID.CRITERION.6` | `AaSimPricingGrid_Criterion6` |  |  |  |
+| 16 | `AA.GRID.CRITERION.7` | `AaSimPricingGrid_Criterion7` |  |  |  |
+| 17 | `AA.GRID.CRITERION.8` | `AaSimPricingGrid_Criterion8` |  |  |  |
+| 18 | `AA.GRID.CRITERION.9` | `AaSimPricingGrid_Criterion9` |  |  |  |
+| 19 | `AA.GRID.CRITERION.10` | `AaSimPricingGrid_Criterion10` |  |  |  |
+| 20 | `AA.GRID.TARGET.1` | `AaSimPricingGrid_Target1` |  |  |  |
+| 21 | `AA.GRID.TARGET.2` | `AaSimPricingGrid_Target2` |  |  |  |
+| 22 | `AA.GRID.TARGET.3` | `AaSimPricingGrid_Target3` |  |  |  |
+| 23 | `AA.GRID.TARGET.4` | `AaSimPricingGrid_Target4` |  |  |  |
+| 24 | `AA.GRID.TARGET.5` | `AaSimPricingGrid_Target5` |  |  |  |
+| 25 | `AA.GRID.TARGET.6` | `AaSimPricingGrid_Target6` |  |  |  |
+| 26 | `AA.GRID.TARGET.7` | `AaSimPricingGrid_Target7` |  |  |  |
+| 27 | `AA.GRID.TARGET.8` | `AaSimPricingGrid_Target8` |  |  |  |
+| 28 | `AA.GRID.TARGET.9` | `AaSimPricingGrid_Target9` |  |  |  |
+| 29 | `AA.GRID.TARGET.10` | `AaSimPricingGrid_Target10` |  |  |  |
+| 30 | `AA.GRID.RESERVED.6` | `AaSimPricingGrid_Reserved6` |  |  |  |
+| 31 | `AA.GRID.RESERVED.5` | `AaSimPricingGrid_Reserved5` |  |  |  |
+| 32 | `AA.GRID.RESERVED.4` | `AaSimPricingGrid_Reserved4` |  |  |  |
+| 33 | `AA.GRID.RESERVED.9` | `AaSimPricingGrid_Reserved9` |  |  |  |
+| 34 | `AA.GRID.RESERVED.8` | `AaSimPricingGrid_Reserved8` |  |  |  |
+| 35 | `AA.GRID.RESERVED.7` | `AaSimPricingGrid_Reserved7` |  |  |  |
+| 36 | `AA.GRID.LOCAL.REF` | `AaSimPricingGrid_LocalRef` |  |  |  |
+| 37 | `AA.GRID.PR.ATTRIBUTE` | `AaSimPricingGrid_PrAttribute` |  |  |  |
+| 38 | `AA.GRID.PR.VALUE` | `AaSimPricingGrid_PrValue` |  |  |  |
+| 39 | `AA.GRID.PR.BRK.RES` | `AaSimPricingGrid_PrBrkRes` |  |  |  |
+| 40 | `AA.GRID.PR.BRK.MSG` | `AaSimPricingGrid_PrBrkMsg` |  |  |  |
+| 41 | `AA.GRID.PR.BRK.CHARGE` | `AaSimPricingGrid_PrBrkCharge` |  |  |  |
+| 42 | `AA.GRID.PR.RESERVED.3` | `AaSimPricingGrid_PrReserved3` |  |  |  |
+| 43 | `AA.GRID.PR.RESERVED.2` | `AaSimPricingGrid_PrReserved2` |  |  |  |
+| 44 | `AA.GRID.PR.RESERVED.1` | `AaSimPricingGrid_PrReserved1` |  |  |  |
+| 45 | `AA.GRID.PR.APP.METHOD` | `AaSimPricingGrid_PrAppMethod` |  |  |  |
+| 46 | `AA.GRID.PR.APP.PERIOD` | `AaSimPricingGrid_PrAppPeriod` |  |  |  |
+| 47 | `AA.GRID.SYS.RESERVE7` | `AaSimPricingGrid_SysReserve7` |  |  |  |
+| 48 | `AA.GRID.SYS.RESERVE6` | `AaSimPricingGrid_SysReserve6` |  |  |  |
+| 49 | `AA.GRID.OWNING.COMPANY` | `AaSimPricingGrid_OwningCompany` |  |  |  |
+| 50 | `AA.GRID.API.ATTRIBUTE` | `AaSimPricingGrid_ApiAttribute` |  |  |  |
+| 51 | `AA.GRID.SYS.RESERVE3` | `AaSimPricingGrid_SysReserve3` |  |  |  |
+| 52 | `AA.GRID.SYS.RESERVE2` | `AaSimPricingGrid_SysReserve2` |  |  |  |
+| 53 | `AA.GRID.SYS.RESERVE1` | `AaSimPricingGrid_SysReserve1` |  |  |  |
+| 54 | `AA.GRID.DEFAULT.ATTR.OPTION` | `AaSimPricingGrid_DefaultAttrOption` |  |  |  |
+| 55 | `AA.GRID.DEFAULT.NEGOTIABLE` | `AaSimPricingGrid_DefaultNegotiable` |  |  |  |
+| 56 | `AA.GRID.NR.ATTRIBUTE` | `AaSimPricingGrid_NrAttribute` |  |  |  |
+| 57 | `AA.GRID.NR.OPTIONS` | `AaSimPricingGrid_NrOptions` |  |  |  |
+| 58 | `AA.GRID.NR.ATTRIBUTE.RULE` | `AaSimPricingGrid_NrAttributeRule` |  |  |  |
+| 59 | `AA.GRID.NR.VALUE.SOURCE` | `AaSimPricingGrid_NrValueSource` |  |  |  |
+| 60 | `AA.GRID.NR.STD.COMP` | `AaSimPricingGrid_NrStdComp` |  |  |  |
+| 61 | `AA.GRID.NR.TYPE` | `AaSimPricingGrid_NrType` |  |  |  |
+| 62 | `AA.GRID.NR.VALUE` | `AaSimPricingGrid_NrValue` |  |  |  |
+| 63 | `AA.GRID.NR.MESSAGE` | `AaSimPricingGrid_NrMessage` |  |  |  |
+| 64 | `AA.GRID.CHANGED.FIELDS` | `AaSimPricingGrid_ChangedFields` |  |  |  |
+| 65 | `AA.GRID.NEGOTIATED.FLDS` | `AaSimPricingGrid_NegotiatedFlds` |  |  |  |
+| 66 | `AA.GRID.ID.COMP.1` | `AaSimPricingGrid_IdComp1` |  |  |  |
+| 67 | `AA.GRID.ID.COMP.2` | `AaSimPricingGrid_IdComp2` |  |  |  |
+| 68 | `AA.GRID.ID.COMP.3` | `AaSimPricingGrid_IdComp3` |  |  |  |
+| 69 | `AA.GRID.ID.COMP.4` | `AaSimPricingGrid_IdComp4` |  |  |  |
+| 70 | `AA.GRID.ID.COMP.5` | `AaSimPricingGrid_IdComp5` |  |  |  |
+| 71 | `AA.GRID.ID.COMP.6` | `AaSimPricingGrid_IdComp6` |  |  |  |
+| 72 | `AA.GRID.RESERVED2.ID` | `AaSimPricingGrid_Reserved2Id` |  |  |  |
+| 73 | `AA.GRID.TARGET.PRODUCT` | `AaSimPricingGrid_TargetProduct` |  |  |  |
+| 74 | `AA.GRID.STMT.NOS` | `AaSimPricingGrid_StmtNos` |  |  |  |
+| 75 | `AA.GRID.OVERRIDE` | `AaSimPricingGrid_Override` |  |  |  |
+| 76 | `AA.GRID.RECORD.STATUS` | `AaSimPricingGrid_RecordStatus` |  |  |  |
+| 77 | `AA.GRID.CURR.NO` | `AaSimPricingGrid_CurrNo` |  |  |  |
+| 78 | `AA.GRID.INPUTTER` | `AaSimPricingGrid_Inputter` |  |  |  |
+| 79 | `AA.GRID.DATE.TIME` | `AaSimPricingGrid_DateTime` |  |  |  |
+| 80 | `AA.GRID.AUTHORISER` | `AaSimPricingGrid_Authoriser` |  |  |  |
+| 81 | `AA.GRID.CO.CODE` | `AaSimPricingGrid_CoCode` |  |  |  |
+| 82 | `AA.GRID.DEPT.CODE` | `AaSimPricingGrid_DeptCode` |  |  |  |
+| 83 | `AA.GRID.AUDITOR.CODE` | `AaSimPricingGrid_AuditorCode` |  |  |  |
+| 84 | `AA.GRID.AUDIT.DATE.TIME` | `AaSimPricingGrid_AuditDateTime` |  |  |  |

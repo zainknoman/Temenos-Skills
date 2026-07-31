@@ -1,0 +1,91 @@
+# IS.PARAMETER — Table Schema
+
+> Source: `INSERTS/I_F.IS.PARAMETER` in `IS_Config.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `IS.PAR.DESCRIPTION` | `IsParameter_Description` |  |  |  |
+| 2 | `IS.PAR.AA.PRODUCT` | `IsParameter_AaProduct` |  |  |  |
+| 3 | `IS.PAR.FIN.ELIG.STATUS` | `IsParameter_FinEligStatus` |  |  |  |
+| 4 | `IS.PAR.SIM.BINDING` | `IsParameter_SimBinding` | TField |  |  |
+| 5 | `IS.PAR.COMPANY` | `IsParameter_Company` |  |  |  |
+| 6 | `IS.PAR.RESTRICT.ASSET` | `IsParameter_RestrictAsset` |  |  |  |
+| 7 | `IS.PAR.STATUS` | `IsParameter_Status` |  |  |  |
+| 8 | `IS.PAR.GOODS.TRANSIT.CAT` | `IsParameter_GoodsTransitCat` | TField | Yes | The Category to refer Goods In Transit Account. During Approval, the account formed out of this category will be used as Goods In Transit Account for Accounting. Validation Rules: 1. Valid T24 Internal category ranging from 10000 to 19999. 2. Mandatory Input if one of the workflow status is "APPROVAL" |
+| 9 | `IS.PAR.PURCHASE.ORDER.CAT` | `IsParameter_PurchaseOrderCat` | TField | Yes | Category to refer Purchase Order Account. During Approval, the account formed out of this category will be used as Purchase Order Account for Accounting. Validation Rules: 1. Valid Internal category ranging from 10000 to 19999. 2. Mandatory Input if one of the workflow status is "APPROVAL" |
+| 10 | `IS.PAR.PREAPPROVAL.TXN` | `IsParameter_PreapprovalTxn` | TField | Yes | Transaction code that will be used while raising Pre-Approval entries. Validation Rules: 1. Valid record from the table TRANSACTION. 2. Mandatory Input if one of the workflow status is "APPROVAL" |
+| 11 | `IS.PAR.PURCHASE.CAT` | `IsParameter_PurchaseCat` | TField | Yes | Category to refer Purchase Account. During Purchase, the account formed out of this category will be used as Purchase Account for Accounting. Validation Rules: 1. Valid Internal category ranging from 10000 to 19999. 2. Mandatory Input if one of the workflow status is "PURCHASE" |
+| 12 | `IS.PAR.MULTI.SUPP.CAT` | `IsParameter_MultiSuppCat` | TField |  |  |
+| 13 | `IS.PAR.PURCHASE.TXN` | `IsParameter_PurchaseTxn` | TField | Yes | Transaction code that will be used while raising Purchase entries. Validation Rules: 1. valid record from the table TRANSACTION 2. Mandatory Input if one of the workflow status is "PURCHASE" |
+| 14 | `IS.PAR.DOWN.PAY.CAT` | `IsParameter_DownPayCat` | TField |  | Category for Down Payment Customer Account. Validation Rules: 1. Valid T24 Internal category ranging from 10000 to 19999. |
+| 15 | `IS.PAR.LIAB.TRANSFER.CAT` | `IsParameter_LiabTransferCat` | TField |  | Category to refer Liability Transfer Account. Validation Rules: 1. Valid Internal category ranging from 10000 to 19999. |
+| 16 | `IS.PAR.DOWN.PAY.FT.TYPE` | `IsParameter_DownPayFtType` | TField |  | The transaction type condition for down payment. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 17 | `IS.PAR.VENDOR.FT.TYPE` | `IsParameter_VendorFtType` | TField |  | The transaction type condition for Vendor Payments. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 18 | `IS.PAR.VENDOR.EXT.FT.TYPE` | `IsParameter_VendorExtFtType` | TField |  | The transaction type condition for External Vendor Payments(NOSTRO). Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 19 | `IS.PAR.COST.FT.TYPE` | `IsParameter_CostFtType` | TField |  | The transaction type condition for Additional Cost Payments. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 20 | `IS.PAR.COST.EXT.FT.TYPE` | `IsParameter_CostExtFtType` | TField |  | The transaction type condition for External Additional Cost Payments(NOSTRO). Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 21 | `IS.PAR.COST.TXN` | `IsParameter_CostTxn` | TField |  | The transaction code to be referenced while raising accounting entries for additional cost. Validation Rules: 1. Valid record from the table TRANSACTION |
+| 22 | `IS.PAR.RESTRICT.COST` | `IsParameter_RestrictCost` |  |  |  |
+| 23 | `IS.PAR.RETENTION.PCT` | `IsParameter_RetentionPct` | TField |  | The percentage of the Vendor payment to be retained from paying. Validation Rules: 1. Valid percentage (less than 100). |
+| 24 | `IS.PAR.RETENTION.CAT` | `IsParameter_RetentionCat` | TField |  | Category to refer Retention Account. The retention amount will be withheld in this account. Validation Rules: 1. Valid Internal category ranging from 10000 to 19999. |
+| 25 | `IS.PAR.DECIMAL.PRICE` | `IsParameter_DecimalPrice` | TField |  | The number of decimals the asset unit price can be accepted. Validation Rules: 1. Any value from 0 to 10 |
+| 26 | `IS.PAR.CONTRIB.BY.ASSET` | `IsParameter_ContribByAsset` | TField |  |  |
+| 27 | `IS.PAR.TRACK.DELIVERY` | `IsParameter_TrackDelivery` | TField |  | Delivery tracking of the assets being requested can be enabled through this field. On setting this field, system will enable delivery tracking feature for the Asset. Enabling the checkbox will expect the system to deliver goods and track the goods delivered. Validation Rules: 1. Valid values are "Y" and NULL while checking and unchecking the checkbox respectively. |
+| 28 | `IS.PAR.SALE.SETTLE.CAT` | `IsParameter_SaleSettleCat` | TField |  | Category to refer Sale Settlement Account during Differential Pricing of Sale. Validation Rules: 1. Valid Internal category ranging from 10000 to 19999. |
+| 29 | `IS.PAR.SALE.PROFIT.CAT` | `IsParameter_SaleProfitCat` | TField |  | The PL Category to account the profit gained from the Differential Pricing of Sale. Validation Rules: 1. Valid PL Category ranging from 50000 to 69999. |
+| 30 | `IS.PAR.SALE.LOSS.CAT` | `IsParameter_SaleLossCat` | TField |  | The PL Category to account the loss incurred due to the Differential Pricing of Sale. Validation Rules: 1. Valid PL Category ranging from 50000 to 69999. |
+| 31 | `IS.PAR.SALE.PL.TXN` | `IsParameter_SalePlTxn` | TField |  | The transaction code to be referenced while raising accounting entries for Differential Pricing of Sale. Validation Rules: 1. Valid record from the table TRANSACTION |
+| 32 | `IS.PAR.DP.STAGE` | `IsParameter_DpStage` | TField |  | The Stage at which the Customer Contribution or Down Payment is declared for the Asset Request contract. On setting the value "Contract", the Customer will declare the down payment in the application IS.CONTRACT until reaching the Finance Eligible Status. Down Payment has to be made through FT application to proceed with Finance. On setting the value "Finance", the Customer will pay the Down Payment as Customer Contribution during Disbursement of the Finance Contract through the application IS.DISBURSEMENT. Only contribution in terms of Bank and Cash are transacted in T24. All Other kinds of contribution are only recorded in the contract and not transacted in T24. Validation Rules: 1. Valid values are "Contract" and "Finance". |
+| 33 | `IS.PAR.BROKER.BUY.CAT` | `IsParameter_BrokerBuyCat` | TField |  | The Category to represent the Buy Broker Wash Account. Validation Rules: 1. Must be a valid record from the table CATEGORY. 2. Valid Internal category ranging from 10000 to 19999 |
+| 34 | `IS.PAR.BROKER.SELL.CAT` | `IsParameter_BrokerSellCat` | TField |  | The Category to represent the Sell Broker Wash Account. Validation Rules: 1. Must be a valid record from the table CATEGORY. 2. Valid Internal category ranging from 10000 to 19999 |
+| 35 | `IS.PAR.BROKER.FT.TYPE` | `IsParameter_BrokerFtType` | TField |  | The transaction type condition for Broker Payments. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 36 | `IS.PAR.BROKER.EXT.FT.TYPE` | `IsParameter_BrokerExtFtType` | TField |  | The transaction type condition for External Broker Payments(NOSTRO). Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 37 | `IS.PAR.REVIEW.WASH.CAT` | `IsParameter_ReviewWashCat` | TField |  | Category to refer Review Expense Account. Validation Rules: 1. Valid Internal category ranging from 10000 to 19999. |
+| 38 | `IS.PAR.REVIEW.EXPENSE.CAT` | `IsParameter_ReviewExpenseCat` | TField |  | The PL Category to pay out review expenses if the review expense is borne by the bank. Validation Rules: 1. Valid PL Category ranging from 50000 to 69999. |
+| 39 | `IS.PAR.REVIEW.TXN` | `IsParameter_ReviewTxn` | TField |  | The transaction code to be referenced while raising accounting entries for review transactions. Validation Rules: 1. Valid record from the table TRANSACTION |
+| 40 | `IS.PAR.REVIEW.FT.TYPE` | `IsParameter_ReviewFtType` | TField |  | The transaction type condition for Reviewer Payments. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 41 | `IS.PAR.REVIEW.EXT.FT.TYPE` | `IsParameter_ReviewExtFtType` | TField |  | The transaction type condition for External Reviewer Payments. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 42 | `IS.PAR.LC.PERCENT` | `IsParameter_LcPercent` | TField |  | The Percentage of the Document amount to be defaulted during Finance. Validation Rules: 1. Valid percentage (less than 100). |
+| 43 | `IS.PAR.MUSHARAKA.KEY` | `IsParameter_MusharakaKey` | TField | Yes | The Musharaka Parameter key which defines the Musharaka features of the product. Validation Rules: 1. Valid key from IS.MUSH.PARAM. 2. Mandatory input if the PRODUCT.TYPE is "Musharaka". |
+| 44 | `IS.PAR.REPOSSESS.CAT` | `IsParameter_RepossessCat` | TField |  | The category that will be used to refer Repossess Account. Validation Rules: 1. Valid Internal category ranging from 10000 to 19999. |
+| 45 | `IS.PAR.RESALE.PROFIT.CAT` | `IsParameter_ResaleProfitCat` | TField |  | The PL category to which the resale profit has to be accounted. After the purchase of the commodity for the purpose of leasing, if the customer backs out of his promise to lease the same, the bank will make a resale in open market and such profit is accounted in this P/L category. Validation Rules: 1. Valid PL Category ranging from 50000 to 69999. |
+| 46 | `IS.PAR.RESALE.LOSS.CAT` | `IsParameter_ResaleLossCat` | TField |  | The PL category to which the resale loss has to be accounted. When the bank makes a loss on account of selling the defaulted goods in the open market, such loss is debited from the internal a/c. This may either recover the loss or write-off in profit/loss account. Validation Rules: 1. Valid PL Category ranging from 50000 to 69999. |
+| 47 | `IS.PAR.REPOSSESS.TXN` | `IsParameter_RepossessTxn` | TField |  | The Transaction code that will be used while raising Repossess entries. Validation Rules: 1. Valid record from the table TRANSACTION. |
+| 48 | `IS.PAR.RESALE.PROFIT.TXN` | `IsParameter_ResaleProfitTxn` | TField |  | The Transaction code that will be used while raising Resale entries that gains profit. Validation Rules: 1. Valid record from the table TRANSACTION. |
+| 49 | `IS.PAR.RESALE.LOSS.TXN` | `IsParameter_ResaleLossTxn` | TField |  | The Transaction code that will be used while raising Resale entries that results in Loss. Validation Rules: 1. Valid record from the table TRANSACTION. |
+| 50 | `IS.PAR.OUT.SALE.CAT` | `IsParameter_OutSaleCat` | TField |  | Category to refer Outright Sale Account. Validation Rules: 1. Valid Internal category ranging from 10000 to 19999. |
+| 51 | `IS.PAR.DISBURSE.FT.TYPE` | `IsParameter_DisburseFtType` | TField |  | The transaction type condition for Disbursements of AA Lending contracts while creating DISBURSEMENT definition in the application IS.DISBURSEMENT. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 52 | `IS.PAR.REPAY.FT.TYPE` | `IsParameter_RepayFtType` | TField |  | The transaction type condition for Repayment transaction of AA Contracts while creating DISBURSEMENT definition in the application IS.DISBURSEMENT. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 53 | `IS.PAR.LOG.SETTLE.EVENTS` | `IsParameter_LogSettleEvents` | TField | Yes | Category to refer Multi supplier Account. This is the Vendor Wash account used in the Contract during Purchase. Vendor Payments are disbursed from this account. Validation Rules: 1. Valid Internal category ranging from 10000 to 19999. 2. Mandatory Input if one of the workflow status is "PURCHASE" |
+| 54 | `IS.PAR.RET.COM.BROKER` | `IsParameter_RetComBroker` | TField |  | This field will be used to capture the FTTC id to raise accounting entries for "Return Commodity to Broker" transaction. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 55 | `IS.PAR.COM.BROK.SETTLE` | `IsParameter_ComBrokSettle` | TField |  | This field will be used to capture the FTTC id to raise accounting entries for "Broker settlement" transaction Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 56 | `IS.PAR.PL.PRFT.RET.COM` | `IsParameter_PlPrftRetCom` | TField |  | This field will be used to capture the PL category for profit accounting entries during "Return commodity to Broker" for different sell unit price Validation Rules: 1. Must be a valid record from the table CATEGORY. 2. Valid Internal category ranging from 50000 to 69999 |
+| 57 | `IS.PAR.PL.LOSS.RET.COM` | `IsParameter_PlLossRetCom` | TField |  | This field will be used to capture the PL category for loss accounting entries during "Return commodity to Broker" for different sell unit price Validation Rules: 1. Must be a valid record from the table CATEGORY. 2. Valid Internal category ranging from 50000 to 69999 |
+| 58 | `IS.PAR.RET.COMMODITY.PL.TXN` | `IsParameter_RetCommodityPlTxn` | TField |  | This field will be used to capture the FTTC id to raise accounting entries for "Return Commodity to Broker" transaction Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 59 | `IS.PAR.SELL.COM.BROKER` | `IsParameter_SellComBroker` | TField |  | This field will be used to capture the FTTC id to raise accounting entries for "Sell Commodity to Sell Broker" transaction Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 60 | `IS.PAR.COM.BROK.SETTLE.FTTC` | `IsParameter_ComBrokSettleFttc` | TField |  | The company for which the related asset is restricted. Validation Rules: 1. Must be a valid company or a value "ALL" |
+| 61 | `IS.PAR.SELL.COM.BROKER.FTTC` | `IsParameter_SellComBrokerFttc` | TField |  | The Auto conversion of Simulation Finance(AA) contracts to live arrangement to be enabled is specified in this field. |
+| 62 | `IS.PAR.REBATE.FT.TYPE` | `IsParameter_RebateFtType` | TField |  | This transaction type is used when generating the accounting entries by using IS.PAYMENT or FUNDS.TRANSFER application. Validation Rules: 1. Valid record from the table FT.TXN.TYPE.CONDITION. |
+| 63 | `IS.PAR.REBATE.INCOME.CAT` | `IsParameter_RebateIncomeCat` | TField |  | Define Rebate Income PL category to which rebate amount will be credited. Validation Rules: 1. Should be a valid record from CATEGORY table. 2. Should be in the range from 50000 to 69999. |
+| 64 | `IS.PAR.BR.FEE.EXPENSE.CATEG` | `IsParameter_BrFeeExpenseCateg` | TField |  |  |
+| 65 | `IS.PAR.BR.FEE.FT.TYPE` | `IsParameter_BrFeeFtType` | TField |  | The transaction code to be referenced while raising accounting entries for the broker payment Validation Rules: 1. Valid record from the table FT.TRANSACTION.TYPE |
+| 66 | `IS.PAR.BR.SH.PAY.FTTC` | `IsParameter_BrShPayFttc` | TField |  | The transaction code to be referenced while making broker share payments Validation Rules: 1. Valid record from the table FT.TRANSACTION.TYPE |
+| 67 | `IS.PAR.BR.SH.PAY.EXT.FTTC` | `IsParameter_BrShPayExtFttc` | TField |  | The transaction code to be referenced while making external broker share payments Validation Rules: 1. Valid record from the table FT.TRANSACTION.TYPE |
+| 68 | `IS.PAR.COMPRESSION.PRFT.FTTC` | `IsParameter_CompressionPrftFttc` | TField |  | The Down Payment contribution by the customer can be provided as "Cash" or "Supplier". The field CONTRIB.BY.ASSET specifies if the customer down payment contribution could be provided as "Asset" |
+| 69 | `IS.PAR.RESALE.SETTLE.CAT` | `IsParameter_ResaleSettleCat` | TField |  | Resale Settlement Categ Field Validation Rules: 1. It should display the List of Internal category codes between 10000 to 19999 as a drop down 1. If the seller is not having an Account with bank, then an Internal Account number created by using this category will get defaulted. |
+| 70 | `IS.PAR.PROFIT.DECL.INCOME.PL` | `IsParameter_ProfitDeclIncomePl` | TField |  | Specify the Income Category for Profit Declaration |
+| 71 | `IS.PAR.PROFIT.DECL.EXPENSE.PL` | `IsParameter_ProfitDeclExpensePl` | TField |  | Specify the Expense Category for Profit Declaration |
+| 72 | `IS.PAR.PROFIT.DECL.TXN` | `IsParameter_ProfitDeclTxn` | TField |  | This field is used to declare the transaction type condition for profit declaration transaction. Should be a valid record from the table FT.TXN.TYPE.CONDITION. |
+| 73 | `IS.PAR.LOCAL.REF` | `IsParameter_LocalRef` |  |  |  |
+| 74 | `IS.PAR.OVERRIDE` | `IsParameter_Override` |  |  |  |
+| 75 | `IS.PAR.RECORD.STATUS` | `IsParameter_RecordStatus` | String |  |  |
+| 76 | `IS.PAR.CURR.NO` | `IsParameter_CurrNo` | String |  |  |
+| 77 | `IS.PAR.INPUTTER` | `IsParameter_Inputter` |  |  |  |
+| 78 | `IS.PAR.DATE.TIME` | `IsParameter_DateTime` |  |  |  |
+| 79 | `IS.PAR.AUTHORISER` | `IsParameter_Authoriser` | String |  |  |
+| 80 | `IS.PAR.CO.CODE` | `IsParameter_CoCode` | String |  |  |
+| 81 | `IS.PAR.DEPT.CODE` | `IsParameter_DeptCode` | String |  |  |
+| 82 | `IS.PAR.AUDITOR.CODE` | `IsParameter_AuditorCode` | String |  |  |
+| 83 | `IS.PAR.AUDIT.DATE.TIME` | `IsParameter_AuditDateTime` | String |  |  |

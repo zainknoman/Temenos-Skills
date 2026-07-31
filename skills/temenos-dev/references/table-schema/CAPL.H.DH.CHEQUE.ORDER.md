@@ -1,0 +1,94 @@
+# CAPL.H.DH.CHEQUE.ORDER — Table Schema
+
+> Source: `INSERTS/I_F.CAPL.H.DH.CHEQUE.ORDER` in `CACQOR_ChequeOrdering.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `CAPL.H.DCO.DATE.ORDERED` | `CaplHDhChequeOrder_DateOrdered` |  |  |  |
+| 2 | `CAPL.H.DCO.CHQ.ORD.INDICATOR` | `CaplHDhChequeOrder_ChqOrdIndicator` |  |  |  |
+| 3 | `CAPL.H.DCO.MICR.ACCT.NO` | `CaplHDhChequeOrder_MicrAcctNo` |  |  |  |
+| 4 | `CAPL.H.DCO.US.ACCT.FLAG` | `CaplHDhChequeOrder_UsAcctFlag` |  |  |  |
+| 5 | `CAPL.H.DCO.CUSTOMER.NUMBER` | `CaplHDhChequeOrder_CustomerNumber` |  |  |  |
+| 6 | `CAPL.H.DCO.VISUAL.ACCT.NO` | `CaplHDhChequeOrder_VisualAcctNo` |  |  |  |
+| 7 | `CAPL.H.DCO.LANGUAGE` | `CaplHDhChequeOrder_Language` |  |  |  |
+| 8 | `CAPL.H.DCO.ACCOUNT.TYPE` | `CaplHDhChequeOrder_AccountType` |  |  |  |
+| 9 | `CAPL.H.DCO.SHIP.TO.CODE` | `CaplHDhChequeOrder_ShipToCode` |  |  |  |
+| 10 | `CAPL.H.DCO.BILLING.OVERRIDE.CODE` | `CaplHDhChequeOrder_BillingOverrideCode` |  |  |  |
+| 11 | `CAPL.H.DCO.STYLE.CODE` | `CaplHDhChequeOrder_StyleCode` |  |  |  |
+| 12 | `CAPL.H.DCO.QUANTITY` | `CaplHDhChequeOrder_Quantity` |  |  |  |
+| 13 | `CAPL.H.DCO.STARTING.NUMBER` | `CaplHDhChequeOrder_StartingNumber` |  |  |  |
+| 14 | `CAPL.H.DCO.NAME.1` | `CaplHDhChequeOrder_Name1` |  |  |  |
+| 15 | `CAPL.H.DCO.NAME.2` | `CaplHDhChequeOrder_Name2` |  |  |  |
+| 16 | `CAPL.H.DCO.ADDRESS.1` | `CaplHDhChequeOrder_Address1` |  |  |  |
+| 17 | `CAPL.H.DCO.ADDRESS.2` | `CaplHDhChequeOrder_Address2` |  |  |  |
+| 18 | `CAPL.H.DCO.ADDRESS.3` | `CaplHDhChequeOrder_Address3` |  |  |  |
+| 19 | `CAPL.H.DCO.POSTAL.CODE` | `CaplHDhChequeOrder_PostalCode` |  |  |  |
+| 20 | `CAPL.H.DCO.HOME.TELEPHONE.NUMBER` | `CaplHDhChequeOrder_HomeTelephoneNumber` |  |  |  |
+| 21 | `CAPL.H.DCO.REORDER.FLAG` | `CaplHDhChequeOrder_ReorderFlag` |  |  |  |
+| 22 | `CAPL.H.DCO.AUXILIARY.INFORMATION` | `CaplHDhChequeOrder_AuxiliaryInformation` |  |  |  |
+| 23 | `CAPL.H.DCO.AMERICAN.MICR` | `CaplHDhChequeOrder_AmericanMicr` |  |  |  |
+| 24 | `CAPL.H.DCO.BILLING.REGION` | `CaplHDhChequeOrder_BillingRegion` |  |  |  |
+| 25 | `CAPL.H.DCO.BULK.NUMBER` | `CaplHDhChequeOrder_BulkNumber` |  |  |  |
+| 26 | `CAPL.H.DCO.SUPRESS.AUTO.COMP` | `CaplHDhChequeOrder_SupressAutoComp` |  |  |  |
+| 27 | `CAPL.H.DCO.REASON.CODE` | `CaplHDhChequeOrder_ReasonCode` |  |  |  |
+| 28 | `CAPL.H.DCO.PRIORITY.CODE` | `CaplHDhChequeOrder_PriorityCode` |  |  |  |
+| 29 | `CAPL.H.DCO.HOME.EMAIL.ADDRESS` | `CaplHDhChequeOrder_HomeEmailAddress` |  |  |  |
+| 30 | `CAPL.H.DCO.WORK.EMAIL.ADDRESS` | `CaplHDhChequeOrder_WorkEmailAddress` |  |  |  |
+| 31 | `CAPL.H.DCO.PRINT.HOME.EMAIL.ADD.IND` | `CaplHDhChequeOrder_PrintHomeEmailAddInd` |  |  |  |
+| 32 | `CAPL.H.DCO.WORK.TELEPHONE.NO` | `CaplHDhChequeOrder_WorkTelephoneNo` |  |  |  |
+| 33 | `CAPL.H.DCO.PRINT.HOME.TEL.NO.INDICATOR` | `CaplHDhChequeOrder_PrintHomeTelNoIndicator` |  |  |  |
+| 34 | `CAPL.H.DCO.TRANS.REGIS.REQUIRED` | `CaplHDhChequeOrder_TransRegisRequired` |  |  |  |
+| 35 | `CAPL.H.DCO.PRINT.WORK.TEL.NO.INDICATOR` | `CaplHDhChequeOrder_PrintWorkTelNoIndicator` |  |  |  |
+| 36 | `CAPL.H.DCO.PRINT.WORK.EMAIL.INDICATOR` | `CaplHDhChequeOrder_PrintWorkEmailIndicator` |  |  |  |
+| 37 | `CAPL.H.DCO.COPIES` | `CaplHDhChequeOrder_Copies` |  |  |  |
+| 38 | `CAPL.H.DCO.COLOUR` | `CaplHDhChequeOrder_Colour` |  |  |  |
+| 39 | `CAPL.H.DCO.WINDOW.CHEQUE.OPTION` | `CaplHDhChequeOrder_WindowChequeOption` |  |  |  |
+| 40 | `CAPL.H.DCO.RE.LINE.TEXT` | `CaplHDhChequeOrder_ReLineText` |  |  |  |
+| 41 | `CAPL.H.DCO.PER.PAR` | `CaplHDhChequeOrder_PerPar` |  |  |  |
+| 42 | `CAPL.H.DCO.SIGNATURE.LINE.COUNT` | `CaplHDhChequeOrder_SignatureLineCount` |  |  |  |
+| 43 | `CAPL.H.DCO.TITLE.LINE.1` | `CaplHDhChequeOrder_TitleLine1` |  |  |  |
+| 44 | `CAPL.H.DCO.TITLE.LINE.2` | `CaplHDhChequeOrder_TitleLine2` |  |  |  |
+| 45 | `CAPL.H.DCO.STUB` | `CaplHDhChequeOrder_Stub` |  |  |  |
+| 46 | `CAPL.H.DCO.ACCOUNT.DESIGNATION.1` | `CaplHDhChequeOrder_AccountDesignation1` |  |  |  |
+| 47 | `CAPL.H.DCO.ACCOUNT.DESIGNATION.2` | `CaplHDhChequeOrder_AccountDesignation2` |  |  |  |
+| 48 | `CAPL.H.DCO.ACCOUNT.DESIGNATION.3` | `CaplHDhChequeOrder_AccountDesignation3` |  |  |  |
+| 49 | `CAPL.H.DCO.CHEQUE.OPTION.INDICATOR` | `CaplHDhChequeOrder_ChequeOptionIndicator` |  |  |  |
+| 50 | `CAPL.H.DCO.OPTION.NAME` | `CaplHDhChequeOrder_OptionName` |  |  |  |
+| 51 | `CAPL.H.DCO.OPTION.NUMBER` | `CaplHDhChequeOrder_OptionNumber` |  |  |  |
+| 52 | `CAPL.H.DCO.OP.QUANTITY` | `CaplHDhChequeOrder_OpQuantity` |  |  |  |
+| 53 | `CAPL.H.DCO.BUSN.ADD.CHQ.MARK.FLAG` | `CaplHDhChequeOrder_BusnAddChqMarkFlag` |  |  |  |
+| 54 | `CAPL.H.DCO.SHIP.TO.OTHR.REC.INDICATOR` | `CaplHDhChequeOrder_ShipToOthrRecIndicator` |  |  |  |
+| 55 | `CAPL.H.DCO.SHIP.TO.OTHR.FIELD.1` | `CaplHDhChequeOrder_ShipToOthrField1` |  |  |  |
+| 56 | `CAPL.H.DCO.SHIP.TO.OTHR.FIELD.2` | `CaplHDhChequeOrder_ShipToOthrField2` |  |  |  |
+| 57 | `CAPL.H.DCO.SHIP.TO.OTHR.FIELD.3` | `CaplHDhChequeOrder_ShipToOthrField3` |  |  |  |
+| 58 | `CAPL.H.DCO.SHIP.TO.OTHR.FIELD.4` | `CaplHDhChequeOrder_ShipToOthrField4` |  |  |  |
+| 59 | `CAPL.H.DCO.SHIP.TO.OTHR.FIELD.5` | `CaplHDhChequeOrder_ShipToOthrField5` |  |  |  |
+| 60 | `CAPL.H.DCO.SHIP.TO.OTHER.POSTAL.CODE` | `CaplHDhChequeOrder_ShipToOtherPostalCode` |  |  |  |
+| 61 | `CAPL.H.DCO.POST.CHARGE` | `CaplHDhChequeOrder_PostCharge` |  |  |  |
+| 62 | `CAPL.H.DCO.DEBIT.ACCT.NO` | `CaplHDhChequeOrder_DebitAcctNo` |  |  |  |
+| 63 | `CAPL.H.DCO.CHQ.ORDER.COMM.TYPE` | `CaplHDhChequeOrder_ChqOrderCommType` |  |  |  |
+| 64 | `CAPL.H.DCO.CHQ.ORDER.CHG.AMT` | `CaplHDhChequeOrder_ChqOrderChgAmt` |  |  |  |
+| 65 | `CAPL.H.DCO.CHQ.ORDER.TXN.REF` | `CaplHDhChequeOrder_ChqOrderTxnRef` |  |  |  |
+| 66 | `CAPL.H.DCO.LOCAL.REF` | `CaplHDhChequeOrder_LocalRef` |  |  |  |
+| 67 | `CAPL.H.DCO.CHQ.PRINT.ADDRESS` | `CaplHDhChequeOrder_ChqPrintAddress` |  |  |  |
+| 68 | `CAPL.H.DCO.RESERVED.9` | `CaplHDhChequeOrder_Reserved9` |  |  |  |
+| 69 | `CAPL.H.DCO.RESERVED.8` | `CaplHDhChequeOrder_Reserved8` |  |  |  |
+| 70 | `CAPL.H.DCO.RESERVED.7` | `CaplHDhChequeOrder_Reserved7` |  |  |  |
+| 71 | `CAPL.H.DCO.RESERVED.6` | `CaplHDhChequeOrder_Reserved6` |  |  |  |
+| 72 | `CAPL.H.DCO.RESERVED.5` | `CaplHDhChequeOrder_Reserved5` |  |  |  |
+| 73 | `CAPL.H.DCO.RESERVED.4` | `CaplHDhChequeOrder_Reserved4` |  |  |  |
+| 74 | `CAPL.H.DCO.RESERVED.3` | `CaplHDhChequeOrder_Reserved3` |  |  |  |
+| 75 | `CAPL.H.DCO.RESERVED.2` | `CaplHDhChequeOrder_Reserved2` |  |  |  |
+| 76 | `CAPL.H.DCO.RESERVED.1` | `CaplHDhChequeOrder_Reserved1` |  |  |  |
+| 77 | `CAPL.H.DCO.OVERRIDE` | `CaplHDhChequeOrder_Override` |  |  |  |
+| 78 | `CAPL.H.DCO.RECORD.STATUS` | `CaplHDhChequeOrder_RecordStatus` |  |  |  |
+| 79 | `CAPL.H.DCO.CURR.NO` | `CaplHDhChequeOrder_CurrNo` |  |  |  |
+| 80 | `CAPL.H.DCO.INPUTTER` | `CaplHDhChequeOrder_Inputter` |  |  |  |
+| 81 | `CAPL.H.DCO.DATE.TIME` | `CaplHDhChequeOrder_DateTime` |  |  |  |
+| 82 | `CAPL.H.DCO.AUTHORISER` | `CaplHDhChequeOrder_Authoriser` |  |  |  |
+| 83 | `CAPL.H.DCO.CO.CODE` | `CaplHDhChequeOrder_CoCode` |  |  |  |
+| 84 | `CAPL.H.DCO.DEPT.CODE` | `CaplHDhChequeOrder_DeptCode` |  |  |  |
+| 85 | `CAPL.H.DCO.AUDITOR.CODE` | `CaplHDhChequeOrder_AuditorCode` |  |  |  |
+| 86 | `CAPL.H.DCO.AUDIT.DATE.TIME` | `CaplHDhChequeOrder_AuditDateTime` |  |  |  |

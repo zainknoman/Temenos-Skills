@@ -1,0 +1,91 @@
+# AA.PRODUCT.BUNDLE — Table Schema
+
+> Source: `INSERTS/I_F.AA.PRODUCT.BUNDLE` in `AA_ProductBundle.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.BUN.ACTIVITY` | `AaSimProductBundle_Activity` |  |  |  |
+| 2 | `AA.BUN.ACTION` | `AaSimProductBundle_Action` |  |  |  |
+| 3 | `AA.BUN.PRODUCT.GROUP` | `AaSimProductBundle_ProductGroup` |  |  |  |
+| 4 | `AA.BUN.RESERVED.10` | `AaSimProductBundle_Reserved10` |  |  |  |
+| 5 | `AA.BUN.PRODUCT` | `AaSimProductBundle_Product` |  |  |  |
+| 6 | `AA.BUN.MINIMUM` | `AaSimProductBundle_Minimum` |  |  |  |
+| 7 | `AA.BUN.MAXIMUM` | `AaSimProductBundle_Maximum` |  |  |  |
+| 8 | `AA.BUN.ARRANGEMENT` | `AaSimProductBundle_Arrangement` |  |  |  |
+| 9 | `AA.BUN.ARR.CURRENCY` | `AaSimProductBundle_ArrCurrency` |  |  |  |
+| 10 | `AA.BUN.MASTER.ARRANGEMENT` | `AaSimProductBundle_MasterArrangement` |  |  |  |
+| 11 | `AA.BUN.MASTER.TYPE` | `AaSimProductBundle_MasterType` |  |  |  |
+| 12 | `AA.BUN.RESERVED.9` | `AaSimProductBundle_Reserved9` |  |  |  |
+| 13 | `AA.BUN.RESERVED.8` | `AaSimProductBundle_Reserved8` |  |  |  |
+| 14 | `AA.BUN.PARTICIPANT.OWNER` | `AaSimProductBundle_ParticipantOwner` |  |  |  |
+| 15 | `AA.BUN.PARTICIPANT.CURRENCY` | `AaSimProductBundle_ParticipantCurrency` |  |  |  |
+| 16 | `AA.BUN.REFERENCE.CCY` | `AaSimProductBundle_ReferenceCcy` |  |  |  |
+| 17 | `AA.BUN.LIMIT.TYPE` | `AaSimProductBundle_LimitType` |  |  |  |
+| 18 | `AA.BUN.MASTER.ACC.NAME` | `AaSimProductBundle_MasterAccName` |  |  |  |
+| 19 | `AA.BUN.MASTER.LIVE.DATE` | `AaSimProductBundle_MasterLiveDate` |  |  |  |
+| 20 | `AA.BUN.SETTLE.ARRANGEMENT` | `AaSimProductBundle_SettleArrangement` |  |  |  |
+| 21 | `AA.BUN.ALLOWED.CURRENCY` | `AaSimProductBundle_AllowedCurrency` |  |  |  |
+| 22 | `AA.BUN.CURRENCY.MINIMUM` | `AaSimProductBundle_CurrencyMinimum` |  |  |  |
+| 23 | `AA.BUN.CURRENCY.MAXIMUM` | `AaSimProductBundle_CurrencyMaximum` |  |  |  |
+| 24 | `AA.BUN.LOCAL.REF` | `AaSimProductBundle_LocalRef` |  |  |  |
+| 25 | `AA.BUN.PR.ATTRIBUTE` | `AaSimProductBundle_PrAttribute` |  |  |  |
+| 26 | `AA.BUN.PR.VALUE` | `AaSimProductBundle_PrValue` |  |  |  |
+| 27 | `AA.BUN.PR.BRK.RES` | `AaSimProductBundle_PrBrkRes` |  |  |  |
+| 28 | `AA.BUN.PR.BRK.MSG` | `AaSimProductBundle_PrBrkMsg` |  |  |  |
+| 29 | `AA.BUN.PR.BRK.CHARGE` | `AaSimProductBundle_PrBrkCharge` |  |  |  |
+| 30 | `AA.BUN.PR.RESERVED.3` | `AaSimProductBundle_PrReserved3` |  |  |  |
+| 31 | `AA.BUN.PR.RESERVED.2` | `AaSimProductBundle_PrReserved2` |  |  |  |
+| 32 | `AA.BUN.PR.RESERVED.1` | `AaSimProductBundle_PrReserved1` |  |  |  |
+| 33 | `AA.BUN.PR.APP.METHOD` | `AaSimProductBundle_PrAppMethod` |  |  |  |
+| 34 | `AA.BUN.PR.APP.PERIOD` | `AaSimProductBundle_PrAppPeriod` |  |  |  |
+| 35 | `AA.BUN.SYS.RESERVE7` | `AaSimProductBundle_SysReserve7` |  |  |  |
+| 36 | `AA.BUN.SYS.RESERVE6` | `AaSimProductBundle_SysReserve6` |  |  |  |
+| 37 | `AA.BUN.OWNING.COMPANY` | `AaSimProductBundle_OwningCompany` |  |  |  |
+| 38 | `AA.BUN.API.ATTRIBUTE` | `AaSimProductBundle_ApiAttribute` |  |  |  |
+| 39 | `AA.BUN.SYS.RESERVE3` | `AaSimProductBundle_SysReserve3` |  |  |  |
+| 40 | `AA.BUN.SYS.RESERVE2` | `AaSimProductBundle_SysReserve2` |  |  |  |
+| 41 | `AA.BUN.SYS.RESERVE1` | `AaSimProductBundle_SysReserve1` |  |  |  |
+| 42 | `AA.BUN.DEFAULT.ATTR.OPTION` | `AaSimProductBundle_DefaultAttrOption` |  |  |  |
+| 43 | `AA.BUN.DEFAULT.NEGOTIABLE` | `AaSimProductBundle_DefaultNegotiable` |  |  |  |
+| 44 | `AA.BUN.NR.ATTRIBUTE` | `AaSimProductBundle_NrAttribute` |  |  |  |
+| 45 | `AA.BUN.NR.OPTIONS` | `AaSimProductBundle_NrOptions` |  |  |  |
+| 46 | `AA.BUN.NR.ATTRIBUTE.RULE` | `AaSimProductBundle_NrAttributeRule` |  |  |  |
+| 47 | `AA.BUN.NR.VALUE.SOURCE` | `AaSimProductBundle_NrValueSource` |  |  |  |
+| 48 | `AA.BUN.NR.STD.COMP` | `AaSimProductBundle_NrStdComp` |  |  |  |
+| 49 | `AA.BUN.NR.TYPE` | `AaSimProductBundle_NrType` |  |  |  |
+| 50 | `AA.BUN.NR.VALUE` | `AaSimProductBundle_NrValue` |  |  |  |
+| 51 | `AA.BUN.NR.MESSAGE` | `AaSimProductBundle_NrMessage` |  |  |  |
+| 52 | `AA.BUN.CHANGED.FIELDS` | `AaSimProductBundle_ChangedFields` |  |  |  |
+| 53 | `AA.BUN.NEGOTIATED.FLDS` | `AaSimProductBundle_NegotiatedFlds` |  |  |  |
+| 54 | `AA.BUN.ID.COMP.1` | `AaSimProductBundle_IdComp1` |  |  |  |
+| 55 | `AA.BUN.ID.COMP.2` | `AaSimProductBundle_IdComp2` |  |  |  |
+| 56 | `AA.BUN.ID.COMP.3` | `AaSimProductBundle_IdComp3` |  |  |  |
+| 57 | `AA.BUN.ID.COMP.4` | `AaSimProductBundle_IdComp4` |  |  |  |
+| 58 | `AA.BUN.ID.COMP.5` | `AaSimProductBundle_IdComp5` |  |  |  |
+| 59 | `AA.BUN.ID.COMP.6` | `AaSimProductBundle_IdComp6` |  |  |  |
+| 60 | `AA.BUN.RESERVED2.ID` | `AaSimProductBundle_Reserved2Id` |  |  |  |
+| 61 | `AA.BUN.TARGET.PRODUCT` | `AaSimProductBundle_TargetProduct` |  |  |  |
+| 62 | `AA.BUN.STMT.NOS` | `AaSimProductBundle_StmtNos` |  |  |  |
+| 63 | `AA.BUN.OVERRIDE` | `AaSimProductBundle_Override` |  |  |  |
+| 64 | `AA.BUN.RECORD.STATUS` | `AaSimProductBundle_RecordStatus` |  |  |  |
+| 65 | `AA.BUN.CURR.NO` | `AaSimProductBundle_CurrNo` |  |  |  |
+| 66 | `AA.BUN.INPUTTER` | `AaSimProductBundle_Inputter` |  |  |  |
+| 67 | `AA.BUN.DATE.TIME` | `AaSimProductBundle_DateTime` |  |  |  |
+| 68 | `AA.BUN.AUTHORISER` | `AaSimProductBundle_Authoriser` |  |  |  |
+| 69 | `AA.BUN.CO.CODE` | `AaSimProductBundle_CoCode` |  |  |  |
+| 70 | `AA.BUN.DEPT.CODE` | `AaSimProductBundle_DeptCode` |  |  |  |
+| 71 | `AA.BUN.AUDITOR.CODE` | `AaSimProductBundle_AuditorCode` |  |  |  |
+| 72 | `AA.BUN.AUDIT.DATE.TIME` | `AaSimProductBundle_AuditDateTime` |  |  |  |
+| 73 | `AA.BUN.ACCOUNT.REF` | `AaSimProductBundle_AccountRef` |  |  |  |
+| 74 | `AA.BUN.ALTERNATE.REF` | `AaSimProductBundle_AlternateRef` |  |  |  |
+| 75 | `AA.BUN.LIVE.DATE` | `AaSimProductBundle_LiveDate` |  |  |  |
+| 76 | `AA.BUN.MASTER.PRODUCT` | `AaSimProductBundle_MasterProduct` |  |  |  |
+| 77 | `AA.BUN.BUNDLE.CONSTITUTION` | `AaSimProductBundle_BundleConstitution` |  |  |  |
+| 78 | `AA.BUN.ARR.INFO.ONLY` | `AaSimProductBundle_ArrInfoOnly` |  |  |  |
+| 79 | `AA.BUN.ARR.ROLE` | `AaSimProductBundle_ArrRole` |  |  |  |
+| 80 | `AA.BUN.GENERATE.IBAN` | `AaSimProductBundle_GenerateIban` |  |  |  |
+| 81 | `AA.BUN.ALT.ID.TYPE` | `AaSimProductBundle_AltIdType` |  |  |  |
+| 82 | `AA.BUN.ALT.ID` | `AaSimProductBundle_AltId` |  |  |  |
+| 83 | `AA.BUN.MASTER.ALTERNATE.REFERENCE` | `AaSimProductBundle_MasterAlternateReference` |  |  |  |

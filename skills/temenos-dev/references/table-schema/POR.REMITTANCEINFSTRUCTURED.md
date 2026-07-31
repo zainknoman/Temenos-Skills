@@ -1,0 +1,117 @@
+# POR.REMITTANCEINFSTRUCTURED — Table Schema
+
+> Source: `INSERTS/I_F.POR.REMITTANCEINFSTRUCTURED` in `PP_InwardCreditTransferInitiationService.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `PPPRS.CompanyID` | `PorRemittanceinfstructured_Companyid` | TField |  | Company ID that needs to process the payment. Example : BNK,GB1 Validation Rules: 3 alphanumeric characters. The value links to the field 'CompanyID' in PPT.COMPANY |
+| 2 | `PPPRS.FTNumber` | `PorRemittanceinfstructured_Ftnumber` | TField |  | FTNumber to identify the records related to one payment. |
+| 3 | `PPPRS.RefDocInfTpCdOrPropCd` | `PorRemittanceinfstructured_Refdocinftpcdorpropcd` |  |  |  |
+| 4 | `PPPRS.RefDocInfTpCdOrPropProp` | `PorRemittanceinfstructured_Refdocinftpcdorpropprop` |  |  |  |
+| 5 | `PPPRS.RefDocInfTpIssuer` | `PorRemittanceinfstructured_Refdocinftpissuer` |  |  |  |
+| 6 | `PPPRS.RefDocInfNr` | `PorRemittanceinfstructured_Refdocinfnr` |  |  |  |
+| 7 | `PPPRS.RefDocInfRelatedDt` | `PorRemittanceinfstructured_Refdocinfrelateddt` |  |  |  |
+| 8 | `PPPRS.RefDocAmDuePayableAm` | `PorRemittanceinfstructured_Refdocamduepayableam` |  |  |  |
+| 9 | `PPPRS.RefDocAmDuePayableAmCcy` | `PorRemittanceinfstructured_Refdocamduepayableamccy` |  |  |  |
+| 10 | `PPPRS.RefDocAmDiscApplAmTpCd` | `PorRemittanceinfstructured_Refdocamdiscapplamtpcd` |  |  |  |
+| 11 | `PPPRS.RefDocAmDiscApplAmTpProp` | `PorRemittanceinfstructured_Refdocamdiscapplamtpprop` |  |  |  |
+| 12 | `PPPRS.RefDocAmDiscApplAmAm` | `PorRemittanceinfstructured_Refdocamdiscapplamam` |  |  |  |
+| 13 | `PPPRS.RefDocAmDiscApplAmAmCcy` | `PorRemittanceinfstructured_Refdocamdiscapplamamccy` |  |  |  |
+| 14 | `PPPRS.RefDocAmCrNoteAm` | `PorRemittanceinfstructured_Refdocamcrnoteam` |  |  |  |
+| 15 | `PPPRS.RefDocAmCrNoteAmCcy` | `PorRemittanceinfstructured_Refdocamcrnoteamccy` |  |  |  |
+| 16 | `PPPRS.RefDocAmTaxAmTpCd` | `PorRemittanceinfstructured_Refdocamtaxamtpcd` |  |  |  |
+| 17 | `PPPRS.RefDocAmTaxAmTpProp` | `PorRemittanceinfstructured_Refdocamtaxamtpprop` |  |  |  |
+| 18 | `PPPRS.RefDocAmTaxAmAm` | `PorRemittanceinfstructured_Refdocamtaxamam` |  |  |  |
+| 19 | `PPPRS.RefDocAmTaxAmAmCcy` | `PorRemittanceinfstructured_Refdocamtaxamamccy` |  |  |  |
+| 20 | `PPPRS.RefDocAmAdjAmRsnAm` | `PorRemittanceinfstructured_Refdocamadjamrsnam` |  |  |  |
+| 21 | `PPPRS.RefDocAmAdjAmRsnAmCcy` | `PorRemittanceinfstructured_Refdocamadjamrsnamccy` |  |  |  |
+| 22 | `PPPRS.RefDocAmAdjAmRsnCrDbInd` | `PorRemittanceinfstructured_Refdocamadjamrsncrdbind` |  |  |  |
+| 23 | `PPPRS.RefDocAmAdjAmRsnRsn` | `PorRemittanceinfstructured_Refdocamadjamrsnrsn` |  |  |  |
+| 24 | `PPPRS.RefDocAmAdjAmRsnAdInf` | `PorRemittanceinfstructured_Refdocamadjamrsnadinf` |  |  |  |
+| 25 | `PPPRS.RefDocAmRemittedAm` | `PorRemittanceinfstructured_Refdocamremittedam` |  |  |  |
+| 26 | `PPPRS.RefDocAmRemittedAmCcy` | `PorRemittanceinfstructured_Refdocamremittedamccy` |  |  |  |
+| 27 | `PPPRS.CrdRefInfTpCdOrPropCd` | `PorRemittanceinfstructured_Crdrefinftpcdorpropcd` |  |  |  |
+| 28 | `PPPRS.CrdRefInfTpCdOrPropProp` | `PorRemittanceinfstructured_Crdrefinftpcdorpropprop` |  |  |  |
+| 29 | `PPPRS.CrdRefInfTpIssuer` | `PorRemittanceinfstructured_Crdrefinftpissuer` |  |  |  |
+| 30 | `PPPRS.CrdRefInfRef` | `PorRemittanceinfstructured_Crdrefinfref` |  |  |  |
+| 31 | `PPPRS.InvrNm` | `PorRemittanceinfstructured_Invrnm` |  |  |  |
+| 32 | `PPPRS.InvrPostAddTp` | `PorRemittanceinfstructured_Invrpostaddtp` |  |  |  |
+| 33 | `PPPRS.InvrPostAddDep` | `PorRemittanceinfstructured_Invrpostadddep` |  |  |  |
+| 34 | `PPPRS.InvrPostAddSubDep` | `PorRemittanceinfstructured_Invrpostaddsubdep` |  |  |  |
+| 35 | `PPPRS.InvrPostAddStreetNm` | `PorRemittanceinfstructured_Invrpostaddstreetnm` |  |  |  |
+| 36 | `PPPRS.InvrPostAddBuildingNr` | `PorRemittanceinfstructured_Invrpostaddbuildingnr` |  |  |  |
+| 37 | `PPPRS.InvrPostAddPostCd` | `PorRemittanceinfstructured_Invrpostaddpostcd` |  |  |  |
+| 38 | `PPPRS.InvrPostAddTownNm` | `PorRemittanceinfstructured_Invrpostaddtownnm` |  |  |  |
+| 39 | `PPPRS.InvrPostAddCtrySubDiv` | `PorRemittanceinfstructured_Invrpostaddctrysubdiv` |  |  |  |
+| 40 | `PPPRS.InvrPostAddCtry` | `PorRemittanceinfstructured_Invrpostaddctry` |  |  |  |
+| 41 | `PPPRS.InvrPostAddLine1` | `PorRemittanceinfstructured_Invrpostaddline1` |  |  |  |
+| 42 | `PPPRS.InvrPostAddLine2` | `PorRemittanceinfstructured_Invrpostaddline2` |  |  |  |
+| 43 | `PPPRS.InvrPostAddLine3` | `PorRemittanceinfstructured_Invrpostaddline3` |  |  |  |
+| 44 | `PPPRS.InvrPostAddLine4` | `PorRemittanceinfstructured_Invrpostaddline4` |  |  |  |
+| 45 | `PPPRS.InvrPostAddLine5` | `PorRemittanceinfstructured_Invrpostaddline5` |  |  |  |
+| 46 | `PPPRS.InvrPostAddLine6` | `PorRemittanceinfstructured_Invrpostaddline6` |  |  |  |
+| 47 | `PPPRS.InvrPostAddLine7` | `PorRemittanceinfstructured_Invrpostaddline7` |  |  |  |
+| 48 | `PPPRS.InvrIdOrgIdAnyBIC` | `PorRemittanceinfstructured_Invridorgidanybic` |  |  |  |
+| 49 | `PPPRS.InvrIdOrgIdOthId` | `PorRemittanceinfstructured_Invridorgidothid` |  |  |  |
+| 50 | `PPPRS.InvrIdOrgIdOthSchNmCd` | `PorRemittanceinfstructured_Invridorgidothschnmcd` |  |  |  |
+| 51 | `PPPRS.InvrIdOrgIdOthSchNmProp` | `PorRemittanceinfstructured_Invridorgidothschnmprop` |  |  |  |
+| 52 | `PPPRS.InvrIdOrgIdOthIssuer` | `PorRemittanceinfstructured_Invridorgidothissuer` |  |  |  |
+| 53 | `PPPRS.InvrIdPrvIdDtPlOfBrBrDt` | `PorRemittanceinfstructured_Invridprviddtplofbrbrdt` |  |  |  |
+| 54 | `PPPRS.InvrIdPrvIdDtPlOfBrProvOfBr` | `PorRemittanceinfstructured_Invridprviddtplofbrprovofbr` |  |  |  |
+| 55 | `PPPRS.InvrIdPrvIdDtPlOfBrCityOfBr` | `PorRemittanceinfstructured_Invridprviddtplofbrcityofbr` |  |  |  |
+| 56 | `PPPRS.InvrIdPrvIdDtPlOfBrCtryOfBr` | `PorRemittanceinfstructured_Invridprviddtplofbrctryofbr` |  |  |  |
+| 57 | `PPPRS.InvrIdPrvIdOthId` | `PorRemittanceinfstructured_Invridprvidothid` |  |  |  |
+| 58 | `PPPRS.InvrIdPrvIdOthSchNmCd` | `PorRemittanceinfstructured_Invridprvidothschnmcd` |  |  |  |
+| 59 | `PPPRS.InvrIdPrvIdOthSchNmProp` | `PorRemittanceinfstructured_Invridprvidothschnmprop` |  |  |  |
+| 60 | `PPPRS.InvrIdPrvIdOthIssuer` | `PorRemittanceinfstructured_Invridprvidothissuer` |  |  |  |
+| 61 | `PPPRS.InvrCtryOfResidence` | `PorRemittanceinfstructured_Invrctryofresidence` |  |  |  |
+| 62 | `PPPRS.InvrContactDetNmPrefix` | `PorRemittanceinfstructured_Invrcontactdetnmprefix` |  |  |  |
+| 63 | `PPPRS.InvrContactDetNm` | `PorRemittanceinfstructured_Invrcontactdetnm` |  |  |  |
+| 64 | `PPPRS.InvrContactDetPhoneNr` | `PorRemittanceinfstructured_Invrcontactdetphonenr` |  |  |  |
+| 65 | `PPPRS.InvrContactDetMobileNr` | `PorRemittanceinfstructured_Invrcontactdetmobilenr` |  |  |  |
+| 66 | `PPPRS.InvrContactDetFaxNr` | `PorRemittanceinfstructured_Invrcontactdetfaxnr` |  |  |  |
+| 67 | `PPPRS.InvrContactDetEmailAdd` | `PorRemittanceinfstructured_Invrcontactdetemailadd` |  |  |  |
+| 68 | `PPPRS.InvrContactDetOth` | `PorRemittanceinfstructured_Invrcontactdetoth` |  |  |  |
+| 69 | `PPPRS.InveNm` | `PorRemittanceinfstructured_Invenm` |  |  |  |
+| 70 | `PPPRS.InvePostAddTp` | `PorRemittanceinfstructured_Invepostaddtp` |  |  |  |
+| 71 | `PPPRS.InvePostAddDep` | `PorRemittanceinfstructured_Invepostadddep` |  |  |  |
+| 72 | `PPPRS.InvePostAddSubDep` | `PorRemittanceinfstructured_Invepostaddsubdep` |  |  |  |
+| 73 | `PPPRS.InvePostAddStreetNm` | `PorRemittanceinfstructured_Invepostaddstreetnm` |  |  |  |
+| 74 | `PPPRS.InvePostAddBuildingNr` | `PorRemittanceinfstructured_Invepostaddbuildingnr` |  |  |  |
+| 75 | `PPPRS.InvePostAddPostCd` | `PorRemittanceinfstructured_Invepostaddpostcd` |  |  |  |
+| 76 | `PPPRS.InvePostAddTownNm` | `PorRemittanceinfstructured_Invepostaddtownnm` |  |  |  |
+| 77 | `PPPRS.InvePostAddCtrySubDiv` | `PorRemittanceinfstructured_Invepostaddctrysubdiv` |  |  |  |
+| 78 | `PPPRS.InvePostAddCtry` | `PorRemittanceinfstructured_Invepostaddctry` |  |  |  |
+| 79 | `PPPRS.InvePostAddLine1` | `PorRemittanceinfstructured_Invepostaddline1` |  |  |  |
+| 80 | `PPPRS.InvePostAddLine2` | `PorRemittanceinfstructured_Invepostaddline2` |  |  |  |
+| 81 | `PPPRS.InvePostAddLine3` | `PorRemittanceinfstructured_Invepostaddline3` |  |  |  |
+| 82 | `PPPRS.InvePostAddLine4` | `PorRemittanceinfstructured_Invepostaddline4` |  |  |  |
+| 83 | `PPPRS.InvePostAddLine5` | `PorRemittanceinfstructured_Invepostaddline5` |  |  |  |
+| 84 | `PPPRS.InvePostAddLine6` | `PorRemittanceinfstructured_Invepostaddline6` |  |  |  |
+| 85 | `PPPRS.InvePostAddLine7` | `PorRemittanceinfstructured_Invepostaddline7` |  |  |  |
+| 86 | `PPPRS.InveIdOrgIdAnyBIC` | `PorRemittanceinfstructured_Inveidorgidanybic` |  |  |  |
+| 87 | `PPPRS.InveIdOrgIdOthId` | `PorRemittanceinfstructured_Inveidorgidothid` |  |  |  |
+| 88 | `PPPRS.InveIdOrgIdOthSchNmCd` | `PorRemittanceinfstructured_Inveidorgidothschnmcd` |  |  |  |
+| 89 | `PPPRS.InveIdOrgIdOthSchNmProp` | `PorRemittanceinfstructured_Inveidorgidothschnmprop` |  |  |  |
+| 90 | `PPPRS.InveIdOrgIdOthIssuer` | `PorRemittanceinfstructured_Inveidorgidothissuer` |  |  |  |
+| 91 | `PPPRS.InveIdPrvIdDtPlOfBrBrDt` | `PorRemittanceinfstructured_Inveidprviddtplofbrbrdt` |  |  |  |
+| 92 | `PPPRS.InveIdPrvIdDtPlOfBrProvOfBr` | `PorRemittanceinfstructured_Inveidprviddtplofbrprovofbr` |  |  |  |
+| 93 | `PPPRS.InveIdPrvIdDtPlOfBrCityOfBr` | `PorRemittanceinfstructured_Inveidprviddtplofbrcityofbr` |  |  |  |
+| 94 | `PPPRS.InveIdPrvIdDtPlOfBrCtryOfBr` | `PorRemittanceinfstructured_Inveidprviddtplofbrctryofbr` |  |  |  |
+| 95 | `PPPRS.InveIdPrvIdOthId` | `PorRemittanceinfstructured_Inveidprvidothid` |  |  |  |
+| 96 | `PPPRS.InveIdPrvIdOthSchNmCd` | `PorRemittanceinfstructured_Inveidprvidothschnmcd` |  |  |  |
+| 97 | `PPPRS.InveIdPrvIdOthSchNmProp` | `PorRemittanceinfstructured_Inveidprvidothschnmprop` |  |  |  |
+| 98 | `PPPRS.InveIdPrvIdOthIssuer` | `PorRemittanceinfstructured_Inveidprvidothissuer` |  |  |  |
+| 99 | `PPPRS.InveCtryOfResidence` | `PorRemittanceinfstructured_Invectryofresidence` |  |  |  |
+| 100 | `PPPRS.InveContactDetNmPrefix` | `PorRemittanceinfstructured_Invecontactdetnmprefix` |  |  |  |
+| 101 | `PPPRS.InveContactDetNm` | `PorRemittanceinfstructured_Invecontactdetnm` |  |  |  |
+| 102 | `PPPRS.InveContactDetPhoneNr` | `PorRemittanceinfstructured_Invecontactdetphonenr` |  |  |  |
+| 103 | `PPPRS.InveContactDetMobileNr` | `PorRemittanceinfstructured_Invecontactdetmobilenr` |  |  |  |
+| 104 | `PPPRS.InveContactDetFaxNr` | `PorRemittanceinfstructured_Invecontactdetfaxnr` |  |  |  |
+| 105 | `PPPRS.InveContactDetEmailAdd` | `PorRemittanceinfstructured_Invecontactdetemailadd` |  |  |  |
+| 106 | `PPPRS.InveContactDetOth` | `PorRemittanceinfstructured_Invecontactdetoth` |  |  |  |
+| 107 | `PPPRS.AdRemittanceInf1` | `PorRemittanceinfstructured_Adremittanceinf1` |  |  |  |
+| 108 | `PPPRS.AdRemittanceInf2` | `PorRemittanceinfstructured_Adremittanceinf2` |  |  |  |
+| 109 | `PPPRS.AdRemittanceInf3` | `PorRemittanceinfstructured_Adremittanceinf3` |  |  |  |

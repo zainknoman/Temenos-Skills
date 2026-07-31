@@ -1,0 +1,91 @@
+# AA.EVIDENCE — Table Schema
+
+> Source: `INSERTS/I_F.AA.EVIDENCE` in `AA_Evidence.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.EVI.ACTIVITY` | `AaSimEvidence_Activity` |  |  |  |
+| 2 | `AA.EVI.ACTION` | `AaSimEvidence_Action` |  |  |  |
+| 3 | `AA.EVI.COVENANT.CATEG` | `AaSimEvidence_CovenantCateg` |  |  |  |
+| 4 | `AA.EVI.COVENANT.EVIDENCE` | `AaSimEvidence_CovenantEvidence` |  |  |  |
+| 5 | `AA.EVI.COVENANT.REL.EVIDENCE` | `AaSimEvidence_CovenantRelEvidence` |  |  |  |
+| 6 | `AA.EVI.COVENANT.RULE.OPER` | `AaSimEvidence_CovenantRuleOper` |  |  |  |
+| 7 | `AA.EVI.COVENANT.RULE.VALUE` | `AaSimEvidence_CovenantRuleValue` |  |  |  |
+| 8 | `AA.EVI.COVENANT.START.DATE` | `AaSimEvidence_CovenantStartDate` |  |  |  |
+| 9 | `AA.EVI.COVENANT.FREQUENCY` | `AaSimEvidence_CovenantFrequency` |  |  |  |
+| 10 | `AA.EVI.COVENANT.NOTICE.DAYS` | `AaSimEvidence_CovenantNoticeDays` |  |  |  |
+| 11 | `AA.EVI.RESERVED.19` | `AaSimEvidence_Reserved19` |  |  |  |
+| 12 | `AA.EVI.RESERVED.18` | `AaSimEvidence_Reserved18` |  |  |  |
+| 13 | `AA.EVI.RESERVED.17` | `AaSimEvidence_Reserved17` |  |  |  |
+| 14 | `AA.EVI.RESERVED.16` | `AaSimEvidence_Reserved16` |  |  |  |
+| 15 | `AA.EVI.COVENANT.CONSEQ` | `AaSimEvidence_CovenantConseq` |  |  |  |
+| 16 | `AA.EVI.RESERVED.15` | `AaSimEvidence_Reserved15` |  |  |  |
+| 17 | `AA.EVI.RESERVED.14` | `AaSimEvidence_Reserved14` |  |  |  |
+| 18 | `AA.EVI.RESERVED.13` | `AaSimEvidence_Reserved13` |  |  |  |
+| 19 | `AA.EVI.RESERVED.12` | `AaSimEvidence_Reserved12` |  |  |  |
+| 20 | `AA.EVI.RESERVED.11` | `AaSimEvidence_Reserved11` |  |  |  |
+| 21 | `AA.EVI.CONDITION.CATEG` | `AaSimEvidence_ConditionCateg` |  |  |  |
+| 22 | `AA.EVI.CONDITION.EVIDENCE` | `AaSimEvidence_ConditionEvidence` |  |  |  |
+| 23 | `AA.EVI.CONDITION.DUE.ACTIVITY` | `AaSimEvidence_ConditionDueActivity` |  |  |  |
+| 24 | `AA.EVI.CONDITION.CONSEQ` | `AaSimEvidence_ConditionConseq` |  |  |  |
+| 25 | `AA.EVI.CONDITION.REL.EVIDENCE` | `AaSimEvidence_ConditionRelEvidence` |  |  |  |
+| 26 | `AA.EVI.CONDITION.RULE.OPER` | `AaSimEvidence_ConditionRuleOper` |  |  |  |
+| 27 | `AA.EVI.CONDITION.RULE.VALUE` | `AaSimEvidence_ConditionRuleValue` |  |  |  |
+| 28 | `AA.EVI.RESERVED.7` | `AaSimEvidence_Reserved7` |  |  |  |
+| 29 | `AA.EVI.RESERVED.6` | `AaSimEvidence_Reserved6` |  |  |  |
+| 30 | `AA.EVI.RESERVED.5` | `AaSimEvidence_Reserved5` |  |  |  |
+| 31 | `AA.EVI.RESERVED.4` | `AaSimEvidence_Reserved4` |  |  |  |
+| 32 | `AA.EVI.RESERVED.3` | `AaSimEvidence_Reserved3` |  |  |  |
+| 33 | `AA.EVI.RESERVED.2` | `AaSimEvidence_Reserved2` |  |  |  |
+| 34 | `AA.EVI.RESERVED.1` | `AaSimEvidence_Reserved1` |  |  |  |
+| 35 | `AA.EVI.LOCAL.REF` | `AaSimEvidence_LocalRef` |  |  |  |
+| 36 | `AA.EVI.PR.ATTRIBUTE` | `AaSimEvidence_PrAttribute` |  |  |  |
+| 37 | `AA.EVI.PR.VALUE` | `AaSimEvidence_PrValue` |  |  |  |
+| 38 | `AA.EVI.PR.BRK.RES` | `AaSimEvidence_PrBrkRes` |  |  |  |
+| 39 | `AA.EVI.PR.BRK.MSG` | `AaSimEvidence_PrBrkMsg` |  |  |  |
+| 40 | `AA.EVI.PR.BRK.CHARGE` | `AaSimEvidence_PrBrkCharge` |  |  |  |
+| 41 | `AA.EVI.PR.RESERVED.3` | `AaSimEvidence_PrReserved3` |  |  |  |
+| 42 | `AA.EVI.PR.RESERVED.2` | `AaSimEvidence_PrReserved2` |  |  |  |
+| 43 | `AA.EVI.PR.RESERVED.1` | `AaSimEvidence_PrReserved1` |  |  |  |
+| 44 | `AA.EVI.PR.APP.METHOD` | `AaSimEvidence_PrAppMethod` |  |  |  |
+| 45 | `AA.EVI.PR.APP.PERIOD` | `AaSimEvidence_PrAppPeriod` |  |  |  |
+| 46 | `AA.EVI.SYS.RESERVE7` | `AaSimEvidence_SysReserve7` |  |  |  |
+| 47 | `AA.EVI.SYS.RESERVE6` | `AaSimEvidence_SysReserve6` |  |  |  |
+| 48 | `AA.EVI.OWNING.COMPANY` | `AaSimEvidence_OwningCompany` |  |  |  |
+| 49 | `AA.EVI.API.ATTRIBUTE` | `AaSimEvidence_ApiAttribute` |  |  |  |
+| 50 | `AA.EVI.SYS.RESERVE3` | `AaSimEvidence_SysReserve3` |  |  |  |
+| 51 | `AA.EVI.SYS.RESERVE2` | `AaSimEvidence_SysReserve2` |  |  |  |
+| 52 | `AA.EVI.SYS.RESERVE1` | `AaSimEvidence_SysReserve1` |  |  |  |
+| 53 | `AA.EVI.DEFAULT.ATTR.OPTION` | `AaSimEvidence_DefaultAttrOption` |  |  |  |
+| 54 | `AA.EVI.DEFAULT.NEGOTIABLE` | `AaSimEvidence_DefaultNegotiable` |  |  |  |
+| 55 | `AA.EVI.NR.ATTRIBUTE` | `AaSimEvidence_NrAttribute` |  |  |  |
+| 56 | `AA.EVI.NR.OPTIONS` | `AaSimEvidence_NrOptions` |  |  |  |
+| 57 | `AA.EVI.NR.ATTRIBUTE.RULE` | `AaSimEvidence_NrAttributeRule` |  |  |  |
+| 58 | `AA.EVI.NR.VALUE.SOURCE` | `AaSimEvidence_NrValueSource` |  |  |  |
+| 59 | `AA.EVI.NR.STD.COMP` | `AaSimEvidence_NrStdComp` |  |  |  |
+| 60 | `AA.EVI.NR.TYPE` | `AaSimEvidence_NrType` |  |  |  |
+| 61 | `AA.EVI.NR.VALUE` | `AaSimEvidence_NrValue` |  |  |  |
+| 62 | `AA.EVI.NR.MESSAGE` | `AaSimEvidence_NrMessage` |  |  |  |
+| 63 | `AA.EVI.CHANGED.FIELDS` | `AaSimEvidence_ChangedFields` |  |  |  |
+| 64 | `AA.EVI.NEGOTIATED.FLDS` | `AaSimEvidence_NegotiatedFlds` |  |  |  |
+| 65 | `AA.EVI.ID.COMP.1` | `AaSimEvidence_IdComp1` |  |  |  |
+| 66 | `AA.EVI.ID.COMP.2` | `AaSimEvidence_IdComp2` |  |  |  |
+| 67 | `AA.EVI.ID.COMP.3` | `AaSimEvidence_IdComp3` |  |  |  |
+| 68 | `AA.EVI.ID.COMP.4` | `AaSimEvidence_IdComp4` |  |  |  |
+| 69 | `AA.EVI.ID.COMP.5` | `AaSimEvidence_IdComp5` |  |  |  |
+| 70 | `AA.EVI.ID.COMP.6` | `AaSimEvidence_IdComp6` |  |  |  |
+| 71 | `AA.EVI.RESERVED2.ID` | `AaSimEvidence_Reserved2Id` |  |  |  |
+| 72 | `AA.EVI.TARGET.PRODUCT` | `AaSimEvidence_TargetProduct` |  |  |  |
+| 73 | `AA.EVI.STMT.NOS` | `AaSimEvidence_StmtNos` |  |  |  |
+| 74 | `AA.EVI.OVERRIDE` | `AaSimEvidence_Override` |  |  |  |
+| 75 | `AA.EVI.RECORD.STATUS` | `AaSimEvidence_RecordStatus` |  |  |  |
+| 76 | `AA.EVI.CURR.NO` | `AaSimEvidence_CurrNo` |  |  |  |
+| 77 | `AA.EVI.INPUTTER` | `AaSimEvidence_Inputter` |  |  |  |
+| 78 | `AA.EVI.DATE.TIME` | `AaSimEvidence_DateTime` |  |  |  |
+| 79 | `AA.EVI.AUTHORISER` | `AaSimEvidence_Authoriser` |  |  |  |
+| 80 | `AA.EVI.CO.CODE` | `AaSimEvidence_CoCode` |  |  |  |
+| 81 | `AA.EVI.DEPT.CODE` | `AaSimEvidence_DeptCode` |  |  |  |
+| 82 | `AA.EVI.AUDITOR.CODE` | `AaSimEvidence_AuditorCode` |  |  |  |
+| 83 | `AA.EVI.AUDIT.DATE.TIME` | `AaSimEvidence_AuditDateTime` |  |  |  |

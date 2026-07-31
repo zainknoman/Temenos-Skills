@@ -1,0 +1,93 @@
+# AA.SHARE.TRANSFER — Table Schema
+
+> Source: `INSERTS/I_F.AA.SHARE.TRANSFER` in `AA_ShareTransfer.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.ST.ACTIVITY` | `AaSimShareTransfer_Activity` |  |  |  |
+| 2 | `AA.ST.ACTION` | `AaSimShareTransfer_Action` |  |  |  |
+| 3 | `AA.ST.SELL.PARTICIPANT` | `AaSimShareTransfer_SellParticipant` |  |  |  |
+| 4 | `AA.ST.BUY.PARTICIPANT` | `AaSimShareTransfer_BuyParticipant` |  |  |  |
+| 5 | `AA.ST.BUY.BACK` | `AaSimShareTransfer_BuyBack` |  |  |  |
+| 6 | `AA.ST.OWN.BANK` | `AaSimShareTransfer_OwnBank` |  |  |  |
+| 7 | `AA.ST.AMOUNT` | `AaSimShareTransfer_Amount` |  |  |  |
+| 8 | `AA.ST.PARTICIPANT.ROLE` | `AaSimShareTransfer_ParticipantRole` |  |  |  |
+| 9 | `AA.ST.TRANSFER.PERCENTAGE` | `AaSimShareTransfer_TransferPercentage` |  |  |  |
+| 10 | `AA.ST.TRANSFER.TYPE` | `AaSimShareTransfer_TransferType` |  |  |  |
+| 11 | `AA.ST.PARTICIPATION.TYPE` | `AaSimShareTransfer_ParticipationType` |  |  |  |
+| 12 | `AA.ST.SECURITISATION.POOL.ID` | `AaSimShareTransfer_SecuritisationPoolId` |  |  |  |
+| 13 | `AA.ST.BENEFICIARY.CCY` | `AaSimShareTransfer_BeneficiaryCcy` |  |  |  |
+| 14 | `AA.ST.PROPERTY.CLASS` | `AaSimShareTransfer_PropertyClass` |  |  |  |
+| 15 | `AA.ST.PROPERTY` | `AaSimShareTransfer_Property` |  |  |  |
+| 16 | `AA.ST.BENEFICIARY.ID` | `AaSimShareTransfer_BeneficiaryId` |  |  |  |
+| 17 | `AA.ST.BENEF.PO.PRODUCT` | `AaSimShareTransfer_BenefPoProduct` |  |  |  |
+| 18 | `AA.ST.RESERVED.5` | `AaSimShareTransfer_Reserved5` |  |  |  |
+| 19 | `AA.ST.RESERVED.6` | `AaSimShareTransfer_Reserved6` |  |  |  |
+| 20 | `AA.ST.RESERVED.7` | `AaSimShareTransfer_Reserved7` |  |  |  |
+| 21 | `AA.ST.RESERVED.8` | `AaSimShareTransfer_Reserved8` |  |  |  |
+| 22 | `AA.ST.RESERVED.9` | `AaSimShareTransfer_Reserved9` |  |  |  |
+| 23 | `AA.ST.SKIM.PROPERTY` | `AaSimShareTransfer_SkimProperty` |  |  |  |
+| 24 | `AA.ST.SKIM.OPER` | `AaSimShareTransfer_SkimOper` |  |  |  |
+| 25 | `AA.ST.SKIM.RATE` | `AaSimShareTransfer_SkimRate` |  |  |  |
+| 26 | `AA.ST.RESERVED.10` | `AaSimShareTransfer_Reserved10` |  |  |  |
+| 27 | `AA.ST.RESERVED.11` | `AaSimShareTransfer_Reserved11` |  |  |  |
+| 28 | `AA.ST.RESERVED.12` | `AaSimShareTransfer_Reserved12` |  |  |  |
+| 29 | `AA.ST.SUB.ARRANGEMENT` | `AaSimShareTransfer_SubArrangement` |  |  |  |
+| 30 | `AA.ST.RESERVED.14` | `AaSimShareTransfer_Reserved14` |  |  |  |
+| 31 | `AA.ST.RESERVED.15` | `AaSimShareTransfer_Reserved15` |  |  |  |
+| 32 | `AA.ST.RESERVED.16` | `AaSimShareTransfer_Reserved16` |  |  |  |
+| 33 | `AA.ST.LOCAL.REF` | `AaSimShareTransfer_LocalRef` |  |  |  |
+| 34 | `AA.ST.PR.ATTRIBUTE` | `AaSimShareTransfer_PrAttribute` |  |  |  |
+| 35 | `AA.ST.PR.VALUE` | `AaSimShareTransfer_PrValue` |  |  |  |
+| 36 | `AA.ST.PR.BRK.RES` | `AaSimShareTransfer_PrBrkRes` |  |  |  |
+| 37 | `AA.ST.PR.BRK.MSG` | `AaSimShareTransfer_PrBrkMsg` |  |  |  |
+| 38 | `AA.ST.PR.BRK.CHARGE` | `AaSimShareTransfer_PrBrkCharge` |  |  |  |
+| 39 | `AA.ST.PR.RESERVED.3` | `AaSimShareTransfer_PrReserved3` |  |  |  |
+| 40 | `AA.ST.PR.RESERVED.2` | `AaSimShareTransfer_PrReserved2` |  |  |  |
+| 41 | `AA.ST.PR.RESERVED.1` | `AaSimShareTransfer_PrReserved1` |  |  |  |
+| 42 | `AA.ST.PR.APP.METHOD` | `AaSimShareTransfer_PrAppMethod` |  |  |  |
+| 43 | `AA.ST.PR.APP.PERIOD` | `AaSimShareTransfer_PrAppPeriod` |  |  |  |
+| 44 | `AA.ST.SYS.RESERVE7` | `AaSimShareTransfer_SysReserve7` |  |  |  |
+| 45 | `AA.ST.SYS.RESERVE6` | `AaSimShareTransfer_SysReserve6` |  |  |  |
+| 46 | `AA.ST.OWNING.COMPANY` | `AaSimShareTransfer_OwningCompany` |  |  |  |
+| 47 | `AA.ST.API.ATTRIBUTE` | `AaSimShareTransfer_ApiAttribute` |  |  |  |
+| 48 | `AA.ST.SYS.RESERVE3` | `AaSimShareTransfer_SysReserve3` |  |  |  |
+| 49 | `AA.ST.SYS.RESERVE2` | `AaSimShareTransfer_SysReserve2` |  |  |  |
+| 50 | `AA.ST.SYS.RESERVE1` | `AaSimShareTransfer_SysReserve1` |  |  |  |
+| 51 | `AA.ST.DEFAULT.ATTR.OPTION` | `AaSimShareTransfer_DefaultAttrOption` |  |  |  |
+| 52 | `AA.ST.DEFAULT.NEGOTIABLE` | `AaSimShareTransfer_DefaultNegotiable` |  |  |  |
+| 53 | `AA.ST.NR.ATTRIBUTE` | `AaSimShareTransfer_NrAttribute` |  |  |  |
+| 54 | `AA.ST.NR.OPTIONS` | `AaSimShareTransfer_NrOptions` |  |  |  |
+| 55 | `AA.ST.NR.ATTRIBUTE.RULE` | `AaSimShareTransfer_NrAttributeRule` |  |  |  |
+| 56 | `AA.ST.NR.VALUE.SOURCE` | `AaSimShareTransfer_NrValueSource` |  |  |  |
+| 57 | `AA.ST.NR.STD.COMP` | `AaSimShareTransfer_NrStdComp` |  |  |  |
+| 58 | `AA.ST.NR.TYPE` | `AaSimShareTransfer_NrType` |  |  |  |
+| 59 | `AA.ST.NR.VALUE` | `AaSimShareTransfer_NrValue` |  |  |  |
+| 60 | `AA.ST.NR.MESSAGE` | `AaSimShareTransfer_NrMessage` |  |  |  |
+| 61 | `AA.ST.CHANGED.FIELDS` | `AaSimShareTransfer_ChangedFields` |  |  |  |
+| 62 | `AA.ST.NEGOTIATED.FLDS` | `AaSimShareTransfer_NegotiatedFlds` |  |  |  |
+| 63 | `AA.ST.ID.COMP.1` | `AaSimShareTransfer_IdComp1` |  |  |  |
+| 64 | `AA.ST.ID.COMP.2` | `AaSimShareTransfer_IdComp2` |  |  |  |
+| 65 | `AA.ST.ID.COMP.3` | `AaSimShareTransfer_IdComp3` |  |  |  |
+| 66 | `AA.ST.ID.COMP.4` | `AaSimShareTransfer_IdComp4` |  |  |  |
+| 67 | `AA.ST.ID.COMP.5` | `AaSimShareTransfer_IdComp5` |  |  |  |
+| 68 | `AA.ST.ID.COMP.6` | `AaSimShareTransfer_IdComp6` |  |  |  |
+| 69 | `AA.ST.RESERVED2.ID` | `AaSimShareTransfer_Reserved2Id` |  |  |  |
+| 70 | `AA.ST.TARGET.PRODUCT` | `AaSimShareTransfer_TargetProduct` |  |  |  |
+| 71 | `AA.ST.STMT.NOS` | `AaSimShareTransfer_StmtNos` |  |  |  |
+| 72 | `AA.ST.OVERRIDE` | `AaSimShareTransfer_Override` |  |  |  |
+| 73 | `AA.ST.RECORD.STATUS` | `AaSimShareTransfer_RecordStatus` |  |  |  |
+| 74 | `AA.ST.CURR.NO` | `AaSimShareTransfer_CurrNo` |  |  |  |
+| 75 | `AA.ST.INPUTTER` | `AaSimShareTransfer_Inputter` |  |  |  |
+| 76 | `AA.ST.DATE.TIME` | `AaSimShareTransfer_DateTime` |  |  |  |
+| 77 | `AA.ST.AUTHORISER` | `AaSimShareTransfer_Authoriser` |  |  |  |
+| 78 | `AA.ST.CO.CODE` | `AaSimShareTransfer_CoCode` |  |  |  |
+| 79 | `AA.ST.DEPT.CODE` | `AaSimShareTransfer_DeptCode` |  |  |  |
+| 80 | `AA.ST.AUDITOR.CODE` | `AaSimShareTransfer_AuditorCode` |  |  |  |
+| 81 | `AA.ST.AUDIT.DATE.TIME` | `AaSimShareTransfer_AuditDateTime` |  |  |  |
+| 82 | `AA.ST.CONSENT.TYPE` | `AaSimShareTransfer_ConsentType` |  |  |  |
+| 83 | `AA.ST.CONSENT.PARTY` | `AaSimShareTransfer_ConsentParty` |  |  |  |
+| 84 | `AA.ST.CONSENT.GIVEN` | `AaSimShareTransfer_ConsentGiven` |  |  |  |
+| 85 | `AA.ST.CONSENT.DATE` | `AaSimShareTransfer_ConsentDate` |  |  |  |

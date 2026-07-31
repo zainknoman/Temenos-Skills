@@ -13,7 +13,7 @@ to analyse business requirements, look up real T24 table schemas and Java APIs,
 then generate correct, compilable code in Infobasic (jBASE BASIC) and Java.
 
 **The single most important rule:** never invent a T24 field name. Every field
-used in generated code must be verified against `skills/t24-dev/references/table-schema/`
+used in generated code must be verified against `skills/temenos-dev/references/table-schema/`
 before the code is emitted. If the field is not in that file, halt and ask.
 
 ---
@@ -26,14 +26,25 @@ project-root/
 ├── pipeline/
 │   ├── extract.py                     ← Phase 1: extract classes from 2,050 JARs
 │   ├── aggregate.py                   ← Phase 2: generate reference .md files
-│   ├── html_parse.py                  ← Phase 1b: extract field schemas from 400 HTML files
-│   └── pdf_extract.py                 ← Phase 1c: extract business rules from 1,000+ PDFs
+│   ├── insert_parse.py                ← Phase 1b: extract table schemas from INSERTS/I_F.* in the JARs
+│   ├── html_parse.py                  ← Phase 1c: enrich fields with type/mandatory/description from 35,235 HTML files
+│   ├── pdf_extract.py                 ← Phase 1d: chunk + TF-IDF embed PDFs into Chroma (docs/, 3,481 files)
+│   ├── query_docs.py                  ← Query Layer B: semantic search over PDF business rules (CLI)
+│   └── validate_fields.py             ← Field Verification Gate: mechanical field-name check (Layer A)
+├── mcp_server/
+│   └── server.py                      ← Optional MCP server: lookup_fields(app), search_rules(query)
 ├── cache/                             ← SHA-256 incremental cache (git-ignored, ~620 MB)
 ├── jar/                               ← 2,050 T24 JAR files (not in repo)
-├── T24.javadoc/                       ← 400 HTML JavaDoc files (not in repo)
-├── docs/                              ← 1,000+ Temenos PDF documentation files (not in repo)
+├── T24.javadoc/                       ← 35,235 HTML JavaDoc files (not in repo)
+├── docs/                              ← Temenos PDF documentation files (not in repo)
+│   ├── <business-topic folders>       ← original training archive (AA, ACCOUNT, DE, OFS, ...)
+│   ├── TAFJ-Admin/                    ← 28 install/runtime PDFs, sourced from a real installed
+│   ├── TAFJ-Migration/                ← R25 Model Bank (C:\R25\TAFJ\doc) on 2026-07-31 — see
+│   ├── TAFJ-Integration/              ← plan/state/r25-scan-report.md for the full recon.
+│   ├── TAFJ-DevSecOps/                ←
+│   └── T24-Componentisation/          ←
 └── skills/
-    ├── t24-dev/                       ← Entry-point skill (routes to sub-skills)
+    ├── temenos-dev/                       ← Entry-point skill (routes to sub-skills)
     │   ├── SKILL.md
     │   └── references/
     │       ├── table-schema/          ← ONE .md per T24 application (ACCOUNT.md, etc.)
@@ -43,10 +54,15 @@ project-root/
     │       ├── hooks/                 ← lifecycle, validation, event hooks
     │       ├── architecture/          ← application-map, dependency-graph
     │       └── relationships/
-    ├── infobasic/                     ← Sub-skill: VVR, VIR, VAR, VCRR, NoFile, DE
-    ├── temenos-l3-java/               ← Sub-skill: RecordLifecycle, Java hooks
-    ├── jbc-componentise/              ← Sub-skill: jBC component authoring
-    └── temenos-de/                    ← Sub-skill: Delivery Engine pipeline
+    ├── temenos-infobasic/  ← Sub-skill: VVR, VIR, VAR, VCRR, NoFile, DE
+    ├── temenos-l3/         ← Sub-skill: RecordLifecycle, Java hooks
+    ├── temenos-jbc/        ← Sub-skill: jBC component authoring
+    ├── temenos-de/         ← Sub-skill: Delivery Engine pipeline
+    ├── temenos-admin/      ← Install, runtime config, DB/app-server admin, TemnMonitor, TemnXACML
+    ├── temenos-migration/  ← TAFJ patching (Patch.xml), RELEASE manifests, version upgrade, ChangeSet installs
+    ├── temenos-integration/ ← ESB/non-ESB payment packages, service extensions, Email/SMS/MQ/JMS integration
+    ├── temenos-devsecops/  ← Precompiler/debugger/unit-test/Maven/SonarQube tooling, Rules Engine, multi-tenant, Keycloak/Kerberos
+    └── temenos-architect/  ← Componentisation architecture, package/routine naming-convention structure
 ```
 
 ---
@@ -54,16 +70,18 @@ project-root/
 ## Knowledge base: three layers
 
 ### Layer A — exact lookup (always available)
-- Location: `skills/t24-dev/references/table-schema/<APP>.md` and `temenos_knowledge.db`
-- Contents: every field name, type, MV/SV flag, mandatory flag, description
+- Location: `skills/temenos-dev/references/table-schema/<APP>.md` (4,596 files) and `temenos_knowledge.db` (table `fields`, 162,842 rows)
+- Contents today: field name + file position + Java alias per application (ground-truth from `INSERTS/I_F.<APP>` inside the JARs), plus type/mandatory/description for 96,159 rows (59%) backfilled from JavaDoc HTML by `html_parse.py`
+- Coverage gap: the remaining 41% have no type/mandatory/description — mostly MV fields with no no-arg getter, or apps with no `Record.html`. A blank in those columns means "not captured," never treat it as "optional." MV/SV flag lives separately in `com/temenos/t24/api/records/<app>/` — cross-check per the MV-field-detection rule in `skills/temenos-dev/SKILL.md`, don't assume it from this file
 - Use for: validation gate before code generation, field name verification
-- Generated by: `pipeline/html_parse.py` from the 400 HTML JavaDoc files
+- Generated by: `pipeline/insert_parse.py` from `INSERTS/I_F.*` in the JARs (regenerate after any JAR set change: `python pipeline/insert_parse.py --jars jar --db temenos_knowledge.db --out skills/temenos-dev/references/table-schema`)
 
-### Layer B — semantic search (on-demand)
-- Location: local Chroma vector DB at `vectordb/`
-- Contents: 1,000+ PDF pages of business rules, module documentation
-- Use for: "what controls dormancy in ACCOUNT?", "what triggers ACCOUNT.OFFICER validation?"
-- Generated by: `pipeline/pdf_extract.py` + embedding pipeline (TODO)
+### Layer B — semantic search (on-demand, LIVE)
+- Location: local Chroma vector DB at `vectordb/` (collection `t24_docs`, 30,476 chunks) + `vectordb/tfidf_vectorizer.joblib`
+- Contents: 3,481 T24 PDFs (4 corrupt/unreadable source files skipped) copied from a personal training/doc archive into `docs/` (topic-per-folder: AA, ACCOUNT, DE, OFS, TPH, Payments, Microbanking, Treasury, ...), chunked per-page (~1200 chars, 150 overlap). Duplicate files (same content copied under multiple topic folders in the source archive) are deduped by SHA-256 before embedding. Plus 53 official Temenos install/admin/migration/integration/devsecops/componentisation PDFs added 2026-07-31 from a real installed R25 Model Bank's `TAFJ_HOME/doc` (`C:\R25`, read-only source — see P6 in Next tasks), under topic folders `TAFJ-Admin`, `TAFJ-Migration`, `TAFJ-Integration`, `TAFJ-DevSecOps`, `T24-Componentisation`.
+- Embedding: TF-IDF (scikit-learn), not a downloaded transformer model — this sandbox has no reliable outbound access to huggingface.co (persistent 429s from sentence-transformers and Chroma's `DefaultEmbeddingFunction` alike), so embeddings are fit locally with zero network dependency. Weaker semantic recall than a dense transformer embedding, fine for T24's exact-terminology-heavy business rules; revisit if a model becomes reachable.
+- Use for: "what controls dormancy in ACCOUNT?", "what triggers ACCOUNT.OFFICER validation?" — query via `python pipeline/query_docs.py "<question>" [--topic ACCOUNT] [-n 5]`
+- Generated by: `pipeline/pdf_extract.py --pdfs docs --vectordb vectordb --cache cache/pdf_extracts` (two phases: pdfplumber extraction cached by SHA-256 in `cache/pdf_extracts/`, then a full TF-IDF refit + Chroma rebuild — the embed phase always rebuilds from all cached chunks since TF-IDF's vocabulary must reflect the whole corpus, not just changed files)
 
 ### Layer C — skill context (loaded at generation time)
 - Location: `skills/*/references/*.md`
@@ -87,7 +105,7 @@ Identify: target T24 application(s), operation type, artefact type.
 | Expose as REST endpoint | REST jBC component |
 
 ### Step 2 — load and verify schema (MANDATORY)
-1. Load `skills/t24-dev/references/table-schema/<APP>.md` for every target application
+1. Load `skills/temenos-dev/references/table-schema/<APP>.md` for every target application
 2. List every field the code will read or write
 3. Verify each field name exists exactly in the schema file
 4. **If any field is missing: HALT. Ask the developer for the correct field name. Never guess.**
@@ -95,9 +113,9 @@ Identify: target T24 application(s), operation type, artefact type.
 ### Step 3 — route to sub-skill
 | Context detected | Sub-skill to activate |
 |------------------|-----------------------|
-| VVR, VIR, VAR, VCRR, GOSUB, Infobasic | `infobasic` |
-| RecordLifecycle, validateRecord, Java hook | `temenos-l3-java` |
-| jBC, .component, $PACKAGE | `jbc-componentise` |
+| VVR, VIR, VAR, VCRR, GOSUB, Infobasic | `temenos-infobasic` |
+| RecordLifecycle, validateRecord, Java hook | `temenos-l3` |
+| jBC, .component, $PACKAGE | `temenos-jbc` |
 | DE, ApplicationHandoff, Array.5 | `temenos-de` |
 
 ### Step 4 — generate complete, compilable code
@@ -146,7 +164,7 @@ resume if interrupted. Format:
 
 ```bash
 # Install dependencies
-pip install javatools pdfplumber beautifulsoup4 lxml
+pip install javatools pdfplumber beautifulsoup4 lxml chromadb scikit-learn joblib mcp
 
 # Phase 1a — extract from JARs (~90 min first run, ~2 min incremental)
 python pipeline/extract.py \
@@ -154,21 +172,37 @@ python pipeline/extract.py \
   --cache cache \
   --workers 8
 
-# Phase 1b — extract field schemas from HTML JavaDoc (NEW — build this next)
+# Phase 1b — extract table schemas from JAR INSERTS/I_F.* (DONE — rerun after JAR set changes)
+python pipeline/insert_parse.py \
+  --jars jar \
+  --db temenos_knowledge.db \
+  --out skills/temenos-dev/references/table-schema
+
+# Phase 1c — enrich fields with type/mandatory/description from HTML JavaDoc (DONE — rerun after JAR/HTML set changes)
 python pipeline/html_parse.py \
   --html T24.javadoc/T24.javadoc \
-  --cache cache \
-  --db temenos_knowledge.db
+  --db temenos_knowledge.db \
+  --out skills/temenos-dev/references/table-schema
 
-# Phase 1c — extract business rules from PDFs (NEW — build after html_parse)
+# Phase 1d — extract business rules from PDFs (DONE — rerun after docs/ changes)
 python pipeline/pdf_extract.py \
   --pdfs docs \
-  --vectordb vectordb
+  --vectordb vectordb \
+  --cache cache/pdf_extracts
+
+# Query Layer B (semantic search over PDF business rules)
+python pipeline/query_docs.py "what controls dormancy in ACCOUNT?" --topic ACCOUNT -n 5
+
+# Field Verification Gate — mechanical check, run before emitting code (P1)
+python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGORY"
+
+# Optional: register the MCP server (P4) for lookup_fields/search_rules as tool calls
+claude mcp add t24-knowledge -- python mcp_server/server.py
 
 # Phase 2 — generate reference .md files (~2 min)
 python pipeline/aggregate.py \
   --cache cache \
-  --out skills/t24-dev/references
+  --out skills/temenos-dev/references
 ```
 
 ---
@@ -182,17 +216,24 @@ python pipeline/aggregate.py \
    general-purpose SDLC orchestrator. It has zero T24 knowledge. Keep the
    existing skill, steal patterns (validation gate, TDD-first, state persistence).
 
-3. **HTML files first, PDFs second.** The 400 HTML JavaDoc files are machine-
-   readable today and contain the most reliable field metadata. Build
-   `html_parse.py` before the PDF extraction pipeline.
+3. **JAR INSERTS first, HTML second, PDFs third.** `INSERTS/I_F.<APP>` inside the
+   JARs is structured EQU data (field name + position, zero parse ambiguity) —
+   built first via `insert_parse.py`. The 35,235 HTML JavaDoc files are machine-
+   readable and add type/mandatory/description metadata on top — build
+   `html_parse.py` next, before the PDF extraction pipeline.
 
 4. **Three knowledge layers, not one.** Exact lookup (SQLite/markdown) for
    schemas and APIs. Vector search (Chroma) for PDF business rules. Skill context
    (markdown templates) for code generation patterns.
 
 5. **The skill runs inside Claude Code with no API key.** No external service
-   calls, no separate process. The skill is instruction files that Claude reads
-   from disk.
+   calls, no separate process required. The skill is instruction files that
+   Claude reads from disk. `mcp_server/server.py` (P4) is an *optional*
+   accelerator on top of this, not a replacement — everything it exposes
+   (`lookup_fields`, `search_rules`) is also reachable by reading
+   `table-schema/*.md` directly or running `pipeline/validate_fields.py` /
+   `pipeline/query_docs.py` via Bash, so the skill still works with zero
+   setup if the MCP server isn't registered.
 
 ---
 
@@ -231,9 +272,23 @@ package com.temenos.t24.custom.<module>;
 
 ## Next tasks (priority order)
 
-- [ ] **P0** Build `pipeline/html_parse.py` — extract field schemas from 400 HTML files into SQLite
-- [ ] **P1** Add validation gate to `skills/t24-dev/SKILL.md` — halt if field not in schema
-- [ ] **P2** Generate `skills/t24-dev/references/table-schema/` from html_parse output
-- [ ] **P3** Build `pipeline/pdf_extract.py` — chunk PDFs and embed into Chroma
-- [ ] **P4** Build MCP server exposing `lookup_fields(app)` and `search_rules(query)` tools
-- [ ] **P5** Add TDD-first step to `skills/infobasic/SKILL.md`
+- [x] **P0** Build `pipeline/insert_parse.py` — extract field name/position schemas from `INSERTS/I_F.*` into SQLite + `table-schema/*.md` (4,596 apps, 162,873 fields)
+- [x] **P0b** Build `pipeline/html_parse.py` — enrich `fields` table with type/mandatory/description from the 35,235 HTML JavaDoc files. Matches on `java_alias` (exact key: `<ClassName>_<GetterSuffix>` from `*Record.html`, no fuzzy matching). Enriched 96,159 / 162,842 rows (59% — remainder are MV fields with no no-arg getter, or apps with no `Record.html`). Usage: `python pipeline/html_parse.py --html T24.javadoc/T24.javadoc --db temenos_knowledge.db --out skills/temenos-dev/references/table-schema` (no `--cache` flag — a single run over 5,973 Record.html files is fast enough not to need one).
+- [x] **P1** Add validation gate to `skills/temenos-dev/SKILL.md` — halt if field not in schema. Done: "Field Verification Gate" section (`skills/temenos-dev/SKILL.md`, right after Reference Files) — load `table-schema/<APP>.md`, verify every field, HALT and ask if missing, state verified fields before the code block. Verification is mechanical, not eyeballed: `python pipeline/validate_fields.py --app <APP> --fields "F1,F2"` — exit 0/1, lists missing fields by name.
+- [x] **P2** Generate `skills/temenos-dev/references/table-schema/` — done by `insert_parse.py`, re-enriched by `html_parse.py`
+- [x] **P3** Build `pipeline/pdf_extract.py` — chunk PDFs and embed into Chroma (TF-IDF, offline — see Layer B above). 3,481 PDFs sourced from a personal T24 training archive (`E:\Learning`), copied into `docs/`, 30,476 chunks embedded. Query via `pipeline/query_docs.py`.
+- [x] **P4** Build MCP server exposing `lookup_fields(app)` and `search_rules(query)` tools — `mcp_server/server.py` (FastMCP, stdio transport). Optional accelerator, not a dependency: the skill works without it via `table-schema/*.md` + `pipeline/query_docs.py`/`validate_fields.py`. Register with `claude mcp add t24-knowledge -- python mcp_server/server.py`.
+- [ ] **P5** Add TDD-first step to `skills/temenos-infobasic/SKILL.md`
+- [x] **P6** Scan a real installed R25 Model Bank (`C:\R25`, external/read-only —
+  never modify it, only read) and build five new skills from what was actually
+  found there (not invented): `temenos-admin`, `temenos-migration`,
+  `temenos-integration`, `temenos-devsecops`, `temenos-architect`. Recon report
+  at `plan/state/r25-scan-report.md`. New PDFs (53 official Temenos docs from
+  `TAFJ_HOME/doc`) copied into `docs/TAFJ-Admin/`, `docs/TAFJ-Migration/`,
+  `docs/TAFJ-Integration/`, `docs/TAFJ-DevSecOps/`, `docs/T24-Componentisation/`
+  and embedded into the existing Layer B vectordb via
+  `pipeline/pdf_extract.py` (adds to, does not replace, the original corpus).
+  Excluded from indexing as noted in the scan report: `bnk/UD` (live runtime
+  data), `bnk/t24lib` (650MB compiled JARs, redundant with `jar/`),
+  `3rdParty/Database/MBR25.bak` (8.7GB DB backup binary), `jboss-eap-8.1` and
+  `DesignStudioT24` internals (third-party/IDE, not T24 knowledge).

@@ -1,0 +1,96 @@
+# AA.AC.GENERAL.CHARGE — Table Schema
+
+> Source: `INSERTS/I_F.AA.AC.GENERAL.CHARGE` in `AA_ClassicProducts.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.GC.ACTIVITY` | `AaArrAcGeneralCharge_Activity` |  |  |  |
+| 2 | `AA.GC.ACTION` | `AaArrAcGeneralCharge_Action` |  |  |  |
+| 3 | `AA.GC.DEBIT.INT.ADDON` | `AaArrAcGeneralCharge_DebitIntAddon` |  |  |  |
+| 4 | `AA.GC.GOVERNMENT.MARGIN` | `AaArrAcGeneralCharge_GovernmentMargin` |  |  |  |
+| 5 | `AA.GC.HIGHEST.DEBIT` | `AaArrAcGeneralCharge_HighestDebit` |  |  |  |
+| 6 | `AA.GC.INTEREST.STATEMENT` | `AaArrAcGeneralCharge_InterestStatement` |  |  |  |
+| 7 | `AA.GC.BAL.REQUIREMENT` | `AaArrAcGeneralCharge_BalRequirement` |  |  |  |
+| 8 | `AA.GC.NUMBER.OF.CREDIT` | `AaArrAcGeneralCharge_NumberOfCredit` |  |  |  |
+| 9 | `AA.GC.NUMBER.OF.DEBIT` | `AaArrAcGeneralCharge_NumberOfDebit` |  |  |  |
+| 10 | `AA.GC.TURNOVER.CREDIT` | `AaArrAcGeneralCharge_TurnoverCredit` |  |  |  |
+| 11 | `AA.GC.TURNOVER.DEBIT` | `AaArrAcGeneralCharge_TurnoverDebit` |  |  |  |
+| 12 | `AA.GC.STATEMENT.CHARGE` | `AaArrAcGeneralCharge_StatementCharge` |  |  |  |
+| 13 | `AA.GC.TRANS.CODE.CHARGE` | `AaArrAcGeneralCharge_TransCodeCharge` |  |  |  |
+| 14 | `AA.GC.COMB.TRNS.CHRG.CODE` | `AaArrAcGeneralCharge_CombTrnsChrgCode` |  |  |  |
+| 15 | `AA.GC.CATEGORY` | `AaArrAcGeneralCharge_Category` |  |  |  |
+| 16 | `AA.GC.TR.CODE.CR` | `AaArrAcGeneralCharge_TrCodeCr` |  |  |  |
+| 17 | `AA.GC.TR.CODE.DR` | `AaArrAcGeneralCharge_TrCodeDr` |  |  |  |
+| 18 | `AA.GC.CHARGE.CODE.LEVEL` | `AaArrAcGeneralCharge_ChargeCodeLevel` |  |  |  |
+| 19 | `AA.GC.WAIVE.CHRG.NEG.BAL` | `AaArrAcGeneralCharge_WaiveChrgNegBal` |  |  |  |
+| 20 | `AA.GC.PERCT.FOR.OFFSET` | `AaArrAcGeneralCharge_PerctForOffset` |  |  |  |
+| 21 | `AA.GC.OFFSET.BAL.TYPE` | `AaArrAcGeneralCharge_OffsetBalType` |  |  |  |
+| 22 | `AA.GC.OFFSET.CURRENCY` | `AaArrAcGeneralCharge_OffsetCurrency` |  |  |  |
+| 23 | `AA.GC.MIN.AV.BAL` | `AaArrAcGeneralCharge_MinAvBal` |  |  |  |
+| 24 | `AA.GC.DAY.BASIS` | `AaArrAcGeneralCharge_DayBasis` |  |  |  |
+| 25 | `AA.GC.BAL.NO.OFFSET` | `AaArrAcGeneralCharge_BalNoOffset` |  |  |  |
+| 26 | `AA.GC.LOW.AMT.CHARGE` | `AaArrAcGeneralCharge_LowAmtCharge` |  |  |  |
+| 27 | `AA.GC.CHARGE.OF.FCY.ACCT` | `AaArrAcGeneralCharge_ChargeOfFcyAcct` |  |  |  |
+| 28 | `AA.GC.CALCUL.STEP.PERIOD` | `AaArrAcGeneralCharge_CalculStepPeriod` |  |  |  |
+| 29 | `AA.GC.COMB.DEBIT.CREDIT` | `AaArrAcGeneralCharge_CombDebitCredit` |  |  |  |
+| 30 | `AA.GC.INT.CHRG.BAL.TYPE` | `AaArrAcGeneralCharge_IntChrgBalType` |  |  |  |
+| 31 | `AA.GC.INT.CHARGE.DEF.BAL` | `AaArrAcGeneralCharge_IntChargeDefBal` |  |  |  |
+| 32 | `AA.GC.INT.CHRG.CCY` | `AaArrAcGeneralCharge_IntChrgCcy` |  |  |  |
+| 33 | `AA.GC.INT.CHRG.BAL` | `AaArrAcGeneralCharge_IntChrgBal` |  |  |  |
+| 34 | `AA.GC.HIGHEST.DEBIT.CHG` | `AaArrAcGeneralCharge_HighestDebitChg` |  |  |  |
+| 35 | `AA.GC.DEFAULT.MIN.AV.BAL` | `AaArrAcGeneralCharge_DefaultMinAvBal` |  |  |  |
+| 36 | `AA.GC.DEFAULT.DAY.BASIS` | `AaArrAcGeneralCharge_DefaultDayBasis` |  |  |  |
+| 37 | `AA.GC.DEF.BAL.NO.OFFSET` | `AaArrAcGeneralCharge_DefBalNoOffset` |  |  |  |
+| 38 | `AA.GC.DEF.LOW.AMT.CHARGE` | `AaArrAcGeneralCharge_DefLowAmtCharge` |  |  |  |
+| 39 | `AA.GC.COMBINED.TAX.CODE` | `AaArrAcGeneralCharge_CombinedTaxCode` |  |  |  |
+| 40 | `AA.GC.LOCAL.REF` | `AaArrAcGeneralCharge_LocalRef` |  |  |  |
+| 41 | `AA.GC.PR.ATTRIBUTE` | `AaArrAcGeneralCharge_PrAttribute` |  |  |  |
+| 42 | `AA.GC.PR.VALUE` | `AaArrAcGeneralCharge_PrValue` |  |  |  |
+| 43 | `AA.GC.PR.BRK.RES` | `AaArrAcGeneralCharge_PrBrkRes` |  |  |  |
+| 44 | `AA.GC.PR.BRK.MSG` | `AaArrAcGeneralCharge_PrBrkMsg` |  |  |  |
+| 45 | `AA.GC.PR.BRK.CHARGE` | `AaArrAcGeneralCharge_PrBrkCharge` |  |  |  |
+| 46 | `AA.GC.PR.RESERVED.3` | `AaArrAcGeneralCharge_PrReserved3` |  |  |  |
+| 47 | `AA.GC.PR.RESERVED.2` | `AaArrAcGeneralCharge_PrReserved2` |  |  |  |
+| 48 | `AA.GC.PR.RESERVED.1` | `AaArrAcGeneralCharge_PrReserved1` |  |  |  |
+| 49 | `AA.GC.PR.APP.METHOD` | `AaArrAcGeneralCharge_PrAppMethod` |  |  |  |
+| 50 | `AA.GC.PR.APP.PERIOD` | `AaArrAcGeneralCharge_PrAppPeriod` |  |  |  |
+| 51 | `AA.GC.SYS.RESERVE7` | `AaArrAcGeneralCharge_SysReserve7` |  |  |  |
+| 52 | `AA.GC.SYS.RESERVE6` | `AaArrAcGeneralCharge_SysReserve6` |  |  |  |
+| 53 | `AA.GC.OWNING.COMPANY` | `AaArrAcGeneralCharge_OwningCompany` |  |  |  |
+| 54 | `AA.GC.API.ATTRIBUTE` | `AaArrAcGeneralCharge_ApiAttribute` |  |  |  |
+| 55 | `AA.GC.SYS.RESERVE3` | `AaArrAcGeneralCharge_SysReserve3` |  |  |  |
+| 56 | `AA.GC.SYS.RESERVE2` | `AaArrAcGeneralCharge_SysReserve2` |  |  |  |
+| 57 | `AA.GC.SYS.RESERVE1` | `AaArrAcGeneralCharge_SysReserve1` |  |  |  |
+| 58 | `AA.GC.DEFAULT.ATTR.OPTION` | `AaArrAcGeneralCharge_DefaultAttrOption` |  |  |  |
+| 59 | `AA.GC.DEFAULT.NEGOTIABLE` | `AaArrAcGeneralCharge_DefaultNegotiable` |  |  |  |
+| 60 | `AA.GC.NR.ATTRIBUTE` | `AaArrAcGeneralCharge_NrAttribute` |  |  |  |
+| 61 | `AA.GC.NR.OPTIONS` | `AaArrAcGeneralCharge_NrOptions` |  |  |  |
+| 62 | `AA.GC.NR.RESERVED2` | `AaArrAcGeneralCharge_NrReserved2` |  |  |  |
+| 63 | `AA.GC.NR.RESERVED1` | `AaArrAcGeneralCharge_NrReserved1` |  |  |  |
+| 64 | `AA.GC.NR.STD.COMP` | `AaArrAcGeneralCharge_NrStdComp` |  |  |  |
+| 65 | `AA.GC.NR.TYPE` | `AaArrAcGeneralCharge_NrType` |  |  |  |
+| 66 | `AA.GC.NR.VALUE` | `AaArrAcGeneralCharge_NrValue` |  |  |  |
+| 67 | `AA.GC.NR.MESSAGE` | `AaArrAcGeneralCharge_NrMessage` |  |  |  |
+| 68 | `AA.GC.CHANGED.FIELDS` | `AaArrAcGeneralCharge_ChangedFields` |  |  |  |
+| 69 | `AA.GC.NEGOTIATED.FLDS` | `AaArrAcGeneralCharge_NegotiatedFlds` |  |  |  |
+| 70 | `AA.GC.ID.COMP.1` | `AaArrAcGeneralCharge_IdComp1` |  |  |  |
+| 71 | `AA.GC.ID.COMP.2` | `AaArrAcGeneralCharge_IdComp2` |  |  |  |
+| 72 | `AA.GC.ID.COMP.3` | `AaArrAcGeneralCharge_IdComp3` |  |  |  |
+| 73 | `AA.GC.ID.COMP.4` | `AaArrAcGeneralCharge_IdComp4` |  |  |  |
+| 74 | `AA.GC.ID.COMP.5` | `AaArrAcGeneralCharge_IdComp5` |  |  |  |
+| 75 | `AA.GC.ID.COMP.6` | `AaArrAcGeneralCharge_IdComp6` |  |  |  |
+| 76 | `AA.GC.RESERVED2.ID` | `AaArrAcGeneralCharge_Reserved2Id` |  |  |  |
+| 77 | `AA.GC.TARGET.PRODUCT` | `AaArrAcGeneralCharge_TargetProduct` |  |  |  |
+| 78 | `AA.GC.STMT.NOS` | `AaArrAcGeneralCharge_StmtNos` |  |  |  |
+| 79 | `AA.GC.OVERRIDE` | `AaArrAcGeneralCharge_Override` |  |  |  |
+| 80 | `AA.GC.RECORD.STATUS` | `AaArrAcGeneralCharge_RecordStatus` |  |  |  |
+| 81 | `AA.GC.CURR.NO` | `AaArrAcGeneralCharge_CurrNo` |  |  |  |
+| 82 | `AA.GC.INPUTTER` | `AaArrAcGeneralCharge_Inputter` |  |  |  |
+| 83 | `AA.GC.DATE.TIME` | `AaArrAcGeneralCharge_DateTime` |  |  |  |
+| 84 | `AA.GC.AUTHORISER` | `AaArrAcGeneralCharge_Authoriser` |  |  |  |
+| 85 | `AA.GC.CO.CODE` | `AaArrAcGeneralCharge_CoCode` |  |  |  |
+| 86 | `AA.GC.DEPT.CODE` | `AaArrAcGeneralCharge_DeptCode` |  |  |  |
+| 87 | `AA.GC.AUDITOR.CODE` | `AaArrAcGeneralCharge_AuditorCode` |  |  |  |
+| 88 | `AA.GC.AUDIT.DATE.TIME` | `AaArrAcGeneralCharge_AuditDateTime` |  |  |  |

@@ -1,0 +1,93 @@
+# AA.INHERITANCE — Table Schema
+
+> Source: `INSERTS/I_F.AA.INHERITANCE` in `AA_Inheritance.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.INH.ACTIVITY` | `AaSimInheritance_Activity` |  |  |  |
+| 2 | `AA.INH.ACTION` | `AaSimInheritance_Action` |  |  |  |
+| 3 | `AA.INH.RESERVED.1` | `AaSimInheritance_Reserved1` |  |  |  |
+| 4 | `AA.INH.RESERVED.2` | `AaSimInheritance_Reserved2` |  |  |  |
+| 5 | `AA.INH.RESERVED.3` | `AaSimInheritance_Reserved3` |  |  |  |
+| 6 | `AA.INH.RESERVED.4` | `AaSimInheritance_Reserved4` |  |  |  |
+| 7 | `AA.INH.DEFAULT.INHERITANCE.LINK` | `AaSimInheritance_DefaultInheritanceLink` |  |  |  |
+| 8 | `AA.INH.DEFAULT.TARGET.INHERITANCE` | `AaSimInheritance_DefaultTargetInheritance` |  |  |  |
+| 9 | `AA.INH.TARGET.PROPERTY` | `AaSimInheritance_TargetProperty` |  |  |  |
+| 10 | `AA.INH.SOURCE.PRODUCT` | `AaSimInheritance_SourceProduct` |  |  |  |
+| 11 | `AA.INH.SOURCE.PROPERTY` | `AaSimInheritance_SourceProperty` |  |  |  |
+| 12 | `AA.INH.RESERVED.6` | `AaSimInheritance_Reserved6` |  |  |  |
+| 13 | `AA.INH.RESERVED.7` | `AaSimInheritance_Reserved7` |  |  |  |
+| 14 | `AA.INH.RESERVED.8` | `AaSimInheritance_Reserved8` |  |  |  |
+| 15 | `AA.INH.RESERVED.9` | `AaSimInheritance_Reserved9` |  |  |  |
+| 16 | `AA.INH.INHERITANCE.LINK` | `AaSimInheritance_InheritanceLink` |  |  |  |
+| 17 | `AA.INH.TARGET.INHERITANCE` | `AaSimInheritance_TargetInheritance` |  |  |  |
+| 18 | `AA.INH.RESERVED.11` | `AaSimInheritance_Reserved11` |  |  |  |
+| 19 | `AA.INH.RESERVED.12` | `AaSimInheritance_Reserved12` |  |  |  |
+| 20 | `AA.INH.RESERVED.13` | `AaSimInheritance_Reserved13` |  |  |  |
+| 21 | `AA.INH.RESERVED.14` | `AaSimInheritance_Reserved14` |  |  |  |
+| 22 | `AA.INH.RESERVED.15` | `AaSimInheritance_Reserved15` |  |  |  |
+| 23 | `AA.INH.DEFAULT.SOURCE.INHERITANCE` | `AaSimInheritance_DefaultSourceInheritance` |  |  |  |
+| 24 | `AA.INH.DEF.SOURCE.PROPERTY` | `AaSimInheritance_DefSourceProperty` |  |  |  |
+| 25 | `AA.INH.SOURCE.CURRENCY` | `AaSimInheritance_SourceCurrency` |  |  |  |
+| 26 | `AA.INH.RESERVED.16` | `AaSimInheritance_Reserved16` |  |  |  |
+| 27 | `AA.INH.RESERVED.17` | `AaSimInheritance_Reserved17` |  |  |  |
+| 28 | `AA.INH.RESERVED.18` | `AaSimInheritance_Reserved18` |  |  |  |
+| 29 | `AA.INH.RESERVED.19` | `AaSimInheritance_Reserved19` |  |  |  |
+| 30 | `AA.INH.RESERVED.20` | `AaSimInheritance_Reserved20` |  |  |  |
+| 31 | `AA.INH.SOURCE.INHERITANCE` | `AaSimInheritance_SourceInheritance` |  |  |  |
+| 32 | `AA.INH.RESERVED.21` | `AaSimInheritance_Reserved21` |  |  |  |
+| 33 | `AA.INH.RESERVED.22` | `AaSimInheritance_Reserved22` |  |  |  |
+| 34 | `AA.INH.RESERVED.23` | `AaSimInheritance_Reserved23` |  |  |  |
+| 35 | `AA.INH.RESERVED.24` | `AaSimInheritance_Reserved24` |  |  |  |
+| 36 | `AA.INH.RESERVED.25` | `AaSimInheritance_Reserved25` |  |  |  |
+| 37 | `AA.INH.LOCAL.REF` | `AaSimInheritance_LocalRef` |  |  |  |
+| 38 | `AA.INH.PR.ATTRIBUTE` | `AaSimInheritance_PrAttribute` |  |  |  |
+| 39 | `AA.INH.PR.VALUE` | `AaSimInheritance_PrValue` |  |  |  |
+| 40 | `AA.INH.PR.BRK.RES` | `AaSimInheritance_PrBrkRes` |  |  |  |
+| 41 | `AA.INH.PR.BRK.MSG` | `AaSimInheritance_PrBrkMsg` |  |  |  |
+| 42 | `AA.INH.PR.BRK.CHARGE` | `AaSimInheritance_PrBrkCharge` |  |  |  |
+| 43 | `AA.INH.PR.RESERVED.3` | `AaSimInheritance_PrReserved3` |  |  |  |
+| 44 | `AA.INH.PR.RESERVED.2` | `AaSimInheritance_PrReserved2` |  |  |  |
+| 45 | `AA.INH.PR.RESERVED.1` | `AaSimInheritance_PrReserved1` |  |  |  |
+| 46 | `AA.INH.PR.APP.METHOD` | `AaSimInheritance_PrAppMethod` |  |  |  |
+| 47 | `AA.INH.PR.APP.PERIOD` | `AaSimInheritance_PrAppPeriod` |  |  |  |
+| 48 | `AA.INH.SYS.RESERVE7` | `AaSimInheritance_SysReserve7` |  |  |  |
+| 49 | `AA.INH.SYS.RESERVE6` | `AaSimInheritance_SysReserve6` |  |  |  |
+| 50 | `AA.INH.OWNING.COMPANY` | `AaSimInheritance_OwningCompany` |  |  |  |
+| 51 | `AA.INH.API.ATTRIBUTE` | `AaSimInheritance_ApiAttribute` |  |  |  |
+| 52 | `AA.INH.SYS.RESERVE3` | `AaSimInheritance_SysReserve3` |  |  |  |
+| 53 | `AA.INH.SYS.RESERVE2` | `AaSimInheritance_SysReserve2` |  |  |  |
+| 54 | `AA.INH.SYS.RESERVE1` | `AaSimInheritance_SysReserve1` |  |  |  |
+| 55 | `AA.INH.DEFAULT.ATTR.OPTION` | `AaSimInheritance_DefaultAttrOption` |  |  |  |
+| 56 | `AA.INH.DEFAULT.NEGOTIABLE` | `AaSimInheritance_DefaultNegotiable` |  |  |  |
+| 57 | `AA.INH.NR.ATTRIBUTE` | `AaSimInheritance_NrAttribute` |  |  |  |
+| 58 | `AA.INH.NR.OPTIONS` | `AaSimInheritance_NrOptions` |  |  |  |
+| 59 | `AA.INH.NR.ATTRIBUTE.RULE` | `AaSimInheritance_NrAttributeRule` |  |  |  |
+| 60 | `AA.INH.NR.VALUE.SOURCE` | `AaSimInheritance_NrValueSource` |  |  |  |
+| 61 | `AA.INH.NR.STD.COMP` | `AaSimInheritance_NrStdComp` |  |  |  |
+| 62 | `AA.INH.NR.TYPE` | `AaSimInheritance_NrType` |  |  |  |
+| 63 | `AA.INH.NR.VALUE` | `AaSimInheritance_NrValue` |  |  |  |
+| 64 | `AA.INH.NR.MESSAGE` | `AaSimInheritance_NrMessage` |  |  |  |
+| 65 | `AA.INH.CHANGED.FIELDS` | `AaSimInheritance_ChangedFields` |  |  |  |
+| 66 | `AA.INH.NEGOTIATED.FLDS` | `AaSimInheritance_NegotiatedFlds` |  |  |  |
+| 67 | `AA.INH.ID.COMP.1` | `AaSimInheritance_IdComp1` |  |  |  |
+| 68 | `AA.INH.ID.COMP.2` | `AaSimInheritance_IdComp2` |  |  |  |
+| 69 | `AA.INH.ID.COMP.3` | `AaSimInheritance_IdComp3` |  |  |  |
+| 70 | `AA.INH.ID.COMP.4` | `AaSimInheritance_IdComp4` |  |  |  |
+| 71 | `AA.INH.ID.COMP.5` | `AaSimInheritance_IdComp5` |  |  |  |
+| 72 | `AA.INH.ID.COMP.6` | `AaSimInheritance_IdComp6` |  |  |  |
+| 73 | `AA.INH.RESERVED2.ID` | `AaSimInheritance_Reserved2Id` |  |  |  |
+| 74 | `AA.INH.TARGET.PRODUCT` | `AaSimInheritance_TargetProduct` |  |  |  |
+| 75 | `AA.INH.STMT.NOS` | `AaSimInheritance_StmtNos` |  |  |  |
+| 76 | `AA.INH.OVERRIDE` | `AaSimInheritance_Override` |  |  |  |
+| 77 | `AA.INH.RECORD.STATUS` | `AaSimInheritance_RecordStatus` |  |  |  |
+| 78 | `AA.INH.CURR.NO` | `AaSimInheritance_CurrNo` |  |  |  |
+| 79 | `AA.INH.INPUTTER` | `AaSimInheritance_Inputter` |  |  |  |
+| 80 | `AA.INH.DATE.TIME` | `AaSimInheritance_DateTime` |  |  |  |
+| 81 | `AA.INH.AUTHORISER` | `AaSimInheritance_Authoriser` |  |  |  |
+| 82 | `AA.INH.CO.CODE` | `AaSimInheritance_CoCode` |  |  |  |
+| 83 | `AA.INH.DEPT.CODE` | `AaSimInheritance_DeptCode` |  |  |  |
+| 84 | `AA.INH.AUDITOR.CODE` | `AaSimInheritance_AuditorCode` |  |  |  |
+| 85 | `AA.INH.AUDIT.DATE.TIME` | `AaSimInheritance_AuditDateTime` |  |  |  |

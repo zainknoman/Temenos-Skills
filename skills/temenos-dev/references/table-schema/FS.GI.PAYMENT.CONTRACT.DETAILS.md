@@ -1,0 +1,92 @@
+# FS.GI.PAYMENT.CONTRACT.DETAILS — Table Schema
+
+> Source: `INSERTS/I_F.FS.GI.PAYMENT.CONTRACT.DETAILS` in `FS_GlobalInvestorTransactions.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `GI.PAYMENT.CONTRACT.DETAILS.PAYMENT.FILE.ID` | `FsGiPaymentContractDetails_PaymentFileId` |  |  |  |
+| 2 | `GI.PAYMENT.CONTRACT.DETAILS.PAYMENT.BATCH.ID` | `FsGiPaymentContractDetails_PaymentBatchId` |  |  |  |
+| 3 | `GI.PAYMENT.CONTRACT.DETAILS.INDIVIDUAL.PAYMENT.ID` | `FsGiPaymentContractDetails_IndividualPaymentId` |  |  |  |
+| 4 | `GI.PAYMENT.CONTRACT.DETAILS.INDIVIDUAL.PAYMENT.STATUS` | `FsGiPaymentContractDetails_IndividualPaymentStatus` |  |  |  |
+| 5 | `GI.PAYMENT.CONTRACT.DETAILS.FINAL.PAYMENT.ID` | `FsGiPaymentContractDetails_FinalPaymentId` |  |  |  |
+| 6 | `GI.PAYMENT.CONTRACT.DETAILS.FINAL.PAYMENT.STATUS` | `FsGiPaymentContractDetails_FinalPaymentStatus` |  |  |  |
+| 7 | `GI.PAYMENT.CONTRACT.DETAILS.EXCHANGE.GROUP` | `FsGiPaymentContractDetails_ExchangeGroup` |  |  |  |
+| 8 | `GI.PAYMENT.CONTRACT.DETAILS.LEGAL.ENTITY.ID` | `FsGiPaymentContractDetails_LegalEntityId` |  |  |  |
+| 9 | `GI.PAYMENT.CONTRACT.DETAILS.FUND.ID` | `FsGiPaymentContractDetails_FundId` |  |  |  |
+| 10 | `GI.PAYMENT.CONTRACT.DETAILS.TA.FUND.ID` | `FsGiPaymentContractDetails_TaFundId` |  |  |  |
+| 11 | `GI.PAYMENT.CONTRACT.DETAILS.SHARE.CLASS.CODE` | `FsGiPaymentContractDetails_ShareClassCode` |  |  |  |
+| 12 | `GI.PAYMENT.CONTRACT.DETAILS.AGENT.ID` | `FsGiPaymentContractDetails_AgentId` |  |  |  |
+| 13 | `GI.PAYMENT.CONTRACT.DETAILS.REGISTER.ID` | `FsGiPaymentContractDetails_RegisterId` |  |  |  |
+| 14 | `GI.PAYMENT.CONTRACT.DETAILS.CONTRACT.ID` | `FsGiPaymentContractDetails_ContractId` |  |  |  |
+| 15 | `GI.PAYMENT.CONTRACT.DETAILS.STATUS` | `FsGiPaymentContractDetails_Status` |  |  |  |
+| 16 | `GI.PAYMENT.CONTRACT.DETAILS.ORDER.ID` | `FsGiPaymentContractDetails_OrderId` |  |  |  |
+| 17 | `GI.PAYMENT.CONTRACT.DETAILS.DEAL.REFERENCE` | `FsGiPaymentContractDetails_DealReference` |  |  |  |
+| 18 | `GI.PAYMENT.CONTRACT.DETAILS.DEAL.STATUS` | `FsGiPaymentContractDetails_DealStatus` |  |  |  |
+| 19 | `GI.PAYMENT.CONTRACT.DETAILS.TRADE.DATE` | `FsGiPaymentContractDetails_TradeDate` |  |  |  |
+| 20 | `GI.PAYMENT.CONTRACT.DETAILS.VALUE.DATE` | `FsGiPaymentContractDetails_ValueDate` |  |  |  |
+| 21 | `GI.PAYMENT.CONTRACT.DETAILS.DB.CR` | `FsGiPaymentContractDetails_DbCr` |  |  |  |
+| 22 | `GI.PAYMENT.CONTRACT.DETAILS.OPERATION.CODE` | `FsGiPaymentContractDetails_OperationCode` |  |  |  |
+| 23 | `GI.PAYMENT.CONTRACT.DETAILS.AMOUNT.IN.QUOT.CCY` | `FsGiPaymentContractDetails_AmountInQuotCcy` |  |  |  |
+| 24 | `GI.PAYMENT.CONTRACT.DETAILS.TA.FUND.CURRENCY` | `FsGiPaymentContractDetails_TaFundCurrency` |  |  |  |
+| 25 | `GI.PAYMENT.CONTRACT.DETAILS.TOTAL.COMMISSION` | `FsGiPaymentContractDetails_TotalCommission` |  |  |  |
+| 26 | `GI.PAYMENT.CONTRACT.DETAILS.INVESTOR.AMOUNT` | `FsGiPaymentContractDetails_InvestorAmount` |  |  |  |
+| 27 | `GI.PAYMENT.CONTRACT.DETAILS.QUANTITY` | `FsGiPaymentContractDetails_Quantity` |  |  |  |
+| 28 | `GI.PAYMENT.CONTRACT.DETAILS.NAV` | `FsGiPaymentContractDetails_Nav` |  |  |  |
+| 29 | `GI.PAYMENT.CONTRACT.DETAILS.PAYMENT.TYPE` | `FsGiPaymentContractDetails_PaymentType` |  |  |  |
+| 30 | `GI.PAYMENT.CONTRACT.DETAILS.EXCHANGE.RATE.APPLICATION` | `FsGiPaymentContractDetails_ExchangeRateApplication` |  |  |  |
+| 31 | `GI.PAYMENT.CONTRACT.DETAILS.EXCHANGE.RATE.USER` | `FsGiPaymentContractDetails_ExchangeRateUser` |  |  |  |
+| 32 | `GI.PAYMENT.CONTRACT.DETAILS.PAYMENT.AMOUNT` | `FsGiPaymentContractDetails_PaymentAmount` |  |  |  |
+| 33 | `GI.PAYMENT.CONTRACT.DETAILS.PAYMENT.CURRENCY` | `FsGiPaymentContractDetails_PaymentCurrency` |  |  |  |
+| 34 | `GI.PAYMENT.CONTRACT.DETAILS.ROUNDING.DIFF.QUOT.CCY` | `FsGiPaymentContractDetails_RoundingDiffQuotCcy` |  |  |  |
+| 35 | `GI.PAYMENT.CONTRACT.DETAILS.ROUNDING.DIFF.PAYMENT.CCY` | `FsGiPaymentContractDetails_RoundingDiffPaymentCcy` |  |  |  |
+| 36 | `GI.PAYMENT.CONTRACT.DETAILS.CDSC.COMMISSION.AMT` | `FsGiPaymentContractDetails_CdscCommissionAmt` |  |  |  |
+| 37 | `GI.PAYMENT.CONTRACT.DETAILS.CDSC.COMMISSION.AGENT` | `FsGiPaymentContractDetails_CdscCommissionAgent` |  |  |  |
+| 38 | `GI.PAYMENT.CONTRACT.DETAILS.COMM.AGENT.ID` | `FsGiPaymentContractDetails_CommAgentId` |  |  |  |
+| 39 | `GI.PAYMENT.CONTRACT.DETAILS.COMMISSION.WAIVER` | `FsGiPaymentContractDetails_CommissionWaiver` |  |  |  |
+| 40 | `GI.PAYMENT.CONTRACT.DETAILS.COMMISSION.DISCOUNT` | `FsGiPaymentContractDetails_CommissionDiscount` |  |  |  |
+| 41 | `GI.PAYMENT.CONTRACT.DETAILS.TRANSACTION.FEE` | `FsGiPaymentContractDetails_TransactionFee` |  |  |  |
+| 42 | `GI.PAYMENT.CONTRACT.DETAILS.ACCRUED.DIVIDEND.AMOUNT` | `FsGiPaymentContractDetails_AccruedDividendAmount` |  |  |  |
+| 43 | `GI.PAYMENT.CONTRACT.DETAILS.DUE.AMOUNT` | `FsGiPaymentContractDetails_DueAmount` |  |  |  |
+| 44 | `GI.PAYMENT.CONTRACT.DETAILS.GAIN` | `FsGiPaymentContractDetails_Gain` |  |  |  |
+| 45 | `GI.PAYMENT.CONTRACT.DETAILS.TAX.AMOUNT` | `FsGiPaymentContractDetails_TaxAmount` |  |  |  |
+| 46 | `GI.PAYMENT.CONTRACT.DETAILS.ADL.AMOUNT` | `FsGiPaymentContractDetails_AdlAmount` |  |  |  |
+| 47 | `GI.PAYMENT.CONTRACT.DETAILS.EQ.CR.REFUND.AMOUNT` | `FsGiPaymentContractDetails_EqCrRefundAmount` |  |  |  |
+| 48 | `GI.PAYMENT.CONTRACT.DETAILS.EQ.DB.DEDUCT.AMOUNT` | `FsGiPaymentContractDetails_EqDbDeductAmount` |  |  |  |
+| 49 | `GI.PAYMENT.CONTRACT.DETAILS.MANAGEMENT.COMMISSION` | `FsGiPaymentContractDetails_ManagementCommission` |  |  |  |
+| 50 | `GI.PAYMENT.CONTRACT.DETAILS.IRISH.TAX.AMOUNT` | `FsGiPaymentContractDetails_IrishTaxAmount` |  |  |  |
+| 51 | `GI.PAYMENT.CONTRACT.DETAILS.ADL.AMOUNT.PAY.CCY` | `FsGiPaymentContractDetails_AdlAmountPayCcy` |  |  |  |
+| 52 | `GI.PAYMENT.CONTRACT.DETAILS.US.TAX.AMOUNT` | `FsGiPaymentContractDetails_UsTaxAmount` |  |  |  |
+| 53 | `GI.PAYMENT.CONTRACT.DETAILS.SWEDISH.TAX.AMOUNT` | `FsGiPaymentContractDetails_SwedishTaxAmount` |  |  |  |
+| 54 | `GI.PAYMENT.CONTRACT.DETAILS.MANAGEMENT.COMMISSION.DUAL` | `FsGiPaymentContractDetails_ManagementCommissionDual` |  |  |  |
+| 55 | `GI.PAYMENT.CONTRACT.DETAILS.LEG.LINK` | `FsGiPaymentContractDetails_LegLink` |  |  |  |
+| 56 | `GI.PAYMENT.CONTRACT.DETAILS.INTERNAL.COMMENT` | `FsGiPaymentContractDetails_InternalComment` |  |  |  |
+| 57 | `GI.PAYMENT.CONTRACT.DETAILS.PARTIAL.OR.RESIDUAL.PAYMENT` | `FsGiPaymentContractDetails_PartialOrResidualPayment` |  |  |  |
+| 58 | `GI.PAYMENT.CONTRACT.DETAILS.COMPONENT.ID` | `FsGiPaymentContractDetails_ComponentId` |  |  |  |
+| 59 | `GI.PAYMENT.CONTRACT.DETAILS.CASHFLOW.MOVEMENT.TYPE` | `FsGiPaymentContractDetails_CashflowMovementType` |  |  |  |
+| 60 | `GI.PAYMENT.CONTRACT.DETAILS.LINKED.BATCH.ID` | `FsGiPaymentContractDetails_LinkedBatchId` |  |  |  |
+| 61 | `GI.PAYMENT.CONTRACT.DETAILS.IN.DEAL.REFERENCE` | `FsGiPaymentContractDetails_InDealReference` |  |  |  |
+| 62 | `GI.PAYMENT.CONTRACT.DETAILS.IND.PAYMENT.STATUS.OLD` | `FsGiPaymentContractDetails_IndPaymentStatusOld` |  |  |  |
+| 63 | `GI.PAYMENT.CONTRACT.DETAILS.FINAL.PAYMENT.STATUS.OLD` | `FsGiPaymentContractDetails_FinalPaymentStatusOld` |  |  |  |
+| 64 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED10` | `FsGiPaymentContractDetails_Reserved10` |  |  |  |
+| 65 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED9` | `FsGiPaymentContractDetails_Reserved9` |  |  |  |
+| 66 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED8` | `FsGiPaymentContractDetails_Reserved8` |  |  |  |
+| 67 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED7` | `FsGiPaymentContractDetails_Reserved7` |  |  |  |
+| 68 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED6` | `FsGiPaymentContractDetails_Reserved6` |  |  |  |
+| 69 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED5` | `FsGiPaymentContractDetails_Reserved5` |  |  |  |
+| 70 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED4` | `FsGiPaymentContractDetails_Reserved4` |  |  |  |
+| 71 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED3` | `FsGiPaymentContractDetails_Reserved3` |  |  |  |
+| 72 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED2` | `FsGiPaymentContractDetails_Reserved2` |  |  |  |
+| 73 | `GI.PAYMENT.CONTRACT.DETAILS.RESERVED1` | `FsGiPaymentContractDetails_Reserved1` |  |  |  |
+| 74 | `GI.PAYMENT.CONTRACT.DETAILS.LOCAL.REF` | `FsGiPaymentContractDetails_LocalRef` |  |  |  |
+| 75 | `GI.PAYMENT.CONTRACT.DETAILS.OVERRIDE` | `FsGiPaymentContractDetails_Override` |  |  |  |
+| 76 | `GI.PAYMENT.CONTRACT.DETAILS.RECORD.STATUS` | `FsGiPaymentContractDetails_RecordStatus` |  |  |  |
+| 77 | `GI.PAYMENT.CONTRACT.DETAILS.CURR.NO` | `FsGiPaymentContractDetails_CurrNo` |  |  |  |
+| 78 | `GI.PAYMENT.CONTRACT.DETAILS.INPUTTER` | `FsGiPaymentContractDetails_Inputter` |  |  |  |
+| 79 | `GI.PAYMENT.CONTRACT.DETAILS.DATE.TIME` | `FsGiPaymentContractDetails_DateTime` |  |  |  |
+| 80 | `GI.PAYMENT.CONTRACT.DETAILS.AUTHORISER` | `FsGiPaymentContractDetails_Authoriser` |  |  |  |
+| 81 | `GI.PAYMENT.CONTRACT.DETAILS.CO.CODE` | `FsGiPaymentContractDetails_CoCode` |  |  |  |
+| 82 | `GI.PAYMENT.CONTRACT.DETAILS.DEPT.CODE` | `FsGiPaymentContractDetails_DeptCode` |  |  |  |
+| 83 | `GI.PAYMENT.CONTRACT.DETAILS.AUDITOR.CODE` | `FsGiPaymentContractDetails_AuditorCode` |  |  |  |
+| 84 | `GI.PAYMENT.CONTRACT.DETAILS.AUDIT.DATE.TIME` | `FsGiPaymentContractDetails_AuditDateTime` |  |  |  |

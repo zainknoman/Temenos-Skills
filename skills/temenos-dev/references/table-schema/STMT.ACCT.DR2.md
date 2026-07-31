@@ -1,0 +1,61 @@
+# STMT.ACCT.DR2 — Table Schema
+
+> Source: `INSERTS/I_F.STMT.ACCT.DR2` in `IC_InterestAndCapitalisation.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `IC.STMD2.PERIOD.FIRST.DATE` | `StmtAcctDr2_PeriodFirstDate` | TField |  | Specifies the value date of the first balance on which the interest has been calculated. This is the day after the previous debit 2 interest application (Capitalisation) as stored in the CAP DATE DR2 INT field in the ACCOUNT record. Validation Rules: 9 date characters - DD MMM YYYY. |
+| 2 | `IC.STMD2.PERIOD.LAST.DATE` | `StmtAcctDr2_PeriodLastDate` | TField |  | Specifies the value date of the last balance on which the interest has been calculated. Interest is calculated on the value dated balances stored in the ACCT.ACTIVITY file, taking into account all entries over the ACCOUNT up to and including the day on which the interest capitalisation is processed. The calculation includes all balances from the day after the previous debit 2 interest capitalisation, as stored in the ACCOUNT record (in the CAP DATE DR2 INT field) up to the capitalisation date specified, or, if the LAST DAY INCLUSIVE field in the ACCOUNT.ACCRUAL file contains 'NO', up to the working day prior to the processing date. Validation Rules: 9 date characters - DD MMM YYYY. |
+| 3 | `IC.STMD2.DR2.INT.DATE` | `StmtAcctDr2_Dr2IntDate` |  |  |  |
+| 4 | `IC.STMD2.DR2.NO.OF.DAYS` | `StmtAcctDr2_Dr2NoOfDays` |  |  |  |
+| 5 | `IC.STMD2.DR2.VAL.BALANCE` | `StmtAcctDr2_Dr2ValBalance` |  |  |  |
+| 6 | `IC.STMD2.DR2.INT.RATE` | `StmtAcctDr2_Dr2IntRate` |  |  |  |
+| 7 | `IC.STMD2.DR2.INT.AMT` | `StmtAcctDr2_Dr2IntAmt` |  |  |  |
+| 8 | `IC.STMD2.DR2.INT.CATEG` | `StmtAcctDr2_Dr2IntCateg` | TField |  | Identifies the Category code to be assigned to Profit and Loss entries generated when debit 2 interest is accrued. Validation Rules: 4 or 5 numeric character Category code. |
+| 9 | `IC.STMD2.DR2.INT.TR.AC` | `StmtAcctDr2_Dr2IntTrAc` | TField |  | Identifies the Transaction code to be assigned to Account entries generated when debit 2 interest is capitalised. Validation Rules: 1-10(Max Value) numeric characters Transaction Code. The Maximum value is specified in EB.OBJECT for TRANSACTION. |
+| 10 | `IC.STMD2.DR2.INT.TR.PL` | `StmtAcctDr2_Dr2IntTrPl` | TField |  | Identifies the Transaction code to be assigned to Profit and Loss entries generated when debit 2 interest is accrued. Validation Rules: 1-10(Max Value) numeric characters Transaction Code. The Maximum value is specified in EB.OBJECT for TRANSACTION. |
+| 11 | `IC.STMD2.D2.INT.TAX.CODE` | `StmtAcctDr2_D2IntTaxCode` |  |  |  |
+| 12 | `IC.STMD2.D2.INT.TAX.RATE` | `StmtAcctDr2_D2IntTaxRate` |  |  |  |
+| 13 | `IC.STMD2.D2.INT.TAX.AMT` | `StmtAcctDr2_D2IntTaxAmt` |  |  |  |
+| 14 | `IC.STMD2.D2.INT.TAXCATEG` | `StmtAcctDr2_D2IntTaxcateg` |  |  |  |
+| 15 | `IC.STMD2.D2.INT.TAXTRSDR` | `StmtAcctDr2_D2IntTaxtrsdr` |  |  |  |
+| 16 | `IC.STMD2.D2.INT.TAXTRSCR` | `StmtAcctDr2_D2IntTaxtrscr` |  |  |  |
+| 17 | `IC.STMD2.LIQUIDITY.ACCOUNT` | `StmtAcctDr2_LiquidityAccount` | TField |  | Where interest and charges are to be passed to an alternative Account, the number of the alternative ACCOUNT is shown by this field. Where interest and charges are to be passed to an alternative Account, the alternative account number should be entered in the INTEREST LIQU ACCT Field on the original customer ACCOUNT record. Validation Rules: Standard account format. |
+| 18 | `IC.STMD2.COMPENS.ACCOUNT` | `StmtAcctDr2_CompensAccount` |  |  |  |
+| 19 | `IC.STMD2.INT.NO.BOOKING` | `StmtAcctDr2_IntNoBooking` | TField |  | If interest and charges are to be calculated for information purposes only and not passed to the account, or if accrued interest is to be suspended and not posted to Profit and Loss, this is shown by this field. The information in this field comes from the equivalent field in the ACCOUNT record. If this field contains 'SUSPENSE', interest will be booked to the Customer's Account but no Profit or Loss entries will be generated, instead, the amount which would have been accrued will be stored in a Suspense Amount field in the Account record. If this field contains 'Y', interest is calculated for information only, no entries will be posted either to Profit and Loss or to the Customer's Account. E.g. for Nostro Accounts. Validation Rules: 'SUSPENSE', 'Y' or nothing. |
+| 20 | `IC.STMD2.TOTAL.INTEREST` | `StmtAcctDr2_TotalInterest` | TField |  | Amount of interest before Tax. Validation Rules: Up to 14 numeric characters plus a decimal point. Standard amount format. |
+| 21 | `IC.STMD2.TOTAL.TAX` | `StmtAcctDr2_TotalTax` | TField |  | Total amount of Tax on Interest (if applicable). Validation Rules: Up to 14 numeric characters plus a decimal point. Standard amount format |
+| 22 | `IC.STMD2.GRAND.TOTAL` | `StmtAcctDr2_GrandTotal` | TField |  | Total amount to be debited to customer's account including debit 2 interest and tax (if applicable). Validation Rules: Up to 14 numeric characters plus a decimal point. Standard amount format. |
+| 23 | `IC.STMD2.CORRECTION.NUMBER` | `StmtAcctDr2_CorrectionNumber` | TField |  | Sequential number of corrected record generated after back-valued entries, rate changes or condition changes. Only present in records which have been corrected. If any entries are processed with VALUE DATES prior to the last Capitalisation date (as stored in the CAP DATE DR2 INT field in the ACCOUNT record), COB job IC.BVAL automatically recalculates the interest for the capitalisation period(s) from the one containing the earliest back-valued entry, up to the last Capitalisation date. The new STMT.ACCT.DR2 record is compared with the one previously calculated, and if there is any difference, the old one is stored in the CORR.ACCT.DR2 file, the corrected one is written in this file and appropriate accounting entries are processed for the differences. If the correction takes place after deferred interest and charges have been posted then the first correction will use these values to work out the difference, as it is possible to adjust the calculated amount prior to posting either manually or via a back valued posting into the capitalisation period. Each time the same capitalisation is corrected, the correction number is incremented by 1. When interest rates or conditions are amended, back-value recalculations are not processed automatically, but can be requested via the table TABLE CAPITALIS CORR. Validation Rules: 3 numeric characters. |
+| 24 | `IC.STMD2.DEFERRED.DATE` | `StmtAcctDr2_DeferredDate` | TField |  | This field will hold the deferred application date of the debit interest in case pending debit interest processing was being performed on this account. |
+| 25 | `IC.STMD2.LIQUIDITY.CCY` | `StmtAcctDr2_LiquidityCcy` | TField |  | Identifies the currency of the liquidity account which may be present on this file. The currency may not necessarally be the currency of the main account. Validation Rules: 3 type SSS (uppercase alpha) character or 1-3 numeric character currency code. |
+| 26 | `IC.STMD2.ICA.POST.INTEREST` | `StmtAcctDr2_IcaPostInterest` | TField |  | Indicates whether ICA interest is actually posted to the account or is just calculated for information purposes. If it is calculated and not posted then the interest will be allocatd to the main account. |
+| 27 | `IC.STMD2.ICA.MAIN.ACCT` | `StmtAcctDr2_IcaMainAcct` |  |  |  |
+| 28 | `IC.STMD2.ICA.DIST.TYPE` | `StmtAcctDr2_IcaDistType` |  |  |  |
+| 29 | `IC.STMD2.ICA.DIST.RATIO` | `StmtAcctDr2_IcaDistRatio` |  |  |  |
+| 30 | `IC.STMD2.ICA.INT.CATEG` | `StmtAcctDr2_IcaIntCateg` |  |  |  |
+| 31 | `IC.STMD2.ICA.TR.AC` | `StmtAcctDr2_IcaTrAc` |  |  |  |
+| 32 | `IC.STMD2.ICA.TR.PL` | `StmtAcctDr2_IcaTrPl` |  |  |  |
+| 33 | `IC.STMD2.ICA.MAIN.INT` | `StmtAcctDr2_IcaMainInt` |  |  |  |
+| 34 | `IC.STMD2.ICA.SUB.INT` | `StmtAcctDr2_IcaSubInt` |  |  |  |
+| 35 | `IC.STMD2.DR2.MIN.VALUE` | `StmtAcctDr2_Dr2MinValue` | TField |  | Indicates the minimum amount of debit interest that can be posted. If the total amount of calculated interest is less than the minimum value, then if DR.MIN.WAIVE is set to YES then the total interest will be set to zero, otherwise it will be set to the minimum value. DR.MIN.WAIVE |
+| 36 | `IC.STMD2.DR2.MIN.WAIVE` | `StmtAcctDr2_Dr2MinWaive` | TField |  | Indicates how the total interest amount is set if it is less than the minimum value. If the total amount of calculated interest is less than the minimum value, then if DR.MIN.WAIVE is set to YES then the total interest will be set to zero, otherwise it will be set to the minimum value. |
+| 37 | `IC.STMD2.UNADJ.TOTAL.INT` | `StmtAcctDr2_UnadjTotalInt` | TField |  | This field holds the unadjusted total amount of Debit Interest when an adjustment relating to the Maximum Legal Rate is needed. |
+| 38 | `IC.STMD2.INT.POST.DATE` | `StmtAcctDr2_IntPostDate` | TField |  | Indicates the date that interest is actually posted to the customer account. For example interest can be capitalised monthly but is actually posted every 6 months to avoid interest on interest. |
+| 39 | `IC.STMD2.MANUAL.ADJ.AMT` | `StmtAcctDr2_ManualAdjAmt` | TField |  | The manual accrual adjustment amount for the period. This could be the amount of interest earned by an account in another system if tranferred to T24 during a capitalisation period. |
+| 40 | `IC.STMD2.DEF.TOTAL.INT` | `StmtAcctDr2_DefTotalInt` | TField |  | The amount of deferred interest that was posted on the deferred date. For the first correction after posting the deferred amounts the deferred amounts, i.e. the amounts actually posted to the customer account will be used to work out the difference between the original amount and the new calculated amount. Any subsequent corrections will use the previously calculated amount. |
+| 41 | `IC.STMD2.DEF.TOTAL.TAX` | `StmtAcctDr2_DefTotalTax` | TField |  | The amount of tax on deferred interest that was posted on the deferred date. For the first correction after posting the deferred amounts the deferred amounts, i.e. the amounts actually posted to the customer account will be used to work out the difference between the original amount and the new calculated amount. Any subsequent corrections will use the previously calculated amount. |
+| 42 | `IC.STMD2.DEF.WAIVE.ALL` | `StmtAcctDr2_DefWaiveAll` | TField |  | YES indicates that all debit interest and tax was waived for this period, if set to YES then no debit interest or tax will apply to this period for back valued corrections. But it will be calculated. |
+| 43 | `IC.STMD2.CORRECTION.ID` | `StmtAcctDr2_CorrectionId` |  |  |  |
+| 44 | `IC.STMD2.ADJ.INT.AMT` | `StmtAcctDr2_AdjIntAmt` |  |  |  |
+| 45 | `IC.STMD2.ADJ.TAX.AMT` | `StmtAcctDr2_AdjTaxAmt` |  |  |  |
+| 46 | `IC.STMD2.WITHHELD.INT.AMT` | `StmtAcctDr2_WithheldIntAmt` |  |  |  |
+| 47 | `IC.STMD2.DB.NETTING.AMT` | `StmtAcctDr2_DbNettingAmt` | TField |  | This field will be updated if CR interest is netted with corresponding DR interest. |
+| 48 | `IC.STMD2.CORRECTION.DATE` | `StmtAcctDr2_CorrectionDate` | TField |  | This field will contain the period end date of the current capitalisation period. |
+| 49 | `IC.STMD2.WAIVE.AMT` | `StmtAcctDr2_WaiveAmt` | TField |  | The minimum waive amount in the currency of the account if the waive currency is different to the currency of the account Validation Rules: Standard amount format. |
+| 50 | `IC.STMD2.WAIVE.RATE` | `StmtAcctDr2_WaiveRate` | TField |  |  |
+| 51 | `IC.STMD2.RESERVED.03` | `StmtAcctDr2_Reserved03` | TField |  |  |
+| 52 | `IC.STMD2.RESERVED.02` | `StmtAcctDr2_Reserved02` | TField |  |  |
+| 53 | `IC.STMD2.RESERVED.01` | `StmtAcctDr2_Reserved01` | TField |  |  |

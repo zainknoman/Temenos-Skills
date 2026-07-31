@@ -1,0 +1,92 @@
+# AA.AZ.ACCOUNTING — Table Schema
+
+> Source: `INSERTS/I_F.AA.AZ.ACCOUNTING` in `AA_ClassicProducts.jar` (positions/aliases via `pipeline/insert_parse.py`); type/mandatory/description via `pipeline/html_parse.py` from JavaDoc HTML.
+> Multivalue status is NOT captured here — cross-check `com/temenos/t24/api/records/` per the MV-field-detection rule in `skills/temenos-dev/SKILL.md` before treating any field as single-value.
+> Type/mandatory are inferred from JavaDoc free text and may be blank where the HTML gave no clear signal — do not treat a blank as "optional".
+
+| Position | Field Name | Java Alias | Type | Mandatory | Description |
+|----------|------------|------------|------|-----------|--------------|
+| 1 | `AA.AZA.ACTIVITY` | `AaArrAzAccounting_Activity` |  |  |  |
+| 2 | `AA.AZA.ACTION` | `AaArrAzAccounting_Action` |  |  |  |
+| 3 | `AA.AZA.DR.TXN.CODE` | `AaArrAzAccounting_DrTxnCode` |  |  |  |
+| 4 | `AA.AZA.CR.TXN.CODE` | `AaArrAzAccounting_CrTxnCode` |  |  |  |
+| 5 | `AA.AZA.MAX.BACK.DATE` | `AaArrAzAccounting_MaxBackDate` |  |  |  |
+| 6 | `AA.AZA.ACCT.SYNC` | `AaArrAzAccounting_AcctSync` |  |  |  |
+| 7 | `AA.AZA.INT.DR.CAP` | `AaArrAzAccounting_IntDrCap` |  |  |  |
+| 8 | `AA.AZA.INT.CR.CAP` | `AaArrAzAccounting_IntCrCap` |  |  |  |
+| 9 | `AA.AZA.CHARGE.DR.TXN` | `AaArrAzAccounting_ChargeDrTxn` |  |  |  |
+| 10 | `AA.AZA.TAX.ON.CHG.TXN` | `AaArrAzAccounting_TaxOnChgTxn` |  |  |  |
+| 11 | `AA.AZA.TAX.ON.INT.TXN` | `AaArrAzAccounting_TaxOnIntTxn` |  |  |  |
+| 12 | `AA.AZA.INT.CORR.TXN` | `AaArrAzAccounting_IntCorrTxn` |  |  |  |
+| 13 | `AA.AZA.DRAWDOWN.TXN` | `AaArrAzAccounting_DrawdownTxn` |  |  |  |
+| 14 | `AA.AZA.LOAN.REPAY` | `AaArrAzAccounting_LoanRepay` |  |  |  |
+| 15 | `AA.AZA.LOAN.PRECLOSE` | `AaArrAzAccounting_LoanPreclose` |  |  |  |
+| 16 | `AA.AZA.MATURITY.TXN` | `AaArrAzAccounting_MaturityTxn` |  |  |  |
+| 17 | `AA.AZA.INT.ADJ.TXN` | `AaArrAzAccounting_IntAdjTxn` |  |  |  |
+| 18 | `AA.AZA.INT.SUS.TXN` | `AaArrAzAccounting_IntSusTxn` |  |  |  |
+| 19 | `AA.AZA.ROLLOVER.CR` | `AaArrAzAccounting_RolloverCr` |  |  |  |
+| 20 | `AA.AZA.PRINCIPAL.TXN` | `AaArrAzAccounting_PrincipalTxn` |  |  |  |
+| 21 | `AA.AZA.OD.PRINCIPAL.TXN` | `AaArrAzAccounting_OdPrincipalTxn` |  |  |  |
+| 22 | `AA.AZA.OD.INTEREST.TXN` | `AaArrAzAccounting_OdInterestTxn` |  |  |  |
+| 23 | `AA.AZA.OD.CHARGE.TXN` | `AaArrAzAccounting_OdChargeTxn` |  |  |  |
+| 24 | `AA.AZA.DEPOSIT.CR` | `AaArrAzAccounting_DepositCr` |  |  |  |
+| 25 | `AA.AZA.DEP.DR.PART` | `AaArrAzAccounting_DepDrPart` |  |  |  |
+| 26 | `AA.AZA.DEP.DR.PRE.CLOSURE` | `AaArrAzAccounting_DepDrPreClosure` |  |  |  |
+| 27 | `AA.AZA.DEP.DR.MATURITY` | `AaArrAzAccounting_DepDrMaturity` |  |  |  |
+| 28 | `AA.AZA.BONUS.CR` | `AaArrAzAccounting_BonusCr` |  |  |  |
+| 29 | `AA.AZA.INT.CORR.IMMED` | `AaArrAzAccounting_IntCorrImmed` |  |  |  |
+| 30 | `AA.AZA.INT.CORR.RTN` | `AaArrAzAccounting_IntCorrRtn` |  |  |  |
+| 31 | `AA.AZA.RESERVED5` | `AaArrAzAccounting_Reserved5` |  |  |  |
+| 32 | `AA.AZA.RESERVED4` | `AaArrAzAccounting_Reserved4` |  |  |  |
+| 33 | `AA.AZA.RESERVED3` | `AaArrAzAccounting_Reserved3` |  |  |  |
+| 34 | `AA.AZA.RESERVED2` | `AaArrAzAccounting_Reserved2` |  |  |  |
+| 35 | `AA.AZA.RESERVED1` | `AaArrAzAccounting_Reserved1` |  |  |  |
+| 36 | `AA.AZA.LOCAL.REF` | `AaArrAzAccounting_LocalRef` |  |  |  |
+| 37 | `AA.AZA.PR.ATTRIBUTE` | `AaArrAzAccounting_PrAttribute` |  |  |  |
+| 38 | `AA.AZA.PR.VALUE` | `AaArrAzAccounting_PrValue` |  |  |  |
+| 39 | `AA.AZA.PR.BRK.RES` | `AaArrAzAccounting_PrBrkRes` |  |  |  |
+| 40 | `AA.AZA.PR.BRK.MSG` | `AaArrAzAccounting_PrBrkMsg` |  |  |  |
+| 41 | `AA.AZA.PR.BRK.CHARGE` | `AaArrAzAccounting_PrBrkCharge` |  |  |  |
+| 42 | `AA.AZA.PR.RESERVED.3` | `AaArrAzAccounting_PrReserved3` |  |  |  |
+| 43 | `AA.AZA.PR.RESERVED.2` | `AaArrAzAccounting_PrReserved2` |  |  |  |
+| 44 | `AA.AZA.PR.RESERVED.1` | `AaArrAzAccounting_PrReserved1` |  |  |  |
+| 45 | `AA.AZA.PR.APP.METHOD` | `AaArrAzAccounting_PrAppMethod` |  |  |  |
+| 46 | `AA.AZA.PR.APP.PERIOD` | `AaArrAzAccounting_PrAppPeriod` |  |  |  |
+| 47 | `AA.AZA.SYS.RESERVE7` | `AaArrAzAccounting_SysReserve7` |  |  |  |
+| 48 | `AA.AZA.SYS.RESERVE6` | `AaArrAzAccounting_SysReserve6` |  |  |  |
+| 49 | `AA.AZA.OWNING.COMPANY` | `AaArrAzAccounting_OwningCompany` |  |  |  |
+| 50 | `AA.AZA.API.ATTRIBUTE` | `AaArrAzAccounting_ApiAttribute` |  |  |  |
+| 51 | `AA.AZA.SYS.RESERVE3` | `AaArrAzAccounting_SysReserve3` |  |  |  |
+| 52 | `AA.AZA.SYS.RESERVE2` | `AaArrAzAccounting_SysReserve2` |  |  |  |
+| 53 | `AA.AZA.SYS.RESERVE1` | `AaArrAzAccounting_SysReserve1` |  |  |  |
+| 54 | `AA.AZA.DEFAULT.ATTR.OPTION` | `AaArrAzAccounting_DefaultAttrOption` |  |  |  |
+| 55 | `AA.AZA.DEFAULT.NEGOTIABLE` | `AaArrAzAccounting_DefaultNegotiable` |  |  |  |
+| 56 | `AA.AZA.NR.ATTRIBUTE` | `AaArrAzAccounting_NrAttribute` |  |  |  |
+| 57 | `AA.AZA.NR.OPTIONS` | `AaArrAzAccounting_NrOptions` |  |  |  |
+| 58 | `AA.AZA.NR.RESERVED2` | `AaArrAzAccounting_NrReserved2` |  |  |  |
+| 59 | `AA.AZA.NR.RESERVED1` | `AaArrAzAccounting_NrReserved1` |  |  |  |
+| 60 | `AA.AZA.NR.STD.COMP` | `AaArrAzAccounting_NrStdComp` |  |  |  |
+| 61 | `AA.AZA.NR.TYPE` | `AaArrAzAccounting_NrType` |  |  |  |
+| 62 | `AA.AZA.NR.VALUE` | `AaArrAzAccounting_NrValue` |  |  |  |
+| 63 | `AA.AZA.NR.MESSAGE` | `AaArrAzAccounting_NrMessage` |  |  |  |
+| 64 | `AA.AZA.CHANGED.FIELDS` | `AaArrAzAccounting_ChangedFields` |  |  |  |
+| 65 | `AA.AZA.NEGOTIATED.FLDS` | `AaArrAzAccounting_NegotiatedFlds` |  |  |  |
+| 66 | `AA.AZA.ID.COMP.1` | `AaArrAzAccounting_IdComp1` |  |  |  |
+| 67 | `AA.AZA.ID.COMP.2` | `AaArrAzAccounting_IdComp2` |  |  |  |
+| 68 | `AA.AZA.ID.COMP.3` | `AaArrAzAccounting_IdComp3` |  |  |  |
+| 69 | `AA.AZA.ID.COMP.4` | `AaArrAzAccounting_IdComp4` |  |  |  |
+| 70 | `AA.AZA.ID.COMP.5` | `AaArrAzAccounting_IdComp5` |  |  |  |
+| 71 | `AA.AZA.ID.COMP.6` | `AaArrAzAccounting_IdComp6` |  |  |  |
+| 72 | `AA.AZA.RESERVED2.ID` | `AaArrAzAccounting_Reserved2Id` |  |  |  |
+| 73 | `AA.AZA.TARGET.PRODUCT` | `AaArrAzAccounting_TargetProduct` |  |  |  |
+| 74 | `AA.AZA.STMT.NOS` | `AaArrAzAccounting_StmtNos` |  |  |  |
+| 75 | `AA.AZA.OVERRIDE` | `AaArrAzAccounting_Override` |  |  |  |
+| 76 | `AA.AZA.RECORD.STATUS` | `AaArrAzAccounting_RecordStatus` |  |  |  |
+| 77 | `AA.AZA.CURR.NO` | `AaArrAzAccounting_CurrNo` |  |  |  |
+| 78 | `AA.AZA.INPUTTER` | `AaArrAzAccounting_Inputter` |  |  |  |
+| 79 | `AA.AZA.DATE.TIME` | `AaArrAzAccounting_DateTime` |  |  |  |
+| 80 | `AA.AZA.AUTHORISER` | `AaArrAzAccounting_Authoriser` |  |  |  |
+| 81 | `AA.AZA.CO.CODE` | `AaArrAzAccounting_CoCode` |  |  |  |
+| 82 | `AA.AZA.DEPT.CODE` | `AaArrAzAccounting_DeptCode` |  |  |  |
+| 83 | `AA.AZA.AUDITOR.CODE` | `AaArrAzAccounting_AuditorCode` |  |  |  |
+| 84 | `AA.AZA.AUDIT.DATE.TIME` | `AaArrAzAccounting_AuditDateTime` |  |  |  |
