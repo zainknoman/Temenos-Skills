@@ -36,6 +36,23 @@ Skills live under `~/.claude/plugins/` after install.
 
 ---
 
+## Component Analyzer
+
+A dedicated `temenos-component-analyzer` skill is included for developer-facing T24
+application/component dependency analysis. It covers PGM.FILE, FILE.CONTROL,
+STANDARD.SELECTION, VERSION, ENQUIRY, routine source, EB.API and the R19
+Job → Batch → Service → Workload execution chain.
+
+The implementation includes an executable mainline:
+
+```
+EB.COMPONENT.ANALYZER.MAIN CUSTOMER
+```
+
+See `skills/temenos-component-analyzer/references/implementation-guide.md`
+for the deployment model, release-sensitive field positions, source-analysis
+limitations, and R19 multithreading checklist.
+
 ## How to Use After Install
 
 **Auto-trigger (passive)** — skills detect context from your words, just describe what you're building:
