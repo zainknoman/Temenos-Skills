@@ -8,7 +8,9 @@
 * @ValidationInfo : Strict flag       : true
 * @ValidationInfo : Bypass GateKeeper : false
 * <Rating>N/A</Rating>
-* Standalone JBC subroutine. Componentized deployments should map this routine from a .component declaration.
+
+$PACKAGE EB.ComponentAnalyzer
+
 SUBROUTINE EB.COMPONENT.ANALYZER(APPLICATION.NAME, REPORT)
 *-----------------------------------------------------------------------------
 * T24 Component Analyzer
@@ -85,7 +87,26 @@ INITIALISE:
 
     APPLICATION.NAME = UPCASE(TRIM(APPLICATION.NAME))
     OUT.REPORT = ''
+	
+    ROUTINE.ID = ''
+    ROUTINE.BASE = ''
 
+    FILE.CONTROL.FOUND = 0
+    STANDARD.SELECTION.FOUND = 0
+
+    PGM.FOUND = 0
+    PGM.TYPE = ''
+    PGM.BATCH = ''
+
+    ROUTINE.PGM.FOUND = 0
+    ROUTINE.PGM.TYPE = ''
+    ROUTINE.PGM.BATCH = ''
+
+    ACCESS.FOUND = 0
+    DAS.FOUND = 0
+    API.FOUND = 0
+    COMPONENT.HINT = 0
+	
     ROUTINE.LIST = ''
     VERSION.LIST = ''
     ENQUIRY.LIST = ''
