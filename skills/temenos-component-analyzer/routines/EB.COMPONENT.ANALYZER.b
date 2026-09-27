@@ -8,7 +8,7 @@
 * @ValidationInfo : Strict flag       : true
 * @ValidationInfo : Bypass GateKeeper : false
 * <Rating>N/A</Rating>
-$PACKAGE EB.ComponentAnalyzer
+* Standalone JBC subroutine. Componentized deployments should map this routine from a .component declaration.
 SUBROUTINE EB.COMPONENT.ANALYZER(APPLICATION.NAME, REPORT)
 *-----------------------------------------------------------------------------
 * T24 Component Analyzer
@@ -102,6 +102,16 @@ INITIALISE:
     SOURCE.FAIL.COUNT = 0
     WARNING.COUNT = 0
 
+    PGM.FOUND = 0
+    PGM.TYPE = ''
+    PGM.BATCH = ''
+    FILE.CONTROL.FOUND = 0
+    STANDARD.SELECTION.FOUND = 0
+    ROUTINE.PGM.FOUND = 0
+    ROUTINE.PGM.TYPE = ''
+    ROUTINE.PGM.BATCH = ''
+    COMPONENT.HINT = 0
+
     GOSUB ADD.LINE
     OUT.REPORT<-1> = '======================================================================'
     OUT.REPORT<-1> = 'T24 COMPONENT ANALYSIS'
@@ -155,30 +165,36 @@ ANALYSE.APPLICATION:
     GOSUB READ.FILE.CONTROL
     GOSUB READ.STANDARD.SELECTION
 
-    IF PGM.FOUND THEN
+    IF PGM.FOUND EQ 1 THEN
         OUT.REPORT<-1> = 'PGM.FILE      : FOUND'
         OUT.REPORT<-1> = '  TYPE        : ':PGM.TYPE
         OUT.REPORT<-1> = '  BATCH.JOB    : ':PGM.BATCH
         IF PGM.TYPE EQ 'B' THEN
             OUT.REPORT<-1> = '  CLASS       : BATCH PROGRAM'
         END
-    END ELSE
+    END
+
+    IF PGM.FOUND EQ 0 THEN
         OUT.REPORT<-1> = 'PGM.FILE      : NOT FOUND'
-        WARNING.COUNT += 1
+        WARNING.COUNT = WARNING.COUNT + 1
     END
 
-    IF FILE.CONTROL.FOUND THEN
+    IF FILE.CONTROL.FOUND EQ 1 THEN
         OUT.REPORT<-1> = 'FILE.CONTROL  : FOUND'
-    END ELSE
-        OUT.REPORT<-1> = 'FILE.CONTROL  : NOT FOUND'
-        WARNING.COUNT += 1
     END
 
-    IF STANDARD.SELECTION.FOUND THEN
+    IF FILE.CONTROL.FOUND EQ 0 THEN
+        OUT.REPORT<-1> = 'FILE.CONTROL  : NOT FOUND'
+        WARNING.COUNT = WARNING.COUNT + 1
+    END
+
+    IF STANDARD.SELECTION.FOUND EQ 1 THEN
         OUT.REPORT<-1> = 'STANDARD.SELECTION : FOUND'
-    ELSE
+    END
+
+    IF STANDARD.SELECTION.FOUND EQ 0 THEN
         OUT.REPORT<-1> = 'STANDARD.SELECTION : NOT FOUND'
-        WARNING.COUNT += 1
+        WARNING.COUNT = WARNING.COUNT + 1
     END
 
     OUT.REPORT<-1> = 'INSERT SOURCE : I_F.':APPLICATION.NAME
@@ -253,7 +269,7 @@ ANALYSE.VERSIONS:
         VERSION.APP = UPCASE(FIELD(VERSION.ID, ',', 1))
         IF VERSION.APP NE APPLICATION.NAME THEN CONTINUE
 
-        VERSION.COUNT += 1
+        VERSION.COUNT = VERSION.COUNT + 1
         VERSION.LIST<-1> = VERSION.ID
 
         OUT.REPORT<-1> = 'VERSION: ':VERSION.ID
@@ -352,7 +368,7 @@ REGISTER.ROUTINE:
     IF ROUTINE.ID EQ '' THEN RETURN
 
     IF INDEX(UPCASE(ROUTINE.LIST), UPCASE(ROUTINE.ID), 1) EQ 0 THEN
-        ROUTINE.COUNT += 1
+        ROUTINE.COUNT = ROUTINE.COUNT + 1
         ROUTINE.LIST<-1> = ROUTINE.ID
     END
 RETURN
@@ -385,7 +401,7 @@ ANALYSE.ENQUIRIES:
 
         IF UPCASE(R.ENQ<ENQ.FILE.POS>) NE APPLICATION.NAME THEN CONTINUE
 
-        ENQUIRY.COUNT += 1
+        ENQUIRY.COUNT = ENQUIRY.COUNT + 1
         ENQUIRY.LIST<-1> = ENQUIRY.ID
 
         OUT.REPORT<-1> = 'ENQUIRY: ':ENQUIRY.ID
@@ -420,7 +436,7 @@ RETURN
 REGISTER.ROUTINE.ID:
     IF ROUTINE.ID EQ '' THEN RETURN
     IF INDEX(UPCASE(ROUTINE.LIST), UPCASE(ROUTINE.ID), 1) EQ 0 THEN
-        ROUTINE.COUNT += 1
+        ROUTINE.COUNT = ROUTINE.COUNT + 1
         ROUTINE.LIST<-1> = ROUTINE.ID
     END
 RETURN
@@ -455,22 +471,24 @@ CLASSIFY.MULTITHREAD.ROUTINE:
 
     ROUTINE.BASE = ROUTINE.ID
 
+    ROUTINE.ROLE = 'RECORD / GENERAL'
+
     IF ROUTINE.ID MATCHES '*.LOAD' THEN
         ROUTINE.BASE = FIELD(ROUTINE.ID, '.LOAD', 1)
-        OUT.REPORT<-1> = '  ROLE                : LOAD'
-    END ELSE
-        IF ROUTINE.ID MATCHES '*.SELECT' THEN
-            ROUTINE.BASE = FIELD(ROUTINE.ID, '.SELECT', 1)
-            OUT.REPORT<-1> = '  ROLE                : SELECT'
-        END ELSE
-            IF ROUTINE.ID MATCHES '*.FILTER' THEN
-                ROUTINE.BASE = FIELD(ROUTINE.ID, '.FILTER', 1)
-                OUT.REPORT<-1> = '  ROLE                : FILTER'
-            END ELSE
-                OUT.REPORT<-1> = '  ROLE                : RECORD / GENERAL'
-            END
-        END
+        ROUTINE.ROLE = 'LOAD'
     END
+
+    IF ROUTINE.ID MATCHES '*.SELECT' THEN
+        ROUTINE.BASE = FIELD(ROUTINE.ID, '.SELECT', 1)
+        ROUTINE.ROLE = 'SELECT'
+    END
+
+    IF ROUTINE.ID MATCHES '*.FILTER' THEN
+        ROUTINE.BASE = FIELD(ROUTINE.ID, '.FILTER', 1)
+        ROUTINE.ROLE = 'FILTER'
+    END
+
+    OUT.REPORT<-1> = '  ROLE                : ':ROUTINE.ROLE
 
     GOSUB READ.PGM.ROUTINE
 
@@ -508,14 +526,20 @@ READ.ROUTINE.SOURCE:
     EXECUTE 'LIST-ITEM BP ':ROUTINE.ID CAPTURING SOURCE SETTING SOURCE.ERROR
 
     IF SOURCE EQ '' OR SOURCE.ERROR NE '' THEN
-        SOURCE.FAIL.COUNT += 1
+        SOURCE.FAIL.COUNT = SOURCE.FAIL.COUNT + 1
         OUT.REPORT<-1> = '  SOURCE              : UNAVAILABLE'
         OUT.REPORT<-1> = '  SOURCE NOTE         : LIST-ITEM BP failed/unavailable'
         RETURN
     END
 
-    SOURCE.COUNT += 1
+    SOURCE.COUNT = SOURCE.COUNT + 1
     OUT.REPORT<-1> = '  SOURCE              : AVAILABLE'
+
+    IF INDEX(UPCASE(SOURCE), 'METAMODELVERSION', 1) THEN COMPONENT.HINT = 1
+    IF INDEX(UPCASE(SOURCE), 'COMPONENT ', 1) THEN COMPONENT.HINT = 1
+    IF INDEX(UPCASE(SOURCE), 'METHOD ', 1) THEN COMPONENT.HINT = 1
+    IF INDEX(UPCASE(SOURCE), 'PROPERTY ', 1) THEN COMPONENT.HINT = 1
+    IF INDEX(UPCASE(SOURCE), 'TABLE ', 1) THEN COMPONENT.HINT = 1
 
     GOSUB SOURCE.PACKAGE
     GOSUB SOURCE.USING
@@ -651,20 +675,14 @@ ANALYSE.COMPONENT.HINT:
     OUT.REPORT<-1> = ''
     OUT.REPORT<-1> = '[JBC COMPONENT]'
 
-    COMPONENT.HINT = 0
+    * COMPONENT.HINT is accumulated while each routine source is read.
 
-    IF SOURCE NE '' THEN
-        IF INDEX(UPCASE(SOURCE), 'METAMODELVERSION', 1) THEN COMPONENT.HINT = 1
-        IF INDEX(UPCASE(SOURCE), 'COMPONENT ', 1) THEN COMPONENT.HINT = 1
-        IF INDEX(UPCASE(SOURCE), 'METHOD ', 1) THEN COMPONENT.HINT = 1
-        IF INDEX(UPCASE(SOURCE), 'PROPERTY ', 1) THEN COMPONENT.HINT = 1
-        IF INDEX(UPCASE(SOURCE), 'TABLE ', 1) THEN COMPONENT.HINT = 1
-    END
-
-    IF COMPONENT.HINT THEN
+    IF COMPONENT.HINT EQ 1 THEN
         OUT.REPORT<-1> = 'Component source hints detected in analyzed routine source.'
         OUT.REPORT<-1> = 'For full component declaration analysis, provide the .component source to the analyzer.'
-    END ELSE
+    END
+
+    IF COMPONENT.HINT EQ 0 THEN
         OUT.REPORT<-1> = 'No .component declaration source was directly available from the analyzed BP routine.'
     END
 RETURN
@@ -681,7 +699,6 @@ ANALYSE.APIS:
         RETURN
     END
 
-    IF ROUTINE.LIST EQ '' THEN RETURN
 
     ROUTINE.TOTAL = DCOUNT(ROUTINE.LIST, @FM)
 
@@ -694,7 +711,7 @@ ANALYSE.APIS:
         CALL F.READ(FN.EB.API, API.ID, R.API, F.EB.API, E.API)
 
         IF NOT(E.API) AND R.API NE '' THEN
-            API.COUNT += 1
+            API.COUNT = API.COUNT + 1
             API.LIST<-1> = API.ID
             OUT.REPORT<-1> = 'EB.API: ':API.ID
             OUT.REPORT<-1> = '  RECORD             : matched by RECORD.ID'
@@ -745,12 +762,12 @@ ANALYSE.SERVICES:
         END
         IF SERVICE.MATCH EQ 0 THEN CONTINUE
 
-        SERVICE.COUNT += 1
+        SERVICE.COUNT = SERVICE.COUNT + 1
         SERVICE.LIST<-1> = SERVICE.JOB
 
         OUT.REPORT<-1> = 'JOB: ':SERVICE.JOB
         OUT.REPORT<-1> = '  PGM.FILE.TYPE       : B'
-        OUT.REPORT<-1> = '  BATCH.JOB.CONTROL   : ':R.SERVICE.PGM<PGM.BATCH.POS>
+        OUT.REPORT<-1> = '  BATCH.JOB           : ':R.SERVICE.PGM<PGM.BATCH.POS>
 
         GOSUB READ.BATCH.SERVICE
     NEXT PGM.NO
