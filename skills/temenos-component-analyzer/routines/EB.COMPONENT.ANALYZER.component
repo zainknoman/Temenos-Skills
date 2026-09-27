@@ -1,17 +1,6 @@
 component EB.ComponentAnalyzer
 metamodelVersion 1.6
 
-    public constant SOURCE.COMMAND { value: 'LIST-ITEM BP' }
-    public constant PGM.FILE.NAME { value: 'F.PGM.FILE' }
-    public constant FILE.CONTROL.NAME { value: 'F.FILE.CONTROL' }
-    public constant STANDARD.SELECTION.NAME { value: 'F.STANDARD.SELECTION' }
-    public constant VERSION.NAME { value: 'F.VERSION' }
-    public constant ENQUIRY.NAME { value: 'F.ENQUIRY' }
-    public constant EB.API.NAME { value: 'F.EB.API' }
-    public constant BATCH.NAME { value: 'F.BATCH' }
-    public constant TSA.SERVICE.NAME { value: 'F.TSA.SERVICE' }
-    public constant TSA.WORKLOAD.PROFILE.NAME { value: 'F.TSA.WORKLOAD.PROFILE' }
-
     public method analyse(
         IN applicationName string,
         OUT report string
