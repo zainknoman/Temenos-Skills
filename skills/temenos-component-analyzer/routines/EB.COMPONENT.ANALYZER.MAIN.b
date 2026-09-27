@@ -9,33 +9,26 @@
 * @ValidationInfo : Bypass GateKeeper : false
 * <Rating>N/A</Rating>
 PROGRAM EB.COMPONENT.ANALYZER.MAIN
-*-----------------------------------------------------------------------------
-* Developer entry point for EB.COMPONENT.ANALYZER.
-*
-* Usage:
-*     EB.COMPONENT.ANALYZER.MAIN CUSTOMER
-*
-* The application name is taken from SENTENCE(1). No INPUT is used.
-*-----------------------------------------------------------------------------
 
-    APPLICATION.NAME = SENTENCE(1)
+	$USING EB.ComponentAnalyzer
 
-    IF APPLICATION.NAME EQ '' THEN
-        CRT ''
-        CRT 'EB.COMPONENT.ANALYZER.MAIN'
-        CRT 'Usage: EB.COMPONENT.ANALYZER.MAIN <APPLICATION>'
-        CRT 'Example: EB.COMPONENT.ANALYZER.MAIN CUSTOMER'
-        STOP
-    END
+	APPLICATION.NAME = SENTENCE(1)
 
-    APPLICATION.NAME = UPCASE(TRIM(APPLICATION.NAME))
+	IF APPLICATION.NAME EQ '' THEN
+		CRT 'Usage: EB.COMPONENT.ANALYZER.MAIN <APPLICATION>'
+		STOP
+	END
 
-    REPORT = ''
-    CALL EB.COMPONENT.ANALYZER(APPLICATION.NAME, REPORT)
+	APPLICATION.NAME = UPCASE(TRIM(APPLICATION.NAME))
 
-    REPORT.LINE.COUNT = DCOUNT(REPORT, @FM)
-    FOR REPORT.LINE.NO = 1 TO REPORT.LINE.COUNT
-        CRT REPORT<REPORT.LINE.NO>
-    NEXT REPORT.LINE.NO
-STOP
+	REPORT = ''
+
+	EB.ComponentAnalyzer.analyse(APPLICATION.NAME, REPORT)
+
+	REPORT.LINE.COUNT = DCOUNT(REPORT, @FM)
+
+	FOR REPORT.LINE.NO = 1 TO REPORT.LINE.COUNT
+		CRT REPORT<REPORT.LINE.NO>
+	NEXT REPORT.LINE.NO
+	STOP
 END
