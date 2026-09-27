@@ -201,3 +201,85 @@ without having to invoke a component API.
 Do not use INPUT/CRT inside business routines. The mainline uses CRT only as a developer
 utility/reporting wrapper. For GUI-safe integration, return the report through the
 component method or persist it in a dedicated developer/report application.
+
+## 8. Quick execution guide
+
+### Deploy the jBC routines
+
+Place these source items in the local BP/source area used by the target T24 environment:
+
+    EB.COMPONENT.ANALYZER
+    EB.COMPONENT.ANALYZER.MAIN
+
+Compile/catalog them using the same BASIC/CATALOG process used for local jBC routines in
+the target environment. For example, in environments using the standard jBASE commands:
+
+    BASIC BP EB.COMPONENT.ANALYZER
+    BASIC BP EB.COMPONENT.ANALYZER.MAIN
+    CATALOG BP EB.COMPONENT.ANALYZER
+    CATALOG BP EB.COMPONENT.ANALYZER.MAIN
+
+If the project uses a TAFJ component builder instead of direct BASIC/CATALOG, build the
+component declaration and its .b implementation through that project's normal component
+build process. The mainline can still be compiled/catalogued as the developer entry point.
+
+### Run one application
+
+From the T24/jBASE command environment:
+
+    EB.COMPONENT.ANALYZER.MAIN CUSTOMER
+
+Other examples:
+
+    EB.COMPONENT.ANALYZER.MAIN ACCOUNT
+    EB.COMPONENT.ANALYZER.MAIN FUNDS.TRANSFER
+    EB.COMPONENT.ANALYZER.MAIN AA.ARRANGEMENT
+
+The mainline reads the first command argument using SENTENCE(1), calls
+EB.COMPONENT.ANALYZER, and prints the returned report line by line.
+
+### If no application is supplied
+
+    EB.COMPONENT.ANALYZER.MAIN
+
+The routine prints:
+
+    Usage: EB.COMPONENT.ANALYZER.MAIN <APPLICATION>
+
+and stops without changing T24 data.
+
+### What it changes
+
+Nothing. The implementation is read-only.
+
+It opens and reads metadata/source only. It does not WRITE, DELETE, AUTHORISE, JOURNAL.UPDATE,
+create PGM.FILE/BATCH/TSA records, or start/stop services.
+
+### First test recommendation
+
+Run against CUSTOMER in a non-production environment and verify these sections:
+
+    [APPLICATION]
+    [VERSIONS]
+    [ENQUIRIES]
+    [ROUTINES]
+    [EB.API]
+    [SERVICES]
+    [DEPENDENCY SUMMARY]
+
+Then compare the discovered VERSION routine positions and service records with the actual
+R19/R25 Model Bank records in the target installation.
+
+### Important TAFJ note
+
+The analyzer intentionally uses EB.READLIST for record selection rather than relying on
+EXECUTE SELECT ... RTNLIST. This avoids a known portability issue where RTNLIST handling
+differs in TAFJ.
+
+The BP source retrieval uses the standard jQL LIST-ITEM command:
+
+    LIST-ITEM BP <ROUTINE>
+
+with line-number suppression not required for the current parser. If the local BP source
+is stored or exposed differently, replace only the source-retrieval section
+READ.ROUTINE.SOURCE; the metadata analyzer does not depend on source retrieval.
