@@ -31,3 +31,6 @@ Thumbs.db
 
 # Harness / export output (regenerable)
 build/
+
+# Per-release knowledge DBs (regenerable: pipeline/build_release.py)
+releases/
