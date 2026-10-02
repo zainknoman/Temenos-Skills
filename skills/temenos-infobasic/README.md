@@ -69,8 +69,8 @@ by customerId and arrangementId selection criteria and returns arrangement statu
 ```
 
 ```
-Write a DE conversion routine AA.DE.CONV.MATURITY.DATE that formats a raw
-YYYYMMDD date field as DD/MM/YYYY for enquiry display.
+Write a Delivery Engine (DE) conversion routine AA.DE.CONV.MATURITY.DATE that
+formats a raw YYYYMMDD date as DD/MM/YYYY in the delivery advice.
 ```
 
 ```
@@ -277,7 +277,7 @@ C:\Users\Lenovo\.claude\skills\temenos-infobasic\
 | `VCRR` | After record committed | Side effects only |
 | `V.APPLICATION` (DS Packager) | Field validation | `EB.SystemTables.setE('msg')` |
 | `E.NOFILE.*` | Enquiry with no file | Populate `finalArray` |
-| `DE.CONV.*` | Enquiry column display | Set `OutValue` |
+| `DE.CONV.*` | Delivery Engine (DE): while formatting a delivery advice | Set `ErrorMsg` (result in `OutValue`) |
 | `AA.CALC.*` | AA framework calculation | Return error param |
 | `AA.GET.*` | AA framework data read | Return error param |
 | `*.S.*` | Background service | EB.Service APIs |

@@ -9,7 +9,7 @@
 | `VAR.*` | Version Authorise Record | On AUTHORISE of a record |
 | `VCRR.*` | Version Create Record | After a record is committed |
 | `*.E.NOFILE.*` | NoFile Enquiry | An enquiry with no backing file |
-| `*.DE.CONV.*` | DE Conversion | Display Engine field conversion |
+| `*.DE.CONV.*` | DE (Delivery Engine) Conversion | A delivery advice field value is converted before the message is formatted |
 | `*.CALC.*`, `*.GET.*`, `*.CHECK.*` | AA Subroutine | Called by AA framework |
 | `*.ARR.TC.*`, `*.PRD.CAT.TC.*` | Property Template | AA property definition |
 | `*.S.*` | Service Routine | Background service / batch |
@@ -395,17 +395,24 @@ END
 
 ---
 
-## 9. Display Engine (DE) Conversion Routine
+## 9. Delivery Engine (DE) Conversion Routine
 
-Converts a raw field value for display in an enquiry column.
+**DE = Delivery Engine**, the T24 subsystem that produces customer advices and messages (print, SWIFT, email). It is not an enquiry or display feature. See `skills/temenos-de/` for the full DE pipeline.
+
+A DE conversion routine converts the value of one field of a **delivery message** before that message is formatted. It works the same way as the built-in conversions (`DATE/F`, `AMT`, …) that are set in the Conversion column of a message's format record (`DE.FORMAT.PRINT` / `DE.FORMAT.SWIFT`; `DE.XML.CONVERSION` on `DE.FORMAT.XML`). The conversion only changes what appears in the advice; the T24 record is not changed. R25 ships 18 of these routines (`AA.DE.CONV.*` in `T24_BP`), for example arrangement start and expiry dates, account short name, and customer SWIFT address.
+
+Not to be confused with:
+- **`*.DE.MAP.*`**: DE **mapping** routines, set in `DE.MAPPING` field `DE.MAP.ROUTINE`. These add data to a message type. They receive the nine handoff records plus the mapping key, and return an error message.
+- **Enquiry conversions**: an `ENQUIRY` CONVERSION routine (Infobasic) or `Enquiry.setValue` (L3 Java). These format enquiry columns.
 
 ```basic
 $PACKAGE AA.ModelBank
 SUBROUTINE AA.DE.CONV.ARRANGEMENT.START.DATE(InValue, HeaderRec, MvNo, OutValue, ErrorMsg)
 *-----------------------------------------------------------------------------
-* DE Conversion - format arrangement start date for display
+* Delivery Engine (DE) conversion - arrangement start date for the delivery advice
 *-----------------------------------------------------------------------------
-    $USING AA.Framework
+    $USING DE.Outward
+    $USING AA.PaymentSchedule
 *-----------------------------------------------------------------------------
     GOSUB Initialise
     GOSUB DoConvert
@@ -414,23 +421,31 @@ RETURN
 Initialise:
     OutValue = ''
     ErrorMsg = ''
+    ArrangementId = InValue          ;* the message field holds the arrangement id
 RETURN
 *-----------------------------------------------------------------------------
 DoConvert:
-    IF NOT(InValue) THEN RETURN
-    ;* InValue = raw date in YYYYMMDD; convert to DD/MM/YYYY for display
-    OutValue = OCONV(ICONV(InValue, "D"), "D.E")
+    IF ArrangementId EQ '' THEN RETURN
+    ;* The outward delivery message being formatted is available if more context is needed:
+    ;*   DE.Outward.getFDeOMsg() = F.DE.O.MSG file, DE.Outward.getRKey() = its record key
+    AccountDetails = ''
+    ReadErr = ''
+    AA.PaymentSchedule.ProcessAccountDetails(ArrangementId, "GET", "GET", AccountDetails, ReadErr)
+    StartDate = AccountDetails<AA.PaymentSchedule.AccountDetails.AdValueDate>
+    OutValue = OCONV(ICONV(StartDate, "D4"), "D4E")   ;* value written into the advice
 RETURN
 *-----------------------------------------------------------------------------
 END
 ```
 
-**Parameters:**
-- `InValue` — raw value of the field from the record
-- `HeaderRec` — the full record as a dynamic array (access other fields for context)
-- `MvNo` — multi-value position (for MV fields)
-- `OutValue` — the formatted display value to return
-- `ErrorMsg` — set if an error occurs
+Pattern taken from R25 `T24_BP/AA.DE.CONV.ARRANGEMENT.START.DATE.b`. It runs inside the Delivery Engine formatting stage, not inside an enquiry.
+
+**Parameters** (all DE conversion routines share this signature):
+- `InValue`: the value of the message field being converted. In the R25 `AA.DE.CONV.*` routines this is the arrangement id, which the routine uses to look up the data it outputs.
+- `HeaderRec`: header data of the delivery message, passed in by the Delivery Engine.
+- `MvNo`: multi-value position of the field in the message.
+- `OutValue`: the converted value that appears in the advice. Only the advice changes; the T24 record is never modified.
+- `ErrorMsg`: set it to stop formatting with an error.
 
 ---
 

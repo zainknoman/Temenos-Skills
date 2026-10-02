@@ -156,8 +156,8 @@ RETURN
 | `*.VCRR.*` | Version Create Record |
 | `*.V.APPLICATION` | DS Packager field validation |
 | `*.E.NOFILE.*` | NoFile Enquiry |
-| `*.DE.CONV.*` | Display Engine conversion |
-| `*.DE.MAP.*` | Display Engine mapping |
+| `*.DE.CONV.*` | Delivery Engine (DE) conversion of a delivery-message field value |
+| `*.DE.MAP.*` | Delivery Engine (DE) mapping routine (`DE.MAPPING` field `DE.MAP.ROUTINE`) |
 | `*.CALC.*` | Calculation subroutine |
 | `*.GET.*` | Getter (read data) |
 | `*.CHECK.*` | Check/validation subroutine |
@@ -308,7 +308,8 @@ Input Stage:    VIR -> VVR (per field) -> display
 Change Stage:   VIR -> VVR (per field) -> display
 Auth Stage:     VAR -> display
 After Commit:   VCRR
-Enquiry:        E.NOFILE or direct file enquiry with DE.CONV conversions
+Enquiry:        E.NOFILE or direct file enquiry with ENQUIRY conversion routines
+Delivery (DE):  handoff -> DE.MAPPING (DE.MAP.ROUTINE) -> format with DE.CONV conversions -> carrier
 AA Framework:   ArrangementActivity -> Property routines -> CALC/GET/CHECK
 Service/Batch:  S. routines or PROGRAM blocks via EB.SERVICE scheduler
 ```
