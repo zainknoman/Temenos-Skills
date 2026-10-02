@@ -5,6 +5,14 @@ Code, backed by a three-layer knowledge base built from real T24 product
 JARs, JavaDoc, business-rule documentation, and a real installed R25 Model
 Bank — not invented field names, guessed API signatures, or guessed config.
 
+**At a glance**
+
+- **11 skills** for code generation (Infobasic, jBC, L3 Java, Delivery Engine) and for operations (admin, migration, integration, devsecops, architecture, component analysis).
+- **Two T24 releases**: a complete knowledge base for **R23** and for **R25** (fields, positions, types, componentised jBC names), plus a generated R23→R25 change report.
+- **25 artefact types, every one proven**: 5 Infobasic, 4 jBC and 16 L3 Java hook templates. Each template's example compiles against a real R25 install and has its fields verified on both releases.
+- **An accuracy check for generated code**: `pipeline/verify_artefact.py` verifies every field and compiles the file against R25 before it's presented.
+- **Help page**: open [`Temenos-Skills-HelpText.html`](Temenos-Skills-HelpText.html) in a browser. It's a JavaDoc-style index of every skill, reference file, artefact template, golden case, pipeline tool and release, with search. Rebuild it with `python pipeline/build_help.py`.
+
 ---
 
 ## Install the Skills
@@ -117,6 +125,56 @@ Layer A is the ground truth for field names — if a field isn't in
 
 An optional MCP server (`mcp_server/server.py`) exposes Layer A/B as
 structured tool calls instead of file reads — see [MCP Server](#mcp-server-optional).
+
+---
+
+## Releases (R23 + R25)
+
+Each release has its own **complete** knowledge DB. It is never stored as a delta over another release, because a delta would silently return the R23 answer for anything R25 removed, renamed or moved.
+
+| Release | Built from (read-only) | Apps | Fields | Fields with a jBC name | DB |
+|---|---|---|---|---|---|
+| **R23** (default) | `jar/` (MANIFEST `R23_AMR.0`) | 4,596 | 162,842 | 62,238 | `temenos_knowledge.db` |
+| **R25** | `C:\R25\bnk\t24lib` + `T24.javadoc.jar` | 4,838 | 171,858 | 69,119 | `releases/R25/temenos_knowledge.db` |
+
+- Pass `--release R25` to `validate_fields.py`, `verify_artefact.py` and `run_golden.py`. Without it they use R23.
+- `pipeline/build_release.py --release R25` builds the R25 DB. It reads from `C:\R25` and fails if anything there changes.
+- `pipeline/release_diff.py --old R23 --new R25` writes `build/releases/R23-to-R25.md`: 245 apps added, 3 removed, 557 changed, 2,580 fields added, 651 removed, 177 moved and **1,740 jBC names renamed** (R25 keeps the app prefix in many local modules).
+- **Componentised (jBC) field names are not Java aliases.** `EB.CUS.SHORT.NAME` is `ST.Customer.Customer.EbCusShortName`, while `AC.CATEGORY` is `AC.AccountOpening.Account.Category`. `pipeline/component_parse.py` reads them from the component classes in the JARs, and `validate_fields.py` prints them.
+
+---
+
+## Accuracy Harness
+
+Generated code is checked, not eyeballed:
+
+```bash
+python pipeline/verify_artefact.py --file out/V.CUS.CHECK.b --app CUSTOMER [--release R25]
+```
+
+1. **Field check.** Legacy EQU names (`AC.CATEGORY`) and componentised names (`ST.Customer.Customer.EbCusMnemonic`) are verified against the release DB.
+2. **Compile check.** jBC and Infobasic compile with R25 `tCompile` (any sibling `.component` first). L3 Java compiles with `javac` against the R25 JARs.
+3. **Write guard.** Compiling writes only to `build/verify/`. Afterwards `C:\R25` is scanned, and the result is FAIL if anything there changed. The setup is described in `plan/state/decisions.md`.
+
+`PASS` needs both checks. A skipped compile (no `C:\R25`) counts as FAIL, never as a pass.
+
+`tests/golden/` holds one reference case per artefact type, and `python pipeline/run_golden.py --release R25` runs them all.
+
+---
+
+## Artefact Templates (25 types)
+
+`templates/<language>/<type>/` holds `template.json` (inputs) and source files with `{{PLACEHOLDER}}`s. A **field** input becomes the EQU name for Infobasic, the componentised name for jBC, or the getter suffix for Java, taken from the selected release.
+
+A template is **proven** when rendering its golden case's inputs reproduces that golden case byte-for-byte, and the golden case passes the accuracy harness. Proven status is computed when `templates.json` is exported, never set by hand.
+
+| Language | Types |
+|---|---|
+| Infobasic (5) | VVR, VIR, VAR, NoFile enquiry, OFS routine. R25 requires `$PACKAGE` and a `.component` even for `$INSERT`-style routines, so both are generated. |
+| jBC (4) | Validation routine, GET method, WRITE method (OFS), NoFile enquiry |
+| Java L3 hooks (16) | RecordLifecycle `checkId`, `defaultFieldValues`, `defaultFieldValuesOnHotField`, `validateRecord`, `validateField` (deprecated in R25), `updateRecord`, `postUpdateRequest`, `isOverrideAutoApprove`; ServiceLifecycle; Enquiry `setIds` / `setFilterCriteria` / `setValue`; AA `ActivityLifecycle.validateRecord`; AA `Calculation.getChargeAmount`; `PaymentLifecycle.validatePaymentForClearing`; `PaymentOrderLifecycle.validatePaymentOrderRecord` |
+
+`python pipeline/release_t24tools.py --release R25` runs the golden cases. Only if they pass does it write the T24Tools export: `build/t24tools/<R>/` (fields, Temenos-derived, for personal use only) and `templates.json` (the templates themselves).
 
 ---
 
@@ -293,7 +351,24 @@ Temenos-Skills/
 │   ├── html_parse.py                  ← Phase 1c: backfill type/mandatory/description from JavaDoc HTML
 │   ├── pdf_extract.py                 ← Phase 1d: chunk + TF-IDF embed PDFs into Chroma (Layer B)
 │   ├── query_docs.py                  ← Query Layer B (CLI)
-│   └── validate_fields.py             ← Field Verification Gate (CLI)
+│   ├── validate_fields.py             ← Field Verification Gate (CLI, prints jBC names)
+│   ├── component_parse.py             ← componentised (jBC) field names from component classes
+│   ├── releases.py / build_release.py ← per-release knowledge DBs (R23, R25)
+│   ├── release_diff.py                ← R23 → R25 change report
+│   ├── artefact_fields.py             ← field references in generated code
+│   ├── compile_check.py               ← tCompile / javac against R25 + write guard
+│   ├── verify_artefact.py             ← accuracy gate: fields + compile
+│   ├── run_golden.py                  ← run every golden case
+│   ├── artefact_templates.py          ← template resolve / render / prove / export
+│   ├── make_goldens.py                ← render golden cases from templates
+│   ├── export_t24tools.py / release_t24tools.py ← T24Tools data + templates export (gated)
+│   └── build_help.py + help_template.html ← builds Temenos-Skills-HelpText.html
+├── templates/                         ← artefact templates (catalogue.json + <language>/<type>/)
+├── tests/
+│   ├── pipeline/                      ← unit tests (pytest)
+│   └── golden/                        ← one compile-verified reference case per artefact type
+├── releases/                          ← per-release knowledge DBs (git-ignored)
+├── Temenos-Skills-HelpText.html       ← generated help (open in a browser)
 ├── mcp_server/
 │   └── server.py                      ← Optional MCP server: lookup_fields, search_rules
 ├── cache/                             ← SHA-256 incremental cache (git-ignored)
@@ -343,7 +418,8 @@ Temenos-Skills/
 
 ## Prerequisites
 
-- Python 3.10+
+- Python 3.10+ (dev: `pip install -r requirements-dev.txt` for pytest)
+- JDK 21 with `javac` on PATH, and the R25 install at `C:\R25` — for the compile gate (optional; without it compiles report SKIPPED = FAIL)
 - JDK with `javap` on PATH (verify: `javap -version`) — for `extract.py` only
 - T24 JAR files in `jar/`
 - T24 JavaDoc HTML in `T24.javadoc/T24.javadoc/`
@@ -378,6 +454,23 @@ python pipeline/query_docs.py "what controls dormancy in ACCOUNT?" --topic ACCOU
 
 # Verify fields before generating code
 python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGORY"
+
+# Componentised (jBC) names for R23
+python pipeline/component_parse.py --jars jar --release R23
+
+# R25 knowledge DB (read-only from C:\R25) and the R23 -> R25 change report
+python pipeline/build_release.py --release R25 --javadoc-jar "C:\R25\bnk\Transact_L3_Javadoc\T24.javadoc.jar"
+python pipeline/release_diff.py --old R23 --new R25
+
+# Accuracy gate for one generated file, and every golden case
+python pipeline/verify_artefact.py --file out/V.CUS.CHECK.b --app CUSTOMER --release R25
+python pipeline/run_golden.py --release R25
+
+# Gated T24Tools export (fields + templates.json)
+python pipeline/release_t24tools.py --release R25
+
+# Rebuild the help page
+python pipeline/build_help.py
 ```
 
 Each phase caches its own inputs by SHA-256, so re-running after adding JARs,

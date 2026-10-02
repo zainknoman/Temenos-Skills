@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Temenos-Skills Help</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%231f5f8b%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2216%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3ET%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --side: #f0efeb; --ink: #1d1d1b; --muted: #6b6a66;
+  --line: #dddcd6; --accent: #1f5f8b; --accent-soft: #e3eef6; --code: #f2f1ed;
+  --ok: #2e7d4f; --ok-soft: #e2f2e8; --warn: #9a6400; --warn-soft: #fbf0d9;
+  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161716; --panel: #1d1e1d; --side: #191a19; --ink: #e8e7e3; --muted: #9b9a94;
+    --line: #333431; --accent: #79b6e0; --accent-soft: #1f3341; --code: #242523;
+    --ok: #6fcf97; --ok-soft: #1c3326; --warn: #f2c063; --warn-soft: #3a2f17;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161716; --panel: #1d1e1d; --side: #191a19; --ink: #e8e7e3; --muted: #9b9a94;
+  --line: #333431; --accent: #79b6e0; --accent-soft: #1f3341; --code: #242523;
+  --ok: #6fcf97; --ok-soft: #1c3326; --warn: #f2c063; --warn-soft: #3a2f17;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--sans); display: grid;
+  grid-template-rows: auto 1fr; grid-template-columns: minmax(0, 1fr); }
+header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--panel);
+  border-bottom: 1px solid var(--line); }
+header h1 { font-size: 16px; margin: 0; white-space: nowrap; }
+header h1 span { color: var(--muted); font-weight: 400; }
+#search { flex: 1; min-width: 0; max-width: 520px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg); color: var(--ink); font: inherit; }
+header button, .btn { padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg);
+  color: var(--ink); font: inherit; cursor: pointer; }
+#menu { display: none; }
+.layout { display: grid; grid-template-columns: 320px minmax(0, 1fr); min-height: 0; }
+nav { background: var(--side); border-right: 1px solid var(--line); overflow: auto; padding: 8px 0 24px; }
+main { overflow: auto; padding: 20px 28px 48px; min-width: 0; }
+.group > summary { list-style: none; cursor: pointer; padding: 6px 14px; font-size: 12px; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.group > summary::-webkit-details-marker, .sub > summary::-webkit-details-marker { display: none; }
+.group > summary::before, .sub > summary::before { content: "▸ "; }
+.group[open] > summary::before, .sub[open] > summary::before { content: "▾ "; }
+.sub > summary { list-style: none; cursor: pointer; padding: 3px 14px 3px 22px; font-weight: 600; }
+nav a { display: block; padding: 3px 14px 3px 34px; color: var(--ink); text-decoration: none; font-size: 14px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+nav .top > a { padding-left: 22px; }
+nav a:hover { background: var(--accent-soft); }
+nav a.active { background: var(--accent); color: #fff; }
+.count { color: var(--muted); font-weight: 400; font-size: 12px; }
+.badge { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.warn { background: var(--warn-soft); color: var(--warn); }
+.badge.plain { background: var(--accent-soft); color: var(--accent); }
+.crumb { color: var(--muted); font-size: 13px; margin-bottom: 4px; }
+main h1 { font-size: 24px; margin: 0 0 6px; }
+.lead { color: var(--muted); max-width: 900px; }
+.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin: 18px 0 16px; flex-wrap: wrap; }
+.tabs button { border: 0; background: none; padding: 8px 14px; color: var(--muted); font: inherit; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tabs button.on { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+.doc { max-width: 980px; }
+.doc h1 { font-size: 22px; } .doc h2 { font-size: 19px; border-bottom: 1px solid var(--line); padding-bottom: 4px; margin-top: 28px; }
+.doc h3 { font-size: 16px; margin-top: 22px; } .doc h4 { font-size: 15px; }
+code { font-family: var(--mono); font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+pre { font-family: var(--mono); font-size: 13px; background: var(--code); padding: 12px 14px; border-radius: 6px;
+  overflow: auto; line-height: 1.45; border: 1px solid var(--line); }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 10px 0; font-size: 14px; display: block; overflow: auto; max-width: 100%; }
+th, td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+th { background: var(--side); }
+blockquote { margin: 10px 0; padding: 4px 14px; border-left: 3px solid var(--accent); color: var(--muted); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 14px 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.card b { display: block; font-size: 22px; } .card span { color: var(--muted); font-size: 13px; }
+.card a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.outline a, .doc a, .crumb a { color: var(--accent); }
+.hit { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.hit a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.hit .snip { color: var(--muted); font-size: 13px; font-family: var(--mono); white-space: pre-wrap; }
+mark { background: var(--warn-soft); color: inherit; }
+.filter { padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font: inherit; }
+.muted { color: var(--muted); }
+@media (max-width: 800px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  header { gap: 8px; padding: 10px 12px; }
+  nav { display: none; position: fixed; inset: 52px 0 0 0; z-index: 5; }
+  nav.open { display: block; }
+  #menu { display: inline-block; }
+  main { padding: 16px; }
+  header h1 span { display: none; }
+}
+</style>
+</head>
+<body>
+<header>
+  <button id="menu" aria-label="Show index">☰</button>
+  <h1>Temenos-Skills <span>help</span></h1>
+  <input id="search" type="search" placeholder="Filter the index — press Enter to search inside every file" autocomplete="off">
+  <button id="theme" title="Theme">◐</button>
+</header>
+<div class="layout">
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<script>
+const INDEX = /*__HELP_INDEX__*/null;
+
+// ---------- tiny Markdown renderer (headings, fences, tables, lists, quotes, inline) ----------
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function inline(s) {
+  const codes = [];
+  s = s.replace(/`([^`]+)`/g, (_, c) => { codes.push(c); return `\u0000${codes.length - 1}\u0000`; });
+  s = esc(s)
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[\s(])\*([^*\s][^*]*)\*/g, "$1<em>$2</em>")
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, t, u) => /^https?:/.test(u)
+      ? `<a href="${u}" target="_blank" rel="noopener">${t}</a>` : `<span class="muted">${t}</span>`);
+  return s.replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${esc(codes[i])}</code>`);
+}
+const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+function md(src) {
+  const lines = src.replace(/\r\n/g, "\n").replace(/^---\n[\s\S]*?\n---\n/, "").split("\n");
+  let out = "", i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const fence = line.match(/^\s*(```|~~~)/);
+    if (fence) {
+      const buf = []; i++;
+      while (i < lines.length && !lines[i].trim().startsWith(fence[1])) buf.push(lines[i++]);
+      i++; out += `<pre><code>${esc(buf.join("\n"))}</code></pre>`; continue;
+    }
+    const h = line.match(/^(#{1,6})\s+(.*)$/);
+    if (h) { out += `<h${h[1].length} id="h-${slug(h[2])}">${inline(h[2])}</h${h[1].length}>`; i++; continue; }
+    if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i + 1])) {
+      const cells = (l) => l.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
+      let t = "<table><thead><tr>" + cells(line).map((c) => `<th>${inline(c)}</th>`).join("") + "</tr></thead><tbody>";
+      i += 2;
+      while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) {
+        t += "<tr>" + cells(lines[i]).map((c) => `<td>${inline(c)}</td>`).join("") + "</tr>"; i++;
+      }
+      out += t + "</tbody></table>"; continue;
+    }
+    if (/^\s*([-*+]|\d+\.)\s+/.test(line)) {
+      const ordered = /^\s*\d+\./.test(line); const items = [];
+      while (i < lines.length && /^\s*([-*+]|\d+\.)\s+/.test(lines[i])) {
+        let item = lines[i].replace(/^\s*([-*+]|\d+\.)\s+/, ""); i++;
+        while (i < lines.length && /^\s{2,}\S/.test(lines[i]) && !/^\s*([-*+]|\d+\.)\s+/.test(lines[i])) item += " " + lines[i++].trim();
+        items.push(`<li>${inline(item.replace(/^\[( |x)\]\s*/, (m, x) => x === "x" ? "☑ " : "☐ "))}</li>`);
+      }
+      out += ordered ? `<ol>${items.join("")}</ol>` : `<ul>${items.join("")}</ul>`; continue;
+    }
+    if (/^\s*>/.test(line)) {
+      const buf = [];
+      while (i < lines.length && /^\s*>/.test(lines[i])) buf.push(lines[i++].replace(/^\s*>\s?/, ""));
+      out += `<blockquote>${md(buf.join("\n"))}</blockquote>`; continue;
+    }
+    if (/^\s*(-{3,}|\*{3,})\s*$/.test(line)) { out += "<hr>"; i++; continue; }
+    if (!line.trim()) { i++; continue; }
+    const buf = [];
+    while (i < lines.length && lines[i].trim() && !/^(#{1,6}\s|\s*```|\s*~~~|\s*>|\s*([-*+]|\d+\.)\s+)/.test(lines[i])
+           && !/^\s*\|.*\|\s*$/.test(lines[i])) buf.push(lines[i++]);
+    if (buf.length) out += `<p>${inline(buf.join(" "))}</p>`; else i++;
+  }
+  return out;
+}
+
+// ---------- routing ----------
+const $ = (id) => document.getElementById(id);
+const fmtBytes = (n) => n > 1e6 ? (n / 1e6).toFixed(1) + " MB" : n > 1e3 ? (n / 1e3).toFixed(0) + " KB" : n + " B";
+const routes = new Map();   // hash -> {label, group, render()}
+function route(hash, entry) { routes.set(hash, entry); return hash; }
+
+function tabs(defs, start) {
+  const el = document.createElement("div");
+  const bar = document.createElement("div"); bar.className = "tabs";
+  const body = document.createElement("div");
+  defs.forEach(([name, render], k) => {
+    const b = document.createElement("button"); b.textContent = name;
+    b.onclick = () => { [...bar.children].forEach((x) => x.classList.remove("on")); b.classList.add("on");
+      body.innerHTML = ""; const r = render(); if (typeof r === "string") body.innerHTML = r; else body.append(r); };
+    bar.append(b);
+    if (k === (start || 0)) setTimeout(() => b.click());
+  });
+  el.append(bar, body); return el;
+}
+function page(crumb, title, lead, after) {
+  const m = $("main"); m.innerHTML = "";
+  m.insertAdjacentHTML("beforeend", `<div class="crumb">${crumb}</div><h1>${title}</h1>${lead ? `<div class="lead">${lead}</div>` : ""}`);
+  if (after) m.append(after);
+  m.scrollTop = 0;
+}
+const docDiv = (html) => { const d = document.createElement("div"); d.className = "doc"; d.innerHTML = html; return d; };
+const outlineHtml = (items) => items.length
+  ? `<div class="doc outline"><ul>${items.map((h) => `<li style="margin-left:${(h.level - 1) * 16}px">${esc(h.title)}</li>`).join("")}</ul></div>`
+  : `<p class="muted">No headings.</p>`;
+
+// ---------- build routes from the index ----------
+function buildRoutes() {
+  INDEX.overview.forEach((s, k) => route(`#overview/${k}`, { group: "Overview", label: s.title,
+    render: () => page("Overview", esc(s.title), "", docDiv(md(s.content))) }));
+
+  INDEX.skills.forEach((skill) => {
+    route(`#skill/${skill.id}`, { group: "Skills", sub: skill.id, label: "About this skill",
+      render: () => renderSkill(skill) });
+    skill.files.forEach((f) => route(`#skill/${skill.id}/${f.path}`, { group: "Skills", sub: skill.id, label: f.path,
+      render: () => renderFile(skill, f), file: f, skill }));
+    if (skill.hasTableSchema) route(`#schemas`, { group: "Skills", sub: skill.id, label: "references/table-schema/ (directory)",
+      render: renderSchemas });
+  });
+
+  INDEX.templates.forEach((lang) => lang.types.forEach((t) =>
+    route(`#template/${t.id}`, { group: "Artefact templates", sub: lang.label, label: t.label, proven: t.proven,
+      render: () => renderTemplate(lang, t) })));
+
+  INDEX.golden.forEach((c) => route(`#golden/${c.name}`, { group: "Golden cases", label: c.name,
+    render: () => renderGolden(c) }));
+  INDEX.pipeline.forEach((p) => route(`#pipeline/${p.name}`, { group: "Pipeline tools", label: p.name,
+    render: () => page("Pipeline tools", esc(p.name), `${p.lines} lines`, docDiv(`<pre>${esc(p.doc || "(no docstring)")}</pre>`)) }));
+  route("#releases", { group: "Releases", label: "Releases & knowledge DBs", render: renderReleases });
+  if (!routes.has("#schemas")) route("#schemas", { group: "Releases", label: "Table schemas", render: renderSchemas });
+}
+
+function renderHome() {
+  const files = INDEX.skills.reduce((n, s) => n + s.files.length, 0);
+  const types = INDEX.templates.reduce((n, l) => n + l.types.length, 0);
+  const proven = INDEX.templates.reduce((n, l) => n + l.types.filter((t) => t.proven).length, 0);
+  const cards = `<div class="cards">
+    <div class="card"><b>${INDEX.skills.length}</b><span>skills · ${files} reference files</span></div>
+    <div class="card"><b>${proven}/${types}</b><span>artefact types proven (compile on R25)</span></div>
+    <div class="card"><b>${INDEX.golden.length}</b><span>golden cases</span></div>
+    <div class="card"><b>${INDEX.releases.filter((r) => r.built).map((r) => r.release).join(" + ") || "—"}</b><span>releases with a knowledge DB</span></div>
+    <div class="card"><b>${INDEX.pipeline.length}</b><span>pipeline tools</span></div></div>`;
+  const skills = `<table><thead><tr><th>Skill</th><th>What it covers</th><th>Files</th></tr></thead><tbody>${
+    INDEX.skills.map((s) => `<tr><td><a href="#skill/${s.id}">${esc(s.name)}</a></td><td>${esc(s.description).slice(0, 260)}${s.description.length > 260 ? "…" : ""}</td><td>${s.files.length}</td></tr>`).join("")
+  }</tbody></table>`;
+  page("Home", "Temenos-Skills", `Every skill, reference file, artefact template, golden case and pipeline tool in this repository. Index built ${esc(INDEX.generated)}.`,
+    docDiv(cards + "<h2>How to read this</h2><p>Pick an entry in the index on the left. Skills open on their <em>About</em> page; every file has <em>Rendered</em>, <em>Source</em> and <em>Outline</em> tabs. Artefact templates show their inputs, template files and a generated, compile-verified example. Type in the box above to filter the index; press <code>Enter</code> to search inside every file.</p><h2>Skills</h2>" + skills));
+}
+
+function renderSkill(skill) {
+  const main = skill.files.find((f) => f.path === "SKILL.md");
+  const rows = skill.files.map((f) => `<tr><td><a href="#skill/${skill.id}/${f.path}">${esc(f.path)}</a></td><td>${f.kind}</td><td>${f.lines}</td><td>${fmtBytes(f.bytes)}</td></tr>`).join("");
+  page(`Skills › ${esc(skill.id)}`, esc(skill.name), esc(skill.description),
+    tabs([
+      ["Overview", () => docDiv(`${skill.version ? `<p><span class="badge plain">version ${esc(skill.version)}</span></p>` : ""}
+        <h2>Files</h2><table><thead><tr><th>File</th><th>Type</th><th>Lines</th><th>Size</th></tr></thead><tbody>${rows}</tbody></table>
+        ${skill.hasTableSchema ? `<p>Plus <a href="#schemas">references/table-schema/</a> — one file per T24 application (not embedded; browse the directory).</p>` : ""}`)],
+      ["SKILL.md", () => docDiv(main ? md(main.content) : "<p class='muted'>No SKILL.md.</p>")],
+      ["Outline", () => outlineHtml(main ? main.outline : [])],
+    ]));
+}
+
+function renderFile(skill, f) {
+  const defs = [];
+  if (f.kind === "md") defs.push(["Rendered", () => docDiv(md(f.content))]);
+  defs.push(["Source", () => docDiv(`<pre><code>${esc(f.content)}</code></pre>`)]);
+  if (f.kind === "md") defs.push(["Outline", () => outlineHtml(f.outline)]);
+  page(`Skills › <a href="#skill/${skill.id}">${esc(skill.id)}</a>`, esc(f.path), `${f.lines} lines · ${fmtBytes(f.bytes)}`, tabs(defs));
+}
+
+function renderTemplate(lang, t) {
+  const status = t.proven === true ? `<span class="badge ok">proven — golden case compiles on R25, fields verified on R23 + R25</span>`
+    : t.proven === false ? `<span class="badge warn">not proven yet</span>` : `<span class="badge plain">status unknown — run release_t24tools.py</span>`;
+  const inputs = t.inputs.length ? `<table><thead><tr><th>Placeholder</th><th>Label</th><th>Kind</th><th>Example / fixed</th></tr></thead><tbody>${
+    t.inputs.map((i) => `<tr><td><code>{{${esc(i.id)}}}</code></td><td>${esc(i.label || "")}</td><td>${esc(i.kind)}${i.of ? ` of <code>${esc(i.of)}</code>` : ""}</td><td>${esc(i.fixed || i.example || "")}</td></tr>`).join("")
+  }</tbody></table><p class="muted">Derived automatically: <code>{{TODAY}}</code>, <code>{{&lt;FIELD&gt;_NAME}}</code> (field name without the app prefix), <code>{{APP_COMPONENT}}</code> / <code>{{APP_RECORD}}</code> (jBC), <code>{{RECORD_CLASS}}</code> / <code>{{RECORD_PACKAGE}}</code> and <code>{{&lt;APP&gt;_CLASS}}</code> / <code>{{&lt;APP&gt;_PACKAGE}}</code> (Java). A <em>field</em> input becomes the EQU name (Infobasic), the componentised name (jBC) or the getter suffix (Java) of the selected release.</p>` : "<p class='muted'>No template yet.</p>";
+  const files = Object.entries(t.files || {});
+  const golden = t.golden && t.golden.output ? Object.entries(t.golden.output) : [];
+  page(`Artefact templates › ${esc(lang.label)}`, esc(t.label), esc(t.description), tabs([
+    ["Overview", () => docDiv(`<p>${status}</p><p>${esc(t.description)}</p><p>Generates: ${files.map(([n]) => `<code>${esc(n)}</code>`).join(" ") || "—"} · inputs: ${t.inputs.map((i) => `<code>${esc(i.id)}</code>`).join(" ")}</p><p>Template id <code>${esc(t.id)}</code>${t.golden && t.golden.case ? ` · golden case <a href="#golden/${esc(t.golden.case)}">${esc(t.golden.case)}</a>` : ""}</p>`)],
+    ["Inputs", () => docDiv(inputs)],
+    ["Template files", () => docDiv(files.map(([n, c]) => `<h3>${esc(n)}</h3><pre><code>${esc(c)}</code></pre>`).join("") || "<p class='muted'>None.</p>")],
+    ["Generated example", () => docDiv(golden.length ? `<p class="muted">Rendered from the golden inputs: ${esc(JSON.stringify(t.golden.userInputs))}</p>` +
+      golden.map(([n, c]) => `<h3>${esc(n)}</h3><pre><code>${esc(c)}</code></pre>`).join("") : "<p class='muted'>Not exported yet — run <code>python pipeline/release_t24tools.py --release R25</code>.</p>")],
+  ]));
+}
+
+function renderGolden(c) {
+  page("Golden cases", esc(c.name), esc(c.requirement || ""), tabs([
+    ["Case", () => docDiv(`<table><tbody>
+      <tr><th>Artefact</th><td>${esc(c.artefact || "")}</td></tr><tr><th>Skill</th><td>${esc(c.skill || "")}</td></tr>
+      <tr><th>Applications</th><td>${(c.apps || []).map((a) => `<code>${esc(a)}</code>`).join(" ")}</td></tr>
+      <tr><th>Expected fields</th><td>${(c.expected_fields || []).map((a) => `<code>${esc(a)}</code>`).join(" ") || "—"}</td></tr>
+      <tr><th>Template</th><td>${c.template ? `<a href="#template/${esc(c.template)}">${esc(c.template)}</a>` : "—"}</td></tr></tbody></table>
+      <p class="muted">Checked by <code>python pipeline/run_golden.py --release R25</code>: fields verified against the release DB, then compiled against C:\\R25.</p>`)],
+    ...Object.entries(c.files).map(([n, src]) => [n, () => docDiv(`<pre><code>${esc(src)}</code></pre>`)]),
+  ]));
+}
+
+function renderReleases() {
+  const rows = INDEX.releases.map((r) => r.built
+    ? `<tr><td><b>${r.release}</b></td><td><code>${esc(r.source)}</code></td><td>${r.apps.toLocaleString()}</td><td>${r.fields.toLocaleString()}</td><td>${r.enriched.toLocaleString()}</td><td>${r.jbcNames.toLocaleString()}</td><td><code>${esc(r.db)}</code></td></tr>`
+    : `<tr><td><b>${r.release}</b></td><td><code>${esc(r.source)}</code></td><td colspan="5" class="muted">not built — python pipeline/build_release.py --release ${r.release}</td></tr>`).join("");
+  const d = INDEX.releaseDiff;
+  page("Releases", "Releases & knowledge DBs", "Each release has its own complete knowledge DB (never a delta). Tools default to R23; pass --release R25 for R25.",
+    docDiv(`<table><thead><tr><th>Release</th><th>Source (read-only)</th><th>Apps</th><th>Fields</th><th>Type/description</th><th>jBC names</th><th>DB</th></tr></thead><tbody>${rows}</tbody></table>
+    ${d ? `<h2>R23 → R25 changes</h2><table><tbody>${Object.entries(d).map(([k, v]) => `<tr><th>${esc(k.replace(/_/g, " "))}</th><td>${v.toLocaleString()}</td></tr>`).join("")}</tbody></table><p class="muted">Full report: build/releases/R23-to-R25.md (pipeline/release_diff.py).</p>` : ""}`));
+}
+
+function renderSchemas() {
+  const releases = Object.keys(INDEX.schemas);
+  const wrap = document.createElement("div");
+  if (!releases.length) { wrap.innerHTML = "<p class='muted'>No knowledge DB built.</p>"; }
+  else {
+    wrap.innerHTML = `<p><select id="sr" class="filter">${releases.map((r) => `<option>${r}</option>`).join("")}</select>
+      <input id="sf" class="filter" placeholder="Filter applications (e.g. CUSTOMER, FUNDS.TRANSFER)"> <span id="sc" class="muted"></span></p>
+      <div class="doc" id="st"></div><p class="muted">Field lists live in <code>skills/temenos-dev/references/table-schema/&lt;APP&gt;.md</code> (R23) and the release DBs. Verify fields with <code>python pipeline/validate_fields.py --app &lt;APP&gt; --fields "F1,F2" [--release R25]</code> — it also prints each field's jBC name.</p>`;
+    const draw = () => {
+      const rel = wrap.querySelector("#sr").value, q = wrap.querySelector("#sf").value.trim().toUpperCase();
+      const rows = INDEX.schemas[rel].filter(([a]) => !q || a.includes(q));
+      wrap.querySelector("#sc").textContent = `${rows.length.toLocaleString()} of ${INDEX.schemas[rel].length.toLocaleString()} applications`;
+      wrap.querySelector("#st").innerHTML = `<table><thead><tr><th>Application</th><th>Fields</th><th>With jBC name</th></tr></thead><tbody>${
+        rows.slice(0, 400).map(([a, n, j]) => `<tr><td><code>${esc(a)}</code></td><td>${n}</td><td>${j}</td></tr>`).join("")}</tbody></table>${rows.length > 400 ? "<p class='muted'>Showing the first 400 — refine the filter.</p>" : ""}`;
+    };
+    setTimeout(() => { wrap.querySelector("#sr").onchange = draw; wrap.querySelector("#sf").oninput = draw; draw(); });
+  }
+  page("Releases", "Table schemas", "Every T24 application in each release's knowledge DB, with its field count and how many fields have a componentised (jBC) name.", wrap);
+}
+
+// ---------- full-text search ----------
+function searchAll(q) {
+  const needle = q.toLowerCase(), hits = [];
+  const add = (hash, title, text) => {
+    const i = text.toLowerCase().indexOf(needle);
+    if (i < 0) return;
+    const count = text.toLowerCase().split(needle).length - 1;
+    const snip = text.slice(Math.max(0, i - 80), i + 120).replace(/\s+/g, " ");
+    hits.push({ hash, title, count, snip });
+  };
+  INDEX.skills.forEach((s) => s.files.forEach((f) => add(`#skill/${s.id}/${f.path}`, `${s.id} / ${f.path}`, f.content)));
+  INDEX.templates.forEach((l) => l.types.forEach((t) => add(`#template/${t.id}`, `template ${t.id}`, [t.label, t.description, ...Object.values(t.files || {})].join("\n"))));
+  INDEX.pipeline.forEach((p) => add(`#pipeline/${p.name}`, `pipeline / ${p.name}`, p.doc));
+  INDEX.overview.forEach((s, k) => add(`#overview/${k}`, `README / ${s.title}`, s.content));
+  hits.sort((a, b) => b.count - a.count);
+  const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "ig");
+  page("Search", `“${esc(q)}”`, `${hits.length} files match`, docDiv(hits.slice(0, 200).map((h) =>
+    `<div class="hit"><a href="${h.hash}">${esc(h.title)}</a> <span class="count">${h.count} match${h.count > 1 ? "es" : ""}</span><div class="snip">…${esc(h.snip).replace(re, (m) => `<mark>${m}</mark>`)}…</div></div>`).join("") || "<p class='muted'>No matches.</p>"));
+}
+
+// ---------- navigation tree ----------
+function drawNav(filter) {
+  const f = (filter || "").toLowerCase();
+  const nav = $("nav"); nav.innerHTML = "";
+  const home = document.createElement("div"); home.className = "top";
+  home.innerHTML = `<a href="#home">🏠 Home</a>`; nav.append(home);
+  const groups = new Map();
+  for (const [hash, e] of routes) {
+    if (f && !(`${e.label} ${e.sub || ""} ${hash}`.toLowerCase().includes(f))) continue;
+    if (!groups.has(e.group)) groups.set(e.group, new Map());
+    const subs = groups.get(e.group); const key = e.sub || "";
+    if (!subs.has(key)) subs.set(key, []);
+    if (!subs.get(key).some(([h]) => h === hash)) subs.get(key).push([hash, e]);
+  }
+  for (const [group, subs] of groups) {
+    const det = document.createElement("details"); det.className = "group"; det.open = !!f || group === "Skills" || group === "Artefact templates";
+    const total = [...subs.values()].reduce((n, l) => n + l.length, 0);
+    det.innerHTML = `<summary>${esc(group)} <span class="count">${total}</span></summary>`;
+    for (const [sub, items] of subs) {
+      const link = ([hash, e]) => `<a href="${hash}" title="${esc(e.label)}">${e.proven === true ? "✓ " : e.proven === false ? "· " : ""}${esc(e.label)}</a>`;
+      if (!sub) { const top = document.createElement("div"); top.className = "top"; top.innerHTML = items.map(link).join(""); det.append(top); continue; }
+      const sd = document.createElement("details"); sd.className = "sub"; sd.open = !!f;
+      sd.innerHTML = `<summary>${esc(sub)} <span class="count">${items.length}</span></summary>${items.map(link).join("")}`;
+      det.append(sd);
+    }
+    nav.append(det);
+  }
+  markActive();
+}
+function markActive() {
+  document.querySelectorAll("nav a").forEach((a) => {
+    const on = a.getAttribute("href") === location.hash;
+    a.classList.toggle("active", on);
+    if (on) { let p = a.parentElement; while (p && p.tagName) { if (p.tagName === "DETAILS") p.open = true; p = p.parentElement; } }
+  });
+}
+function go() {
+  const hash = decodeURIComponent(location.hash || "#home");
+  const e = routes.get(hash);
+  if (e) e.render(); else renderHome();
+  markActive(); $("nav").classList.remove("open");
+}
+
+// ---------- boot ----------
+buildRoutes();
+drawNav("");
+window.addEventListener("hashchange", go);
+go();
+$("search").addEventListener("input", (ev) => drawNav(ev.target.value));
+$("search").addEventListener("keydown", (ev) => { if (ev.key === "Enter" && ev.target.value.trim().length > 1) searchAll(ev.target.value.trim()); });
+$("menu").onclick = () => $("nav").classList.toggle("open");
+const THEMES = ["system", "light", "dark"];
+let theme = "system";
+try { theme = localStorage.getItem("tsHelpTheme") || "system"; } catch (e) {}
+const applyTheme = () => { if (theme === "system") document.documentElement.removeAttribute("data-theme"); else document.documentElement.dataset.theme = theme; $("theme").textContent = { system: "◐", light: "☀", dark: "☾" }[theme]; };
+applyTheme();
+$("theme").onclick = () => { theme = THEMES[(THEMES.indexOf(theme) + 1) % 3]; try { localStorage.setItem("tsHelpTheme", theme); } catch (e) {} applyTheme(); };
+</script>
+</body>
+</html>
