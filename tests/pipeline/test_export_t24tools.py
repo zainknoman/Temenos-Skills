@@ -54,3 +54,22 @@ def test_release_must_be_given(db, tmp_path):
     import pytest
     with pytest.raises(ValueError):
         write_export(db, tmp_path, "", now="2026-10-02T00:00:00Z")
+
+
+def test_cli_reads_the_selected_releases_db_not_r23(tmp_path):
+    # Run where only an R23 DB exists: asking for R25 must fail, never export R23 data labelled R25.
+    import shutil
+    import sqlite3
+    import subprocess
+    import sys
+    from tests.conftest import ROOT, ROWS, SCHEMA
+    conn = sqlite3.connect(tmp_path / "temenos_knowledge.db")
+    conn.execute(SCHEMA)
+    conn.executemany("INSERT INTO fields VALUES (?,?,?,?,?,?,?,?)", ROWS)
+    conn.commit()
+    conn.close()
+    proc = subprocess.run([sys.executable, str(ROOT / "pipeline" / "export_t24tools.py"), "--release", "R25"],
+                          cwd=tmp_path, capture_output=True, text=True)
+    assert proc.returncode != 0
+    assert "no knowledge DB for R25" in proc.stdout + proc.stderr
+    assert not (tmp_path / "build").exists()

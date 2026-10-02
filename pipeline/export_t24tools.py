@@ -13,12 +13,12 @@ import argparse
 import gzip
 import hashlib
 import json
-import sqlite3
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
 from artefact_fields import _has_component_table, dotted_prefix, record_class
+from releases import connect
 
 SCHEMA_VERSION = 2  # v2: per-field componentised name + per-app components
 GZIP_WARN_BYTES = 5_000_000
@@ -101,11 +101,11 @@ def write_export(conn, out_dir, release, now=None):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--db", default="temenos_knowledge.db")
+    ap.add_argument("--db", help="explicit DB path; default: the --release's knowledge DB")
     ap.add_argument("--out", help="default: build/t24tools/<release>")
     ap.add_argument("--release", required=True, help="release of the JARs the DB was built from, e.g. R23")
     args = ap.parse_args()
-    conn = sqlite3.connect(args.db)
+    conn = connect(args)  # never default to the R23 DB for another release
     out = Path(args.out or f"build/t24tools/{args.release}")
     m = write_export(conn, out, args.release)
     conn.close()
