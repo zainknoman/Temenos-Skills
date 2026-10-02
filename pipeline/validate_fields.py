@@ -38,6 +38,10 @@ def main():
                 "SELECT field_name, component, record, comp_field FROM component_fields WHERE app = ? "
                 "ORDER BY component", (app,)):
             comp_names.setdefault(field_name.upper(), []).append(f"{comp}.{record}.{comp_field}")
+    kinds = {}
+    if conn.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'field_kinds'").fetchone():
+        kinds = {f.upper(): k for f, k in conn.execute(
+            "SELECT field_name, kind FROM field_kinds WHERE app = ?", (app,))}
     conn.close()
 
     if not rows:
@@ -57,7 +61,7 @@ def main():
         jbc = f", jBC {' | '.join(comp_names[f])}" if f in comp_names else ""
         print(
             f"  {field_name}  (pos {position}, alias {java_alias}, "
-            f"type={field_type or '?'}, mandatory={mandatory or '?'}{jbc})"
+            f"type={field_type or '?'}, mandatory={mandatory or '?'}, value={kinds.get(f, '?')}{jbc})"
         )
     sys.exit(0)
 

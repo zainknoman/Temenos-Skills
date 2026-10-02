@@ -8,8 +8,8 @@ def test_fields_doc_shape_and_nulls(db):
     acc = fields["apps"]["ACCOUNT"]
     assert acc["prefix"] == "AC."
     assert acc["recordClass"] == "Account"
-    assert acc["fields"][0] == [1, "AC.CUSTOMER", "Account_Customer", "TField", "Yes", None]
-    assert acc["fields"][2] == [3, "AC.ACCOUNT.TITLE.1", "Account_AccountTitle1", None, None, None]
+    assert acc["fields"][0] == [1, "AC.CUSTOMER", "Account_Customer", "TField", "Yes", None, None]
+    assert acc["fields"][2] == [3, "AC.ACCOUNT.TITLE.1", "Account_AccountTitle1", None, None, None, None]
 
 
 def test_descriptions_skip_empty(db):
@@ -26,14 +26,14 @@ def test_output_is_deterministic(db, tmp_path):
 
 def test_manifest_counts(db, tmp_path):
     m = write_export(db, tmp_path, "R25", now="2026-10-02T00:00:00Z")
-    assert (m["apps"], m["fields"], m["schemaVersion"]) == (2, 5, 2)
+    assert (m["apps"], m["fields"], m["schemaVersion"]) == (2, 5, 3)
     assert json.loads((tmp_path / "manifest.json").read_text()) == m
 
 
 def test_blank_strings_export_as_null_not_optional(db, tmp_path):
     db.execute("INSERT INTO fields VALUES ('ACCOUNT','AC.BLANK',4,'Account_Blank','x.jar','','','')")
     fields, desc = build_export(db, "R25")
-    assert fields["apps"]["ACCOUNT"]["fields"][3] == [4, "AC.BLANK", "Account_Blank", None, None, None]
+    assert fields["apps"]["ACCOUNT"]["fields"][3] == [4, "AC.BLANK", "Account_Blank", None, None, None, None]
     assert "AC.BLANK" not in desc["apps"]["ACCOUNT"]
 
 
@@ -73,3 +73,12 @@ def test_cli_reads_the_selected_releases_db_not_r23(tmp_path):
     assert proc.returncode != 0
     assert "no knowledge DB for R25" in proc.stdout + proc.stderr
     assert not (tmp_path / "build").exists()
+
+
+def test_export_v3_carries_value_kind(db_with_kinds):
+    fields, _ = build_export(db_with_kinds, "R23")
+    cus = {f[1]: f for f in fields["apps"]["CUSTOMER"]["fields"]}
+    assert cus["EB.CUS.MNEMONIC"][6] == "SV"
+    assert cus["EB.CUS.SHORT.NAME"][6] == "MV"
+    acc = {f[1]: f for f in fields["apps"]["ACCOUNT"]["fields"]}
+    assert acc["AC.ACCOUNT.TITLE.1"][6] is None      # unknown, never guessed

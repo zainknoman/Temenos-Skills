@@ -20,7 +20,7 @@ from pathlib import Path
 from artefact_fields import _has_component_table, dotted_prefix, record_class
 from releases import connect
 
-SCHEMA_VERSION = 2  # v2: per-field componentised name + per-app components
+SCHEMA_VERSION = 3  # v2: per-field componentised name + per-app components; v3: per-field value kind
 GZIP_WARN_BYTES = 5_000_000
 
 
@@ -56,6 +56,9 @@ def build_export(conn, release):
     for row in rows:
         by_app[row[0]].append(row[1:])
     components, comp_names = _component_names(conn)
+    kinds = {}
+    if conn.execute("SELECT 1 FROM sqlite_master WHERE name = 'field_kinds'").fetchone():
+        kinds = {(a, f): k for a, f, k in conn.execute("SELECT app, field_name, kind FROM field_kinds")}
     apps, descs = {}, {}
     for app in sorted(by_app):
         recs = by_app[app]
@@ -63,8 +66,9 @@ def build_export(conn, release):
             "prefix": dotted_prefix([r[1] for r in recs]),
             "recordClass": record_class(app),
             "components": components.get(app, []),
-            "fields": [[r[0], r[1], r[2], _blank_to_none(r[3]), _blank_to_none(r[4]), comp_names.get((app, r[0]))]
-                       for r in recs],
+            # [position, name, javaAlias, type, mandatory, jbcName, kind] -- kind: SV / MV / MV-GROUP / null (unknown)
+            "fields": [[r[0], r[1], r[2], _blank_to_none(r[3]), _blank_to_none(r[4]), comp_names.get((app, r[0])),
+                        kinds.get((app, r[1]))] for r in recs],
         }
         d = {r[1]: r[5] for r in recs if _blank_to_none(r[5])}
         if d:

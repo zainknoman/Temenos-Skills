@@ -212,6 +212,9 @@ python pipeline/release_t24tools.py --release R23
 # Componentised (jBC) field names -- from component_*_cl.class in the JARs into table component_fields
 python pipeline/component_parse.py --jars jar --release R23
 
+# Single- vs multi-value flag per field (record-class getters) into table field_kinds
+python pipeline/record_parse.py --jars jar --release R23
+
 # R25 knowledge DB, read-only from C:\R25 (copies + generates the javadoc in build/; write guard on)
 python pipeline/build_release.py --release R25 --javadoc-jar "C:\R25\bnk\Transact_L3_Javadoc\T24.javadoc.jar"
 python pipeline/release_diff.py --old R23 --new R25          # what changed -> build/releases/R23-to-R25.md

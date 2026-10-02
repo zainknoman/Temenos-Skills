@@ -84,7 +84,8 @@ All reference files live under `references/` relative to this skill.
    python pipeline/verify_artefact.py --file <path> --app <APP> [--app <APP2>] [--release R25]
    ```
    `PASS` = every legacy field verified **and** the file compiled against the R25 install (`tCompile` for jBC/Infobasic, `javac` for L3 Java). `FAIL` = fix and re-run before presenting the code. `COMPILE: SKIPPED` (no `C:\R25` on this machine) = say so explicitly; never present the code as compile-verified.
-   Componentised field names (`ST.Customer.Customer.EbCusShortName`) are **not** the Java alias and are not in `table-schema/` — the gate lists them as "checked by compiler", and tCompile is the authority for them.
+   Componentised field names (`ST.Customer.Customer.EbCusShortName`) are **not** the Java alias and are not in `table-schema/`. `validate_fields.py` prints them (`jBC …`) and the gate verifies them against the `component_fields` table; without that table it falls back to "checked by compiler".
+   **Single vs multi-value:** `validate_fields.py` prints `value=SV|MV|MV-GROUP`. In L3 Java, `rec.get<Field>().getValue()` only works for `SV` fields. An `MV` getter returns a `List` (`rec.get<Field>().get(i).getValue()`), and an `MV-GROUP` field lives on a group class (`rec.get<Group>().get(i).get<Field>()`). `value=?` means the record class has no such getter, so don't generate Java that calls it.
 
 `table-schema/*.md` gives field name + position, plus type/mandatory/description for 59% of fields (backfilled from JavaDoc HTML — see `CLAUDE.md` Layer A). A blank type/mandatory cell means "not captured," never treat it as "optional." MV/SV status is **not** in this file at all — it comes only from the JAR-structure rule below.
 

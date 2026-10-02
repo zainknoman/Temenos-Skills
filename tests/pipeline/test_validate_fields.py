@@ -2,7 +2,7 @@ import sqlite3
 import subprocess
 import sys
 
-from tests.conftest import COMPONENT_ROWS, ROOT, ROWS, SCHEMA
+from tests.conftest import COMPONENT_ROWS, KIND_ROWS, ROOT, ROWS, SCHEMA
 
 
 def _run(tmp_path, fields, with_components=True):
@@ -14,6 +14,8 @@ def _run(tmp_path, fields, with_components=True):
         conn.execute("CREATE TABLE component_fields (release TEXT, app TEXT, component TEXT, record TEXT,"
                      " comp_field TEXT, position INTEGER, field_name TEXT)")
         conn.executemany("INSERT INTO component_fields VALUES (?,?,?,?,?,?,?)", COMPONENT_ROWS)
+        conn.execute("CREATE TABLE field_kinds (release TEXT, app TEXT, field_name TEXT, kind TEXT, getter_class TEXT)")
+        conn.executemany("INSERT INTO field_kinds VALUES (?,?,?,?,?)", KIND_ROWS)
     conn.commit()
     conn.close()
     return subprocess.run([sys.executable, str(ROOT / "pipeline" / "validate_fields.py"), "--db", str(db),
@@ -29,3 +31,8 @@ def test_works_without_component_table(tmp_path):
     proc = _run(tmp_path, "EB.CUS.MNEMONIC", with_components=False)
     assert proc.returncode == 0
     assert "jBC" not in proc.stdout
+
+
+def test_prints_single_or_multi_value(tmp_path):
+    out = _run(tmp_path, "EB.CUS.MNEMONIC,EB.CUS.SHORT.NAME").stdout
+    assert "value=SV" in out and "value=MV" in out

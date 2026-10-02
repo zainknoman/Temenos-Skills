@@ -42,3 +42,17 @@ def db_with_components(db):
                   comp_field TEXT, position INTEGER, field_name TEXT)""")
     db.executemany("INSERT INTO component_fields VALUES (?,?,?,?,?,?,?)", COMPONENT_ROWS)
     return db
+
+
+KIND_ROWS = [
+    ("R23", "CUSTOMER", "EB.CUS.MNEMONIC", "SV", "CustomerRecord"),
+    ("R23", "CUSTOMER", "EB.CUS.SHORT.NAME", "MV", "CustomerRecord"),
+    ("R23", "ACCOUNT", "AC.CATEGORY", "SV", "AccountRecord"),
+]
+
+
+@pytest.fixture
+def db_with_kinds(db):
+    db.execute("CREATE TABLE field_kinds (release TEXT, app TEXT, field_name TEXT, kind TEXT, getter_class TEXT)")
+    db.executemany("INSERT INTO field_kinds VALUES (?,?,?,?,?)", KIND_ROWS)
+    return db

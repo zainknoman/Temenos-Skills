@@ -57,6 +57,10 @@ def plan_steps(release, javadoc_jar):
                       [py, str(HERE / "component_parse.py"), "--jars", str(RELEASES[release]),
                        "--db", str(db), "--release", release],
                       [db], None))
+    steps.append(Step("record_parse",
+                      [py, str(HERE / "record_parse.py"), "--jars", str(RELEASES[release]),
+                       "--db", str(db), "--release", release],
+                      [db], None))
     return steps
 
 

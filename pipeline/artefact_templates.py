@@ -56,6 +56,10 @@ def _primary_jbc_name(conn, app, field_name):
     return f"{comp}.{record}.{field}", comp
 
 
+def _has_table(conn, name):
+    return conn.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (name,)).fetchone() is not None
+
+
 def _field_value(language, conn, app, field_name):
     row = conn.execute("SELECT java_alias FROM fields WHERE app = ? AND field_name = ?",
                        (app, field_name)).fetchone()
@@ -64,6 +68,16 @@ def _field_value(language, conn, app, field_name):
     if language == "infobasic":
         return field_name, None
     if language == "java":
+        # Java templates call rec.get<Field>().getValue(): only valid for a single-value
+        # getter on the record class (field_kinds, from record_parse.py).
+        if _has_table(conn, "field_kinds"):
+            kind = conn.execute("SELECT kind FROM field_kinds WHERE app = ? AND field_name = ?",
+                                (app, field_name)).fetchone()
+            if kind is None:
+                raise FieldNotAvailable(f"{field_name} has no single-value getter on the {app} record class")
+            if kind[0] != "SV":
+                raise FieldNotAvailable(f"{field_name} is a multi-value field ({kind[0]}); "
+                                        f"this Java template needs a single-value field")
         return row[0].split("_", 1)[1], None
     try:
         hit = _primary_jbc_name(conn, app, field_name)

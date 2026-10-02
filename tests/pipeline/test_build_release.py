@@ -9,7 +9,7 @@ JAVADOC = Path(r"C:\R25\bnk\Transact_L3_Javadoc\T24.javadoc.jar")
 
 def test_r25_build_steps_in_order():
     names = [s.name for s in plan_steps("R25", javadoc_jar=JAVADOC)]
-    assert names == ["copy-javadoc", "generate-javadoc", "insert_parse", "html_parse", "component_parse"]
+    assert names == ["copy-javadoc", "generate-javadoc", "insert_parse", "html_parse", "component_parse", "record_parse"]
 
 
 def test_r25_build_writes_only_to_releases_and_build():
@@ -33,4 +33,4 @@ def test_r23_rebuild_is_refused():
 
 def test_without_javadoc_the_html_steps_are_skipped():
     names = [s.name for s in plan_steps("R25", javadoc_jar=None)]
-    assert names == ["insert_parse", "component_parse"]
+    assert names == ["insert_parse", "component_parse", "record_parse"]

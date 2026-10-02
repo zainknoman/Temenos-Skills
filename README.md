@@ -141,6 +141,7 @@ Each release has its own **complete** knowledge DB. It is never stored as a delt
 - `pipeline/build_release.py --release R25` builds the R25 DB. It reads from `C:\R25` and fails if anything there changes.
 - `pipeline/release_diff.py --old R23 --new R25` writes `build/releases/R23-to-R25.md`: 245 apps added, 3 removed, 557 changed, 2,580 fields added, 651 removed, 177 moved and **1,740 jBC names renamed** (R25 keeps the app prefix in many local modules).
 - **Componentised (jBC) field names are not Java aliases.** `EB.CUS.SHORT.NAME` is `ST.Customer.Customer.EbCusShortName`, while `AC.CATEGORY` is `AC.AccountOpening.Account.Category`. `pipeline/component_parse.py` reads them from the component classes in the JARs, and `validate_fields.py` prints them.
+- **Single- vs multi-value** comes from the record classes: `<Rec>Record.get<Field>()` returning `TField` = `SV`, returning `List` = `MV`, getter only on a group class = `MV-GROUP` (`pipeline/record_parse.py`, table `field_kinds`; R23 133k / R25 143k fields classified). Java templates accept only `SV` fields; `validate_fields.py` prints `value=SV|MV|MV-GROUP`.
 
 ---
 
@@ -353,6 +354,7 @@ Temenos-Skills/
 │   ├── query_docs.py                  ← Query Layer B (CLI)
 │   ├── validate_fields.py             ← Field Verification Gate (CLI, prints jBC names)
 │   ├── component_parse.py             ← componentised (jBC) field names from component classes
+│   ├── record_parse.py                ← single / multi-value flag per field (record-class getters)
 │   ├── releases.py / build_release.py ← per-release knowledge DBs (R23, R25)
 │   ├── release_diff.py                ← R23 → R25 change report
 │   ├── artefact_fields.py             ← field references in generated code
@@ -457,6 +459,9 @@ python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGO
 
 # Componentised (jBC) names for R23
 python pipeline/component_parse.py --jars jar --release R23
+
+# Single- vs multi-value flag per field (record-class getters) into table field_kinds
+python pipeline/record_parse.py --jars jar --release R23
 
 # R25 knowledge DB (read-only from C:\R25) and the R23 -> R25 change report
 python pipeline/build_release.py --release R25 --javadoc-jar "C:\R25\bnk\Transact_L3_Javadoc\T24.javadoc.jar"

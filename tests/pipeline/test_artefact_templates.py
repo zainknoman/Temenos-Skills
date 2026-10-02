@@ -115,3 +115,20 @@ def test_template_failing_its_proof_is_exported_unproven(db_with_components, tmp
                            golden_root=tmp_path / "golden")
     assert doc["languages"][0]["types"][0]["proven"] is False
     assert "jbc/validation" in capsys.readouterr().out
+
+
+def test_java_refuses_multi_value_fields(db_with_kinds):
+    with pytest.raises(FieldNotAvailable, match="multi-value"):
+        resolve(JAVA, {"APP": "CUSTOMER", "FIELD": "EB.CUS.SHORT.NAME"}, db_with_kinds, today="2026-10-03")
+
+
+def test_java_refuses_fields_without_a_record_getter(db_with_kinds):
+    # AC.ACCOUNT.TITLE.1 is in fields but has no field_kinds row (no getter found)
+    with pytest.raises(FieldNotAvailable, match="no single-value getter"):
+        resolve(JAVA, {"APP": "ACCOUNT", "FIELD": "AC.ACCOUNT.TITLE.1"}, db_with_kinds, today="2026-10-03")
+
+
+def test_java_accepts_single_value_and_infobasic_accepts_multi_value(db_with_kinds):
+    assert resolve(JAVA, {"APP": "CUSTOMER", "FIELD": "EB.CUS.MNEMONIC"}, db_with_kinds, today="x")["FIELD"] == "Mnemonic"
+    basic = {**JAVA, "language": "infobasic"}
+    assert resolve(basic, {"APP": "CUSTOMER", "FIELD": "EB.CUS.SHORT.NAME"}, db_with_kinds, today="x")["FIELD"] == "EB.CUS.SHORT.NAME"
