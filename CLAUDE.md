@@ -202,6 +202,10 @@ python pipeline/verify_artefact.py --file out/V.CUS.CHECK.b --app CUSTOMER
 python pipeline/run_golden.py          # every golden case in tests/golden must PASS
 python -m pytest tests/pipeline -q     # harness unit tests (pip install -r requirements-dev.txt)
 
+# T24Tools export (P7) -- written to build/t24tools/<release>/ only if every golden case passes.
+# Temenos-derived data: personal use only, never commit it to the public T24Tools repo.
+python pipeline/release_t24tools.py --release R25
+
 # Optional: register the MCP server (P4) for lookup_fields/search_rules as tool calls
 claude mcp add t24-knowledge -- python mcp_server/server.py
 
