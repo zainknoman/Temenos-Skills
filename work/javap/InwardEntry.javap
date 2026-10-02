@@ -1,0 +1,10 @@
+public class com.temenos.t24.api.hook.clearing.InwardEntry extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  public com.temenos.t24.api.hook.clearing.InwardEntry();
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public void modifyLocalReferenceValues(java.lang.String, java.lang.String, com.temenos.t24.api.complex.ft.clearinghook.ClearingContext, com.temenos.t24.api.records.acinwardentry.AcInwardEntryRecord, com.temenos.api.TString);
+  public com.temenos.t24.api.complex.ft.clearinghook.ValidationResponse validateEntry(com.temenos.api.TStructure, com.temenos.t24.api.records.acinwardentry.AcInwardEntryRecord, com.temenos.t24.api.complex.ft.clearinghook.ClearingContext);
+  static {};
+}

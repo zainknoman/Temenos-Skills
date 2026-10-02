@@ -1,0 +1,14 @@
+public class com.temenos.t24.api.payments.DataAccess {
+  protected static final com.temenos.logging.facade.Logger logger;
+  private final com.temenos.tafj.api.client.TAFJRuntime runtime;
+  private final com.temenos.tafj.api.client.impl.T24Context t24Context;
+  public com.temenos.t24.api.payments.DataAccess();
+  public com.temenos.t24.api.payments.DataAccess(com.temenos.tafj.api.client.impl.T24Context);
+  public com.temenos.t24.api.payments.DataAccess(com.temenos.tafj.api.client.impl.T24Context, boolean);
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public com.temenos.t24.api.records.portransaction.PorTransactionRecord getPaymentRecord(java.lang.String);
+  public java.lang.String getActiveId(java.lang.String, java.lang.String);
+  static {};
+}

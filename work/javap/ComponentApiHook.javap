@@ -1,0 +1,14 @@
+public class com.temenos.t24.api.hook.ComponentApiHook extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  public com.temenos.t24.api.hook.ComponentApiHook();
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public com.temenos.t24.api.complex.pp.componentapihook.Account getCreditAccount(com.temenos.t24.api.complex.pp.componentapihook.TransactionContext, com.temenos.t24.api.complex.pp.componentapihook.CreditParty);
+  public com.temenos.t24.api.complex.pp.componentapihook.DebitAccount getDebitAccount(com.temenos.t24.api.complex.pp.componentapihook.TransactionContext, com.temenos.t24.api.complex.pp.componentapihook.DebitParty);
+  public com.temenos.t24.api.complex.pp.componentapihook.Response validateCreditParty(com.temenos.t24.api.complex.pp.componentapihook.TransactionContext, com.temenos.t24.api.complex.pp.componentapihook.CreditParty);
+  public com.temenos.t24.api.complex.pp.componentapihook.Response validateDebitParty(com.temenos.t24.api.complex.pp.componentapihook.TransactionContext, com.temenos.t24.api.complex.pp.componentapihook.DebitParty);
+  public com.temenos.api.TBoolean getCodewordFlag(com.temenos.t24.api.complex.pp.componentapihook.TransactionContext, com.temenos.t24.api.complex.pp.componentapihook.InboundCodeWord, com.temenos.t24.api.complex.pp.componentapihook.ProcessRoutine, com.temenos.t24.api.complex.pp.componentapihook.ProcessSequence);
+  public com.temenos.t24.api.complex.pp.componentapihook.CalculatedDates setCalculatedDate(com.temenos.t24.api.complex.pp.componentapihook.InDateDetails, com.temenos.t24.api.complex.pp.componentapihook.Channel, java.util.List<com.temenos.t24.api.complex.pp.componentapihook.DebitCondition>, java.util.List<com.temenos.t24.api.complex.pp.componentapihook.Credit>, java.util.List<com.temenos.t24.api.complex.pp.componentapihook.AccountInfo>);
+  static {};
+}

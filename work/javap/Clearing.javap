@@ -1,0 +1,9 @@
+public class com.temenos.t24.api.hook.countrymodelbank.usa.Clearing extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  public com.temenos.t24.api.hook.countrymodelbank.usa.Clearing();
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public com.temenos.t24.api.complex.achfrm.clearinghousehook.EntryData updateEntry(com.temenos.t24.api.records.achentries.AchEntriesRecord, com.temenos.t24.api.complex.achfrm.clearinghousehook.EntryDataContext);
+  static {};
+}

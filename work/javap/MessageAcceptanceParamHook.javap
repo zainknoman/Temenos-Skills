@@ -1,0 +1,17 @@
+public class com.temenos.t24.api.hook.MessageAcceptanceParamHook extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  public com.temenos.t24.api.hook.MessageAcceptanceParamHook();
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public com.temenos.t24.api.complex.pp.messageacceptanceparamhook.MessageResponse validateSwiftMessage(java.lang.String, com.temenos.t24.api.complex.pp.messageacceptanceparamhook.ReceivedFileDetails);
+  public com.temenos.t24.api.complex.pp.messageacceptanceparamhook.MessageResponse ackNackMessage(java.lang.String, com.temenos.t24.api.complex.pp.messageacceptanceparamhook.MessageAcceptanceParameter, com.temenos.t24.api.complex.pp.messageacceptanceparamhook.ReceivedFileDetails);
+  public void messageForward(java.lang.String, java.lang.String, com.temenos.api.TString);
+  public com.temenos.t24.api.complex.pp.messageacceptanceparamhook.FileInformation debulkMessage(java.lang.String, java.lang.String, com.temenos.t24.api.complex.pp.messageacceptanceparamhook.ChannelInfo, com.temenos.api.TString, com.temenos.api.TString);
+  public com.temenos.t24.api.complex.pp.messageacceptanceparamhook.MessageResponse validateBacsMessage(com.temenos.t24.api.complex.pp.messageacceptanceparamhook.BacsInfo, com.temenos.api.TString);
+  public com.temenos.t24.api.complex.pp.messageacceptanceparamhook.MessageResponse validateAchMessage(java.lang.String, com.temenos.t24.api.complex.pp.messageacceptanceparamhook.ReceivedFileDetails);
+  public com.temenos.t24.api.complex.pp.messageacceptanceparamhook.MessageResponse validateChequeClearingMessage(com.temenos.t24.api.complex.pp.messageacceptanceparamhook.ChequeClearing);
+  public com.temenos.t24.api.complex.pp.messageacceptanceparamhook.MessageResponse validateClearingMessage(java.lang.String);
+  public void ackClearingMessage(java.lang.String, com.temenos.api.TString);
+  static {};
+}

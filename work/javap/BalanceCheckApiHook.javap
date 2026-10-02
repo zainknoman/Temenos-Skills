@@ -1,0 +1,9 @@
+public class com.temenos.t24.api.hook.BalanceCheckApiHook extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  public com.temenos.t24.api.hook.BalanceCheckApiHook();
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public void recyclerLookup(com.temenos.t24.api.complex.pp.balancecheckapihook.TransactionInformation, java.util.List<com.temenos.t24.api.complex.pp.balancecheckapihook.CreditParty>, java.util.List<com.temenos.t24.api.complex.pp.balancecheckapihook.DebitParty>, com.temenos.t24.api.complex.pp.balancecheckapihook.DebitAuthorityInformation, com.temenos.t24.api.complex.pp.balancecheckapihook.RecyclerInformation);
+  static {};
+}

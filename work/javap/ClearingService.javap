@@ -1,0 +1,9 @@
+public class com.temenos.t24.api.hook.accounting.ClearingService extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  public com.temenos.t24.api.hook.accounting.ClearingService();
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public void bookEntries(java.lang.String, com.temenos.t24.api.complex.ac.clearingservicehook.ClearingContext, java.lang.String, com.temenos.api.TString, com.temenos.t24.api.complex.ac.clearingservicehook.RequestDetail, java.util.List<com.temenos.t24.api.complex.ac.clearingservicehook.Entry>);
+  static {};
+}

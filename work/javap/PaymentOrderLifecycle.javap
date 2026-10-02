@@ -1,0 +1,17 @@
+public class com.temenos.t24.api.hook.payments.PaymentOrderLifecycle extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  private final com.temenos.tafj.api.client.TAFJRuntime runtime;
+  private final com.temenos.tafj.api.client.impl.T24Context t24Context;
+  public com.temenos.t24.api.hook.payments.PaymentOrderLifecycle();
+  public com.temenos.t24.api.hook.payments.PaymentOrderLifecycle(com.temenos.tafj.api.client.impl.T24Context);
+  public com.temenos.t24.api.hook.payments.PaymentOrderLifecycle(com.temenos.tafj.api.client.impl.T24Context, boolean);
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public void handleValidationEvent(java.lang.String, com.temenos.t24.api.records.paymentorder.PaymentOrderRecord, com.temenos.t24.api.records.portransaction.PorTransactionRecord, com.temenos.t24.api.records.porsupplementaryinfo.PorSupplementaryInfoRecord, com.temenos.t24.api.records.poragreementandadvice.PorAgreementAndAdviceRecord, com.temenos.t24.api.records.porpostingandconfirmation.PorPostingAndConfirmationRecord, com.temenos.t24.api.records.poraudittrail.PorAuditTrailRecord, com.temenos.t24.api.complex.pi.paymentorderlifecyclehook.TransactionContext);
+  public com.temenos.api.TBoolean applyChargeType(java.lang.String, com.temenos.t24.api.records.paymentorder.PaymentOrderRecord, com.temenos.t24.api.complex.pi.paymentorderlifecyclehook.PaymentOrderValidationContext);
+  public void setProductId(java.lang.String, com.temenos.t24.api.records.paymentorder.PaymentOrderRecord, com.temenos.t24.api.complex.pi.paymentorderlifecyclehook.PaymentOrderValidationContext, com.temenos.api.TString);
+  public com.temenos.api.TValidationResponse validatePaymentOrderRecord(java.lang.String, com.temenos.t24.api.records.paymentorder.PaymentOrderRecord, com.temenos.t24.api.complex.pi.paymentorderlifecyclehook.PaymentOrderValidationContext);
+  public com.temenos.t24.api.hook.payments.PaymentOrderLifecycle$PaymentSystemType getPaymentSystemType(java.lang.String, java.lang.String, com.temenos.t24.api.records.paymentorder.PaymentOrderRecord, com.temenos.t24.api.complex.pi.paymentorderlifecyclehook.TransactionContext);
+  static {};
+}

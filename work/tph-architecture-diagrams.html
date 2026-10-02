@@ -1,0 +1,587 @@
+<title>TPH Engine &amp; ACH Clearing — Architecture</title>
+<style>
+  :root {
+    --paper:      #E9EDE6;
+    --surface:    #F6F8F3;
+    --surface-2:  #FDFEFB;
+    --ink:        #1B2019;
+    --ink-2:      #59634F;
+    --ink-3:      #7E8875;
+    --rule:       #C8D1C1;
+    --rule-soft:  #DBE2D5;
+    --accent:     #1D4A52;
+    --flag:       #8E3520;
+    --flag-bg:    #F2DED6;
+    --shadow: 0 1px 0 rgba(27,32,25,.04), 0 2px 10px rgba(27,32,25,.05);
+
+    --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --font-body: "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12160F; --surface: #191E16; --surface-2: #1F251B;
+      --ink: #E6EADE; --ink-2: #9AA792; --ink-3: #7C8874;
+      --rule: #313A2C; --rule-soft: #262E22;
+      --accent: #7FBDBF; --flag: #E08A6B; --flag-bg: #38201A;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 2px 10px rgba(0,0,0,.25);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #12160F; --surface: #191E16; --surface-2: #1F251B;
+    --ink: #E6EADE; --ink-2: #9AA792; --ink-3: #7C8874;
+    --rule: #313A2C; --rule-soft: #262E22;
+    --accent: #7FBDBF; --flag: #E08A6B; --flag-bg: #38201A;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 2px 10px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 28px 96px; }
+
+  .masthead {
+    display: flex; flex-direction: column; gap: 16px;
+    padding: 60px 0 28px; border-bottom: 2px solid var(--ink);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4.6vw, 50px);
+    line-height: 1.06; font-weight: 600; letter-spacing: -.015em;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    font-family: var(--font-display); font-size: 19px; line-height: 1.55;
+    color: var(--ink-2); max-width: 66ch;
+  }
+
+  section { padding-top: 56px; }
+
+  h2 {
+    font-family: var(--font-display); font-size: 27px;
+    font-weight: 600; letter-spacing: -.01em; margin-bottom: 8px;
+  }
+
+  .section-lede { color: var(--ink-2); max-width: 70ch; margin-bottom: 28px; }
+
+  p { max-width: 74ch; }
+
+  figure {
+    margin: 0 0 12px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 24px 20px 18px;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+
+  figure svg { display: block; width: 100%; min-width: 900px; max-width: 100%; height: auto; }
+
+  figcaption {
+    margin-top: 18px; padding-top: 14px;
+    border-top: 1px solid var(--rule-soft);
+    font-size: 14px; line-height: 1.55; color: var(--ink-2);
+    max-width: 88ch;
+  }
+
+  figcaption b { color: var(--ink); font-weight: 600; }
+
+  .scope-flag {
+    display: flex; flex-direction: column; gap: 8px;
+    background: var(--flag-bg);
+    border: 1px solid var(--flag);
+    border-left-width: 3px;
+    padding: 16px 20px;
+    margin-bottom: 26px;
+  }
+
+  .scope-flag h3 {
+    font-family: var(--font-mono); font-size: 11.5px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--flag);
+  }
+
+  .scope-flag p { font-size: 14.5px; color: var(--ink); margin: 0; max-width: 82ch; }
+
+  .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; margin-top: 30px; }
+
+  .note {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent); padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .note h4 {
+    font-family: var(--font-mono); font-size: 11.5px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+  }
+
+  .note p { font-size: 14px; color: var(--ink-2); margin: 0; }
+  .note code, figcaption code, .scope-flag code {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--rule-soft); padding: 0 4px;
+  }
+
+  footer {
+    margin-top: 72px; padding-top: 22px; border-top: 1px solid var(--rule);
+    font-size: 13px; color: var(--ink-3);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Temenos Payment Hub · Architecture</div>
+    <h1>The TPH engine, and how an ACH clearing attaches to it</h1>
+    <p class="standfirst">Two drawings. The first shows why TPH behaves the way it does — a pipeline of independent
+      components whose logic lives in parameter tables rather than in code. The second shows the asymmetry that makes ACH
+      clearing work: outward is a bulking problem, inward is a debulking problem.</p>
+  </header>
+
+  <!-- ============ FIGURE 1 ============ -->
+  <section>
+    <h2>1 · The TPH engine</h2>
+    <p class="section-lede">The mechanism worth seeing is not the list of components — it is that no component contains its
+      own business logic. Each resolves behaviour at runtime from the parameter plane beneath it, and a single table decides
+      which physical program a component runs, or whether it runs at all.</p>
+
+    <figure>
+      <svg viewBox="0 0 1240 745" role="img"
+           aria-label="TPH engine architecture: channels feed a messaging framework perimeter, which feeds a five-stage component pipeline. Beneath the pipeline a parameter plane of PP parameter tables supplies every stage by peel-off resolution, and PP.PROGRAMS.PER.WEIGHT selects which physical program each component runs or skips it. An external systems rail on the right holds Transact core, sanctions, rate interface, ledger and SWIFT or clearing output.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+          </marker>
+          <marker id="a1x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+
+        <!-- ---------- band 1: channels ---------- -->
+        <text x="60" y="26" font-family="var(--font-mono)" font-size="11" letter-spacing="1.6" fill="var(--ink-3)">CHANNELS</text>
+        <g fill="var(--surface-2)" stroke="currentColor" stroke-width="1">
+          <rect x="60"  y="38" width="140" height="42"/>
+          <rect x="210" y="38" width="140" height="42"/>
+          <rect x="360" y="38" width="140" height="42"/>
+          <rect x="510" y="38" width="140" height="42"/>
+          <rect x="660" y="38" width="140" height="42"/>
+          <rect x="810" y="38" width="140" height="42"/>
+        </g>
+        <g font-size="11.5" fill="currentColor" text-anchor="middle" font-family="var(--font-body)">
+          <text x="130" y="63">Transact AA / STO</text>
+          <text x="280" y="63">Payment Order</text>
+          <text x="430" y="63">Host systems</text>
+          <text x="580" y="63">SAA (SWIFT MT)</text>
+          <text x="730" y="63">Delivery (MX)</text>
+          <text x="880" y="63">Clearing files</text>
+        </g>
+
+        <line x1="505" y1="80" x2="505" y2="112" stroke="currentColor" stroke-width="1.4" marker-end="url(#a1)"/>
+
+        <!-- ---------- band 2: perimeter ---------- -->
+        <text x="60" y="106" font-family="var(--font-mono)" font-size="11" letter-spacing="1.6" fill="var(--ink-3)">PERIMETER</text>
+        <rect x="60" y="118" width="890" height="66" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.4"/>
+        <text x="82" y="145" font-size="13.5" fill="currentColor" font-weight="600">Messaging Framework — Camel layer</text>
+        <text x="82" y="165" font-size="11.5" fill="var(--ink-2)">acceptance · mapping · debulking · ACK</text>
+
+        <rect x="640" y="130" width="296" height="42" fill="none" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="4 3"/>
+        <text x="788" y="146" font-size="11.5" fill="var(--accent)" text-anchor="middle" font-weight="600">Python extension</text>
+        <text x="788" y="163" font-size="10.5" fill="var(--accent)" text-anchor="middle" font-family="var(--font-mono)">writes PP.POR.EXTENSION</text>
+
+        <line x1="505" y1="184" x2="505" y2="222" stroke="currentColor" stroke-width="1.4" marker-end="url(#a1)"/>
+        <line x1="788" y1="172" x2="788" y2="222" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#a1x)"/>
+        <text x="798" y="205" font-size="10.5" fill="var(--accent)">substitutes attributes · raises validations</text>
+
+        <!-- ---------- band 3: engine ---------- -->
+        <text x="60" y="216" font-family="var(--font-mono)" font-size="11" letter-spacing="1.6" fill="var(--ink-3)">ENGINE — COMPONENT PIPELINE</text>
+        <rect x="60" y="228" width="890" height="272" fill="none" stroke="currentColor" stroke-width="1.4"/>
+
+        <!-- stage columns -->
+        <g font-family="var(--font-mono)" font-size="9.5" letter-spacing="1.1" fill="var(--ink-3)" text-anchor="middle">
+          <text x="156" y="252">ACCEPT</text>
+          <text x="333" y="252">CLASSIFY</text>
+          <text x="510" y="252">PROCESS</text>
+          <text x="687" y="252">SCREEN + PRICE</text>
+          <text x="864" y="252">BOOK + EMIT</text>
+        </g>
+
+        <g fill="var(--surface-2)" stroke="currentColor" stroke-width="1">
+          <rect x="72"  y="262" width="168" height="28"/><rect x="72"  y="296" width="168" height="28"/>
+          <rect x="72"  y="330" width="168" height="28"/><rect x="72"  y="364" width="168" height="28"/>
+          <rect x="249" y="262" width="168" height="28"/><rect x="249" y="296" width="168" height="28"/>
+          <rect x="249" y="330" width="168" height="28"/><rect x="249" y="364" width="168" height="28"/>
+          <rect x="426" y="262" width="168" height="28"/><rect x="426" y="296" width="168" height="28"/>
+          <rect x="426" y="330" width="168" height="28"/><rect x="426" y="364" width="168" height="28"/>
+          <rect x="603" y="262" width="168" height="28"/><rect x="603" y="296" width="168" height="28"/>
+          <rect x="603" y="330" width="168" height="28"/><rect x="603" y="364" width="168" height="28"/>
+          <rect x="780" y="262" width="168" height="28"/><rect x="780" y="296" width="168" height="28"/>
+          <rect x="780" y="330" width="168" height="28"/><rect x="780" y="364" width="168" height="28"/>
+        </g>
+
+        <g font-size="10.5" fill="currentColor" text-anchor="middle" font-family="var(--font-mono)">
+          <text x="156" y="280">MessageAcceptance</text>
+          <text x="156" y="314">InwardMapping</text>
+          <text x="156" y="348">BatchServer</text>
+          <text x="156" y="382">TRNGeneration</text>
+
+          <text x="333" y="280">WeightAssignment</text>
+          <text x="333" y="314">InboundCodeWord</text>
+          <text x="333" y="348">SLADetermination</text>
+          <text x="333" y="382">OrderEntryRepair</text>
+
+          <text x="510" y="280">PaymentInitialisation</text>
+          <text x="510" y="314">Debit / CreditParty</text>
+          <text x="510" y="348">ProductDetermination</text>
+          <text x="510" y="382">RoutingAndSettlement</text>
+
+          <text x="687" y="280">TemenosAML</text>
+          <text x="687" y="314">RiskFilter</text>
+          <text x="687" y="348">FeeDetermination</text>
+          <text x="687" y="382">BalanceCheck</text>
+
+          <text x="864" y="280">PostingScheme</text>
+          <text x="864" y="314">PaymentGeneration</text>
+          <text x="864" y="348">Confirmations</text>
+          <text x="864" y="382">TransactionReporting</text>
+        </g>
+
+        <!-- inter-stage arrows -->
+        <g stroke="currentColor" stroke-width="1.3">
+          <line x1="241" y1="327" x2="248" y2="327" marker-end="url(#a1)"/>
+          <line x1="418" y1="327" x2="425" y2="327" marker-end="url(#a1)"/>
+          <line x1="595" y1="327" x2="602" y2="327" marker-end="url(#a1)"/>
+          <line x1="772" y1="327" x2="779" y2="327" marker-end="url(#a1)"/>
+        </g>
+
+        <!-- the shared record -->
+        <line x1="72" y1="432" x2="940" y2="432" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 3" marker-end="url(#a1)"/>
+        <text x="72" y="424" font-size="11" fill="var(--ink-2)">one payment record (<tspan font-family="var(--font-mono)">POR.*</tspan>) mutated in place — components share no state but the record</text>
+        <text x="72" y="460" font-size="11" fill="var(--ink-3)">component order and participation are configuration, not code</text>
+        <text x="72" y="480" font-size="11" fill="var(--ink-3)">failures leave the pipeline sideways: Exception Q · Repair Q · Warehouse</text>
+
+        <!-- ---------- external rail ---------- -->
+        <text x="985" y="216" font-family="var(--font-mono)" font-size="11" letter-spacing="1.6" fill="var(--ink-3)">EXTERNAL</text>
+        <g fill="var(--surface-2)" stroke="currentColor" stroke-width="1">
+          <rect x="985" y="228" width="195" height="46"/>
+          <rect x="985" y="282" width="195" height="46"/>
+          <rect x="985" y="336" width="195" height="46"/>
+          <rect x="985" y="390" width="195" height="46"/>
+          <rect x="985" y="444" width="195" height="46"/>
+        </g>
+        <g font-size="11" fill="currentColor" text-anchor="middle">
+          <text x="1082" y="247">Transact core</text><text x="1082" y="263" font-size="10" fill="var(--ink-2)">accounts · customers</text>
+          <text x="1082" y="301">Sanctions / AML</text><text x="1082" y="317" font-size="10" fill="var(--ink-2)">external engine</text>
+          <text x="1082" y="355">Rate interface</text><text x="1082" y="371" font-size="10" fill="var(--ink-2)">FX</text>
+          <text x="1082" y="409">Ledger · PM · FAMS</text><text x="1082" y="425" font-size="10" fill="var(--ink-2)">booking · positions</text>
+          <text x="1082" y="463">SAA · Clearing</text><text x="1082" y="479" font-size="10" fill="var(--ink-2)">outbound despatch</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.2">
+          <line x1="950" y1="251" x2="983" y2="251" marker-end="url(#a1)"/>
+          <line x1="950" y1="305" x2="983" y2="305" marker-end="url(#a1)"/>
+          <line x1="950" y1="359" x2="983" y2="359" marker-end="url(#a1)"/>
+          <line x1="950" y1="413" x2="983" y2="413" marker-end="url(#a1)"/>
+          <line x1="950" y1="467" x2="983" y2="467" marker-end="url(#a1)"/>
+        </g>
+        <g font-size="9" fill="var(--ink-3)" text-anchor="middle">
+          <text x="966" y="246">balance</text>
+          <text x="966" y="300">screen</text>
+          <text x="966" y="354">rate</text>
+          <text x="966" y="408">book</text>
+          <text x="966" y="462">emit</text>
+        </g>
+
+        <!-- ---------- band 4: parameter plane ---------- -->
+        <g stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3">
+          <line x1="156" y1="556" x2="156" y2="502" marker-end="url(#a1)"/>
+          <line x1="333" y1="556" x2="333" y2="502" marker-end="url(#a1)"/>
+          <line x1="510" y1="556" x2="510" y2="502" marker-end="url(#a1)"/>
+          <line x1="687" y1="556" x2="687" y2="502" marker-end="url(#a1)"/>
+          <line x1="864" y1="556" x2="864" y2="502" marker-end="url(#a1)"/>
+        </g>
+        <text x="1180" y="530" font-size="11" fill="var(--ink-2)" text-anchor="end">resolved per payment by peel-off — most-specific record wins</text>
+
+        <text x="60" y="576" font-family="var(--font-mono)" font-size="11" letter-spacing="1.6" fill="var(--ink-3)">PARAMETER PLANE</text>
+        <rect x="60" y="586" width="1120" height="140" fill="none" stroke="currentColor" stroke-width="1.4"/>
+
+        <g fill="var(--surface-2)" stroke="currentColor" stroke-width="1">
+          <rect x="72"  y="600" width="168" height="26"/><rect x="249" y="600" width="168" height="26"/>
+          <rect x="426" y="600" width="168" height="26"/><rect x="603" y="600" width="168" height="26"/>
+          <rect x="780" y="600" width="168" height="26"/>
+          <rect x="72"  y="634" width="168" height="26"/><rect x="249" y="634" width="168" height="26"/>
+          <rect x="426" y="634" width="168" height="26"/><rect x="603" y="634" width="168" height="26"/>
+          <rect x="780" y="634" width="168" height="26"/>
+        </g>
+        <g font-size="9.5" fill="currentColor" text-anchor="middle" font-family="var(--font-mono)">
+          <text x="156" y="617">PP.MSG.ACCEPTANCE.PARAM</text>
+          <text x="333" y="617">PP.SPECIFIC.WEIGHT</text>
+          <text x="510" y="617">PP.*PRODUCTCOND</text>
+          <text x="687" y="617">PP.RISK.FILTER.CONDITIONS</text>
+          <text x="864" y="617">PP.POSTING.SET</text>
+
+          <text x="156" y="651">PP.SOURCE · PPT.CHANNEL</text>
+          <text x="333" y="651">PP.SLA · CODEWORD</text>
+          <text x="510" y="651">PP.CONTRACT</text>
+          <text x="687" y="651">PP.CLIENTCHARGES</text>
+          <text x="864" y="651">PP.LEDGER.PRODUCT.CODES</text>
+        </g>
+
+        <rect x="72" y="676" width="1096" height="38" fill="none" stroke="var(--accent)" stroke-width="1.6"/>
+        <text x="88" y="700" font-size="11.5" font-family="var(--font-mono)" fill="var(--accent)" font-weight="600">PP.PROGRAMS.PER.WEIGHT</text>
+        <text x="300" y="700" font-size="12" fill="var(--accent)">selects which physical program each component invokes — or skips the component entirely</text>
+      </svg>
+      <figcaption><b>TPH is a parameter-driven component pipeline, not a monolith.</b> Payments enter through the Camel-layer
+        messaging framework, then pass through five stages of independent components, each mutating one shared payment record.
+        None of them carries client-specific logic: every component reads its behaviour from the parameter plane below by
+        peel-off resolution. The framed table is the master switch — <code>PP.PROGRAMS.PER.WEIGHT</code> maps each component,
+        per payment weight, to a physical program, and can drop a component from the run without any code change. The dashed
+        accent path is the only sanctioned place client code executes.</figcaption>
+    </figure>
+
+    <div class="notes">
+      <div class="note">
+        <h4>Why this shape matters</h4>
+        <p>Estimating a TPH change means asking which plane it lands in. A behaviour change is usually a parameter record.
+          A new component is almost never possible. A new rule that no table expresses is the extension layer.</p>
+      </div>
+      <div class="note">
+        <h4>What the diagram omits</h4>
+        <p>Queues and warehousing are shown only as the sideways exits. The full 57-step ordering lives in the STP flow
+          breakdown — this drawing is about structure, not sequence.</p>
+      </div>
+      <div class="note">
+        <h4>Verified against</h4>
+        <p>Component names are the delivered <code>PP.*Service</code> list from the R25 Payments release highlights.
+          Table names come from the extracted JAR schemas and <i>Intro Temenos Payments</i>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FIGURE 2 ============ -->
+  <section>
+    <h2>2 · ACH clearing attached to TPH</h2>
+
+    <div class="scope-flag">
+      <h3>Scope boundary</h3>
+      <p>This is the <b>generic</b> TPH domestic ACH clearing architecture, drawn from the delivered clearing framework and
+        the inward mapping framework. It is <b>not</b> CBOJ-specific — the CBOJ IRD has not been supplied. Message types shown
+        are the standard ISO 20022 ACH set; the actual CBOJ message list, versions, purpose codes and return reason codes
+        must come from the IRD. Whether CBOJ ACH is a delivered adapter or a Local Clearing Extension build is
+        <b>unknown and unestimated</b>.</p>
+    </div>
+
+    <p class="section-lede">The two directions are not mirror images. Outward accumulates many payments into one file on a
+      clock; inward takes one file and explodes it into many payments. Different tables control each, and the settlement
+      booking sits between them.</p>
+
+    <figure>
+      <svg viewBox="0 0 1240 700" role="img"
+           aria-label="ACH clearing with TPH. Outward lane runs left to right: customer channel, T24 payment order, TPH STP pipeline, ACH routing, bulk assembly, file generation and cutoff, then out to the domestic ACH scheme as pacs.008. Inward lane runs right to left: scheme delivers a file to an incoming directory, message acceptance interprets and debulks it into child payments, which run the TPH STP pipeline and post to the beneficiary account in T24. A shared settlement booking box between the lanes carries the item-level or file-level indicator from PP.CLEARING.SETTING.">
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+          </marker>
+          <marker id="a2x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+
+        <!-- column guides -->
+        <text x="60"  y="24" font-family="var(--font-mono)" font-size="10" letter-spacing="1.4" fill="var(--ink-3)">BANK SIDE</text>
+        <text x="1180" y="24" font-family="var(--font-mono)" font-size="10" letter-spacing="1.4" fill="var(--ink-3)" text-anchor="end">SCHEME SIDE</text>
+        <line x1="60" y1="32" x2="1180" y2="32" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 4"/>
+
+        <!-- ---------- OUTWARD ---------- -->
+        <text x="60" y="58" font-family="var(--font-mono)" font-size="11" letter-spacing="1.6" fill="var(--accent)">OUTWARD ACH</text>
+
+        <g fill="var(--surface-2)" stroke="currentColor" stroke-width="1">
+          <rect x="60"   y="70" width="140" height="62"/>
+          <rect x="223"  y="70" width="140" height="62"/>
+          <rect x="386"  y="70" width="140" height="62"/>
+          <rect x="549"  y="70" width="140" height="62"/>
+          <rect x="712"  y="70" width="140" height="62"/>
+          <rect x="875"  y="70" width="140" height="62"/>
+        </g>
+        <rect x="1038" y="70" width="142" height="62" fill="none" stroke="var(--accent)" stroke-width="1.8"/>
+
+        <g font-size="11.5" fill="currentColor" text-anchor="middle">
+          <text x="130"  y="96">Customer /</text><text x="130"  y="112">channel</text>
+          <text x="293"  y="96">T24 Payment</text><text x="293"  y="112">Order</text>
+          <text x="456"  y="96">TPH STP</text><text x="456"  y="112">pipeline</text>
+          <text x="619"  y="96">ACH routing</text><text x="619"  y="112">selected</text>
+          <text x="782"  y="96">Bulk</text><text x="782"  y="112">assembly</text>
+          <text x="945"  y="96">File build</text><text x="945"  y="112">+ cutoff</text>
+        </g>
+        <text x="1109" y="96" font-size="11.5" fill="var(--accent)" text-anchor="middle" font-weight="600">Domestic ACH</text>
+        <text x="1109" y="112" font-size="11.5" fill="var(--accent)" text-anchor="middle" font-weight="600">scheme</text>
+
+        <g stroke="currentColor" stroke-width="1.4">
+          <line x1="200" y1="101" x2="221" y2="101" marker-end="url(#a2)"/>
+          <line x1="363" y1="101" x2="384" y2="101" marker-end="url(#a2)"/>
+          <line x1="526" y1="101" x2="547" y2="101" marker-end="url(#a2)"/>
+          <line x1="689" y1="101" x2="710" y2="101" marker-end="url(#a2)"/>
+          <line x1="852" y1="101" x2="873" y2="101" marker-end="url(#a2)"/>
+        </g>
+        <line x1="1015" y1="101" x2="1036" y2="101" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#a2x)"/>
+
+        <!-- controlling tables under outward -->
+        <g font-size="9.5" fill="var(--ink-3)" text-anchor="middle" font-family="var(--font-mono)">
+          <text x="293" y="150">PP.SOURCE</text>
+          <text x="456" y="150">product · charges</text>
+          <text x="456" y="163">FX · balance</text>
+          <text x="619" y="150">PP.CONTRACT</text>
+          <text x="619" y="163">PP.RSCHANNEL.SELECTION</text>
+          <text x="782" y="150">PPT.CLEARING</text>
+          <text x="782" y="163">MaxTransPerBulk · BulkingCriteriaAPI</text>
+          <text x="945" y="150">FileGenerationRequired = Y</text>
+          <text x="945" y="163">PP.CLEARING.FREQUENCY · CutOff</text>
+        </g>
+
+        <text x="1109" y="150" font-size="10.5" fill="var(--accent)" text-anchor="middle" font-family="var(--font-mono)">pacs.008 →</text>
+        <text x="1109" y="164" font-size="10.5" fill="var(--ink-3)" text-anchor="middle" font-family="var(--font-mono)">← pacs.002</text>
+
+        <!-- N branch -->
+        <path d="M 945 132 L 945 196 L 700 196" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#a2)"/>
+        <text x="710" y="192" font-size="10" fill="var(--ink-2)">if <tspan font-family="var(--font-mono)">FileGenerationRequired = N</tspan> → payment parks at status 990, implementation layer builds the file</text>
+
+        <!-- ---------- SETTLEMENT ---------- -->
+        <rect x="386" y="228" width="629" height="58" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.4"/>
+        <text x="700" y="252" font-size="12.5" fill="currentColor" text-anchor="middle" font-weight="600">T24 nostro / suspense settlement booking</text>
+        <text x="700" y="271" font-size="10.5" fill="var(--ink-2)" text-anchor="middle" font-family="var(--font-mono)">PP.CLEARING.SETTING — SettlementBookingIndicator: IF item-level | LF file-level</text>
+
+        <line x1="945" y1="212" x2="945" y2="226" stroke="currentColor" stroke-width="1.3" marker-end="url(#a2)"/>
+        <line x1="456" y1="330" x2="456" y2="288" stroke="currentColor" stroke-width="1.3" marker-end="url(#a2)"/>
+
+        <text x="1030" y="262" font-size="10" fill="var(--ink-3)">must stay in sync with</text>
+        <text x="1030" y="275" font-size="10" fill="var(--ink-3)">the bulking criteria above</text>
+
+        <!-- ---------- INWARD ---------- -->
+        <text x="60" y="330" font-family="var(--font-mono)" font-size="11" letter-spacing="1.6" fill="var(--accent)">INWARD ACH</text>
+
+        <g fill="var(--surface-2)" stroke="currentColor" stroke-width="1">
+          <rect x="60"   y="342" width="140" height="62"/>
+          <rect x="223"  y="342" width="140" height="62"/>
+          <rect x="386"  y="342" width="140" height="62"/>
+          <rect x="549"  y="342" width="140" height="62"/>
+          <rect x="712"  y="342" width="140" height="62"/>
+          <rect x="875"  y="342" width="140" height="62"/>
+        </g>
+        <rect x="1038" y="342" width="142" height="62" fill="none" stroke="var(--accent)" stroke-width="1.8"/>
+
+        <g font-size="11.5" fill="currentColor" text-anchor="middle">
+          <text x="130"  y="368">Beneficiary</text><text x="130"  y="384">account posted</text>
+          <text x="293"  y="368">TPH STP</text><text x="293"  y="384">per child</text>
+          <text x="456"  y="368">Children</text><text x="456"  y="384">released</text>
+          <text x="619"  y="368">Debulk</text><text x="619"  y="384">parent + children</text>
+          <text x="782"  y="368">Interpret</text><text x="782"  y="384">+ validate</text>
+          <text x="945"  y="368">Incoming</text><text x="945"  y="384">directory</text>
+        </g>
+        <text x="1109" y="368" font-size="11.5" fill="var(--accent)" text-anchor="middle" font-weight="600">Domestic ACH</text>
+        <text x="1109" y="384" font-size="11.5" fill="var(--accent)" text-anchor="middle" font-weight="600">scheme</text>
+
+        <g stroke="currentColor" stroke-width="1.4">
+          <line x1="221" y1="373" x2="200" y2="373" marker-end="url(#a2)"/>
+          <line x1="384" y1="373" x2="363" y2="373" marker-end="url(#a2)"/>
+          <line x1="547" y1="373" x2="526" y2="373" marker-end="url(#a2)"/>
+          <line x1="710" y1="373" x2="689" y2="373" marker-end="url(#a2)"/>
+          <line x1="873" y1="373" x2="852" y2="373" marker-end="url(#a2)"/>
+        </g>
+        <line x1="1036" y1="373" x2="1015" y2="373" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#a2x)"/>
+
+        <g font-size="9.5" fill="var(--ink-3)" text-anchor="middle" font-family="var(--font-mono)">
+          <text x="293" y="422">product · account validation</text>
+          <text x="293" y="435">duplicate · purpose code</text>
+          <text x="456" y="422">BatchServer</text>
+          <text x="456" y="435">release of children</text>
+          <text x="619" y="422">splitXMLIntoSmallFiles</text>
+          <text x="619" y="435">DebulkAPI</text>
+          <text x="782" y="422">interpretXML · ValidateAPI</text>
+          <text x="782" y="435">InterpretAPI</text>
+          <text x="945" y="422">PP.MSG.ACCEPTANCE.PARAM</text>
+          <text x="945" y="435">IncomingMsgDirectory</text>
+        </g>
+
+        <text x="1109" y="422" font-size="10.5" fill="var(--ink-3)" text-anchor="middle" font-family="var(--font-mono)">← pacs.008</text>
+        <text x="1109" y="436" font-size="10.5" fill="var(--accent)" text-anchor="middle" font-family="var(--font-mono)">pacs.002 →</text>
+
+        <!-- ---------- RETURNS ---------- -->
+        <text x="60" y="500" font-family="var(--font-mono)" font-size="11" letter-spacing="1.6" fill="var(--ink-3)">RETURNS &amp; EXCEPTIONS</text>
+        <rect x="60" y="512" width="1120" height="96" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 3"/>
+
+        <g fill="var(--surface-2)" stroke="currentColor" stroke-width="1">
+          <rect x="76"  y="530" width="200" height="60"/>
+          <rect x="292" y="530" width="200" height="60"/>
+          <rect x="508" y="530" width="200" height="60"/>
+          <rect x="724" y="530" width="200" height="60"/>
+          <rect x="940" y="530" width="224" height="60"/>
+        </g>
+        <g font-size="11" fill="currentColor" text-anchor="middle">
+          <text x="176" y="553">Repair Q</text>
+          <text x="392" y="553">Return of settled</text>
+          <text x="608" y="553">Cancellation request</text>
+          <text x="832" y="553">Automated return</text>
+          <text x="1052" y="553">Reject / NACK</text>
+        </g>
+        <g font-size="9.5" fill="var(--ink-3)" text-anchor="middle" font-family="var(--font-mono)">
+          <text x="176" y="572">manual repair before post</text>
+          <text x="392" y="572">pacs.004</text>
+          <text x="608" y="572">camt.056 → camt.029</text>
+          <text x="832" y="572">AutomatedReturnIndicator</text>
+          <text x="1052" y="572">PP.CLEARING.RETURNCODE</text>
+        </g>
+
+        <text x="60" y="640" font-size="11" fill="var(--flag)">Message set shown is the standard ISO 20022 ACH set — replace with the CBOJ IRD's actual messages, versions and reason codes before use.</text>
+        <text x="60" y="662" font-size="11" fill="var(--ink-3)">Delivered clearing adapters cover SEPA, BACS, TARGET2, STEP2, CHAPS and HKCLG. Any other scheme is a Local Clearing Extension build.</text>
+      </svg>
+      <figcaption><b>Outward bulks; inward debulks — and that asymmetry drives the configuration.</b> On the outward path a
+        payment only becomes a file after routing selects the clearing, bulking criteria group it, and a cutoff releases it —
+        three separate tables, one clock. On the inward path a file arrives at a configured directory and is exploded back
+        into individual payments that each run the full STP pipeline. The settlement box sits between them because both
+        directions book through the same nostro, and the <code>IF</code>/<code>LF</code> indicator must agree with the bulking
+        criteria or the file's bookings will not reconcile.</figcaption>
+    </figure>
+
+    <div class="notes">
+      <div class="note">
+        <h4>The escape hatch</h4>
+        <p><code>FileGenerationRequired = N</code> tells TPH not to build the file at all. Payments park at status 990 and an
+          implementation layer produces the file, then updates status by OFS or the Provider API. This is the fork that
+          decides most of the build effort.</p>
+      </div>
+      <div class="note">
+        <h4>The reconciliation trap</h4>
+        <p>If DD and CT bulk into one file, both <code>PP.CLEARING.SETTING</code> records need the same Settlement Booking
+          Indicator. Mismatched, you get files whose nostro bookings do not reconcile — and it surfaces late.</p>
+      </div>
+      <div class="note">
+        <h4>What is still unknown</h4>
+        <p>Everything CBOJ-specific: message versions, purpose codes, return reason codes, STP rules, the ACH/RTGS split,
+          and whether file generation is even done by TPH. All of it needs the IRD.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Component and table names verified against the R25 Payments release highlights service list, the extracted JAR table schemas, <i>Intro Temenos Payments</i>, and <i>TPH Configuring Clearing</i>.</span>
+    <span>Figure 2 is a generic reference architecture. It is not a CBOJ design and must not be used as one.</span>
+  </footer>
+
+</div>

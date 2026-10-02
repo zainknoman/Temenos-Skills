@@ -34,3 +34,7 @@ build/
 
 # Per-release knowledge DBs (regenerable: pipeline/build_release.py)
 releases/
+
+# Local runtime artefacts
+.claude/scheduled_tasks.lock
+.playwright-mcp/

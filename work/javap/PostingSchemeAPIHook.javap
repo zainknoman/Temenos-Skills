@@ -1,0 +1,9 @@
+public class com.temenos.t24.api.hook.PostingSchemeAPIHook extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  public com.temenos.t24.api.hook.PostingSchemeAPIHook();
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public java.lang.String getTextTokenValue(java.lang.String);
+  static {};
+}

@@ -1,0 +1,9 @@
+public class com.temenos.t24.api.hook.DebitCollectionOrderHook extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  public com.temenos.t24.api.hook.DebitCollectionOrderHook();
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public void validateRecord(java.lang.String, com.temenos.t24.api.records.dbdebitcollectionorder.DbDebitCollectionOrderRecord, com.temenos.api.TString);
+  static {};
+}

@@ -1,0 +1,12 @@
+public class com.temenos.t24.api.hook.PaymentOrderHook extends com.temenos.tafj.api.client.impl.T24Context {
+  protected static final com.temenos.logging.facade.Logger logger;
+  public com.temenos.t24.api.hook.PaymentOrderHook();
+  public static java.lang.String getVersion();
+  public static java.lang.String getBuildDate();
+  public static java.lang.String getComponentVersion();
+  public com.temenos.api.TBoolean isChargeApplied(java.lang.String, com.temenos.t24.api.records.paymentorder.PaymentOrderRecord, com.temenos.api.TString);
+  public void setPaymentOrderProduct(java.lang.String, com.temenos.t24.api.records.paymentorder.PaymentOrderRecord, com.temenos.api.TString, com.temenos.api.TString);
+  public java.lang.String getPaymentOrderProductId(java.lang.String, com.temenos.t24.api.records.paymentorder.PaymentOrderRecord, com.temenos.api.TString);
+  public void validateRecord(java.lang.String, com.temenos.t24.api.records.paymentorder.PaymentOrderRecord, com.temenos.api.TString);
+  static {};
+}

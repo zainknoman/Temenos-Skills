@@ -1,0 +1,1741 @@
+<title>TPH STP Process Flow — Step Breakdown</title>
+<style>
+  :root {
+    --paper:      #E9EDE6;
+    --surface:    #F6F8F3;
+    --surface-2:  #FDFEFB;
+    --ink:        #1B2019;
+    --ink-2:      #59634F;
+    --ink-3:      #7E8875;
+    --rule:       #C8D1C1;
+    --rule-soft:  #DBE2D5;
+    --accent:     #1D4A52;
+
+    --core:       #3C5A66;
+    --core-bg:    #DDE6EA;
+    --config:     #7C5E10;
+    --config-bg:  #EFE6C9;
+    --custom:     #8E3520;
+    --custom-bg:  #F2DED6;
+
+    --shadow: 0 1px 0 rgba(27,32,25,.04), 0 2px 10px rgba(27,32,25,.05);
+
+    --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --font-body: "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:      #12160F;
+      --surface:    #191E16;
+      --surface-2:  #1F251B;
+      --ink:        #E6EADE;
+      --ink-2:      #9AA792;
+      --ink-3:      #7C8874;
+      --rule:       #313A2C;
+      --rule-soft:  #262E22;
+      --accent:     #7FBDBF;
+
+      --core:       #8FB2C4;
+      --core-bg:    #1F2E36;
+      --config:     #D6AE55;
+      --config-bg:  #322A11;
+      --custom:     #E08A6B;
+      --custom-bg:  #38201A;
+
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 2px 10px rgba(0,0,0,.25);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper:      #12160F;
+    --surface:    #191E16;
+    --surface-2:  #1F251B;
+    --ink:        #E6EADE;
+    --ink-2:      #9AA792;
+    --ink-3:      #7C8874;
+    --rule:       #313A2C;
+    --rule-soft:  #262E22;
+    --accent:     #7FBDBF;
+
+    --core:       #8FB2C4;
+    --core-bg:    #1F2E36;
+    --config:     #D6AE55;
+    --config-bg:  #322A11;
+    --custom:     #E08A6B;
+    --custom-bg:  #38201A;
+
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 2px 10px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 28px 96px;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 64px 0 32px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 5.2vw, 56px);
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -.015em;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    font-family: var(--font-display);
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 64ch;
+  }
+
+  .source-note {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 24px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-3);
+  }
+
+  .source-note b { color: var(--ink-2); font-weight: 500; }
+
+  /* ---------- generic sections ---------- */
+
+  section { padding-top: 56px; }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 27px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    margin-bottom: 8px;
+  }
+
+  .section-lede {
+    color: var(--ink-2);
+    max-width: 68ch;
+    margin-bottom: 26px;
+  }
+
+  p { max-width: 72ch; }
+
+  /* ---------- classification key ---------- */
+
+  .key-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 16px;
+  }
+
+  .key-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--kc, var(--accent));
+    padding: 20px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--shadow);
+  }
+
+  .key-card.core   { --kc: var(--core); }
+  .key-card.config { --kc: var(--config); }
+  .key-card.custom { --kc: var(--custom); }
+
+  .key-card h3 {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--kc);
+  }
+
+  .key-card .count {
+    font-family: var(--font-display);
+    font-size: 42px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  .key-card .count span {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-left: 6px;
+  }
+
+  .key-card p { font-size: 14.5px; color: var(--ink-2); margin: 0; }
+  .key-card .who { font-size: 13px; color: var(--ink-3); font-style: italic; }
+
+  /* ---------- filter bar ---------- */
+
+  .filterbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 48px;
+    padding: 14px 0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .filterbar .fb-label {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-right: 4px;
+  }
+
+  .fbtn {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: .04em;
+    padding: 6px 14px;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+
+  .fbtn:hover { border-color: var(--ink-3); color: var(--ink); }
+  .fbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .fbtn[aria-pressed="true"] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  /* ---------- stage + steps ---------- */
+
+  .stage { padding-top: 46px; }
+
+  .stage-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 4px;
+  }
+
+  .stage-letter {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .18em;
+    color: var(--accent);
+    border: 1px solid var(--rule);
+    padding: 3px 8px;
+    flex: none;
+  }
+
+  .stage-head h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .stage-head .range {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .steps {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* the rail the payment travels down */
+  .steps::before {
+    content: "";
+    position: absolute;
+    left: 21px;
+    top: 26px;
+    bottom: 26px;
+    width: 1px;
+    background: var(--rule);
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 44px 1fr 158px;
+    gap: 0 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    align-items: start;
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .idx {
+    position: relative;
+    z-index: 1;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--surface-2);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-2);
+  }
+
+  .step[data-class="custom"] .idx { border-color: var(--custom); color: var(--custom); }
+  .step[data-class="config"] .idx { border-color: var(--config); color: var(--config); }
+
+  .step h4 {
+    font-family: var(--font-display);
+    font-size: 18.5px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 6px;
+    text-wrap: balance;
+  }
+
+  .step p {
+    font-size: 15px;
+    color: var(--ink-2);
+    margin-bottom: 10px;
+  }
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    list-style: none;
+  }
+
+  .meta li {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-3);
+    display: flex;
+    gap: 8px;
+  }
+
+  .meta .lbl {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    flex: none;
+    width: 74px;
+    padding-top: 2px;
+  }
+
+  .meta code {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-2);
+    background: var(--surface);
+    border: 1px solid var(--rule-soft);
+    padding: 0 4px;
+    white-space: nowrap;
+  }
+
+  .meta .vals { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+
+  .tags { display: flex; flex-direction: column; gap: 7px; align-items: flex-start; }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+  }
+
+  .chip.core   { color: var(--core);   background: var(--core-bg); }
+  .chip.config { color: var(--config); background: var(--config-bg); }
+  .chip.custom { color: var(--custom); background: var(--custom-bg); }
+
+  .chip.sub {
+    font-size: 10px;
+    letter-spacing: .08em;
+    padding: 3px 8px;
+    background: transparent;
+    border-style: dashed;
+    text-transform: none;
+  }
+
+  .trigger {
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--custom);
+    border-left: 2px solid var(--custom);
+    padding-left: 9px;
+    margin-top: 10px;
+    max-width: 62ch;
+  }
+
+  .trigger b { font-weight: 600; }
+
+  /* ---------- roll-up lists ---------- */
+
+  .rollup {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .rollup-col {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--rc, var(--accent));
+    padding: 22px;
+    box-shadow: var(--shadow);
+  }
+
+  .rollup-col.core   { --rc: var(--core); }
+  .rollup-col.config { --rc: var(--config); }
+  .rollup-col.custom { --rc: var(--custom); }
+
+  .rollup-col h3 {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--rc);
+    margin-bottom: 4px;
+  }
+
+  .rollup-col .sub {
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .rollup-col ol {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rollup-col li {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink-2);
+    display: flex;
+    gap: 10px;
+  }
+
+  .rollup-col li .n {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+    flex: none;
+    width: 22px;
+    text-align: right;
+    padding-top: 1px;
+  }
+
+  /* ---------- effort table ---------- */
+
+  .table-scroll { overflow-x: auto; border: 1px solid var(--rule); background: var(--surface); }
+
+  table { border-collapse: collapse; width: 100%; min-width: 640px; }
+
+  th, td {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--rule-soft);
+    font-size: 14.5px;
+    vertical-align: top;
+  }
+
+  th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+
+  td:first-child { font-weight: 600; }
+  td .muted { color: var(--ink-2); }
+  tbody tr:last-child td { border-bottom: none; }
+  td code {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-2);
+  }
+
+  /* ---------- callout ---------- */
+
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .callout h3 {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 600;
+  }
+
+  .callout ul { padding-left: 20px; display: flex; flex-direction: column; gap: 7px; }
+  .callout li { font-size: 14.5px; color: var(--ink-2); }
+  .callout code {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    background: var(--surface-2);
+    border: 1px solid var(--rule-soft);
+    padding: 0 4px;
+  }
+
+  footer {
+    margin-top: 72px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-size: 13px;
+    color: var(--ink-3);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .empty-note {
+    padding: 18px 0;
+    font-size: 14px;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+
+  @media (max-width: 820px) {
+    .step { grid-template-columns: 36px 1fr; }
+    .steps::before { left: 17px; }
+    .idx { width: 34px; height: 34px; font-size: 12px; }
+    .tags { grid-column: 2; flex-direction: row; flex-wrap: wrap; margin-top: 12px; }
+    .meta li { flex-direction: column; gap: 2px; }
+    .meta .lbl { width: auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Temenos Payment Hub · Straight-Through Processing</div>
+    <h1>TPH STP Process Flow — step-by-step breakdown</h1>
+    <p class="standfirst">Every box on the STP flow diagram, in processing order, with the one thing an implementation team
+      actually needs to know about each: does the engine already do this, do you configure it, or do you have to build it?</p>
+    <div class="source-note">
+      <span><b>Source</b> docs/TPH STP Flow New.jpg</span>
+      <span><b>Steps</b> 57</span>
+      <span><b>Stages</b> 6</span>
+      <span><b>Grounding</b> R25 Payments service list · PP.* parameter tables · Payments Extensibility</span>
+    </div>
+  </header>
+
+  <section id="key">
+    <h2>How each step is classified</h2>
+    <p class="section-lede">Three categories, applied as a <em>primary</em> answer per step. Most TPH steps are a delivered
+      service whose behaviour comes entirely from parameter tables — where that setup is the real work, the step is marked
+      Configuration even though the code is core. A dashed secondary chip flags the other dimension.</p>
+
+    <div class="key-grid">
+      <div class="key-card core">
+        <h3>Core</h3>
+        <div class="count">29<span>of 57 steps</span></div>
+        <p>The engine performs this itself. A delivered <code>PP.*Service</code> runs it; there is nothing to set up beyond
+          switching the component on, and nothing to write.</p>
+        <span class="who">Owner: none — it just runs</span>
+      </div>
+      <div class="key-card config">
+        <h3>Configuration</h3>
+        <div class="count">25<span>of 57 steps</span></div>
+        <p>Core code, client-specific behaviour. The outcome is driven by records in <code>PP.*</code> parameter tables
+          resolved by peel-off logic. No code, but real analysis and setup effort.</p>
+        <span class="who">Owner: business / implementation consultant</span>
+      </div>
+      <div class="key-card custom">
+        <h3>Customisation</h3>
+        <div class="count">3<span>primary · 12 conditional</span></div>
+        <p>Something must be built: a Python extension, a scheme adapter, an interface to a third-party or non-Transact
+          system. 12 further steps turn custom only under a stated condition.</p>
+        <span class="who">Owner: development team</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="filterbar" role="group" aria-label="Filter steps by classification">
+    <span class="fb-label">Show</span>
+    <button class="fbtn" type="button" data-filter="all" aria-pressed="true">All 57</button>
+    <button class="fbtn" type="button" data-filter="core" aria-pressed="false">Core 29</button>
+    <button class="fbtn" type="button" data-filter="config" aria-pressed="false">Configuration 25</button>
+    <button class="fbtn" type="button" data-filter="custom" aria-pressed="false">Customisation 3</button>
+    <button class="fbtn" type="button" data-filter="dev" aria-pressed="false">Any dev effort 15</button>
+  </div>
+
+  <!-- ================= STAGE A ================= -->
+  <section class="stage" data-stage="A">
+    <div class="stage-head">
+      <span class="stage-letter">A</span>
+      <h3>Intake &amp; message acceptance</h3>
+      <span class="range">Steps 1–13</span>
+    </div>
+    <div class="steps">
+
+      <article class="step" data-class="config" data-dev="yes">
+        <div class="idx">01</div>
+        <div>
+          <h4>Delivering channels</h4>
+          <p>Payments arrive from nine channel types shown across the top band: Payment Order, Local Clearing,
+            Delivery (SWIFT MX), SAA (SWIFT MT), Host Systems, Other Banks, Direct Debit Initiation (DD/DDI),
+            Debit Collection and Teller (cheques). Retail/Corporate/Wealth channels and Transact AA &amp; STO feed in
+            through Payment Order.</p>
+          <ul class="meta">
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.SOURCE</code><code>PP.MSG.FORMAT.PER.CHANNEL</code><code>PP.MSGPAYMENTTYPECHANNEL</code></span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> a proprietary host system or in-house channel needs its own adapter
+            into the messaging framework.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span><span class="chip sub custom">+ custom adapter</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">02</div>
+        <div>
+          <h4>Message Acceptance &amp; Enrichment</h4>
+          <p>The single entry point for every channel. Accepts the inbound message, applies file- and bulk-level duplicate
+            checks and enriches it before anything else runs. MT19x / MT29x investigation messages are diverted straight to
+            the Transact Delivery Module rather than into the payment flow.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.MessageAcceptanceService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.MSG.ACCEPTANCE.PARAM</code><code>PP.MSGMAPPINGPARAMETER</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ param setup</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">03</div>
+        <div>
+          <h4>Bulk detection &amp; Batch Server debulking</h4>
+          <p>A decision tests whether the message is single-debit/multiple-credit (CT) or single-credit/multiple-debit (DD).
+            If yes, the Batch Server debulks the file into a parent and its children; if no, the message continues as a
+            single payment.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.BatchServerService</code><code>PP.LocalClearingDebulkingService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">04</div>
+        <div>
+          <h4>Parent / children release control</h4>
+          <p>The Batch Server holds the release-of-parent and release-of-children gates. A test on whether the parent is
+            rejected or finalised decides the children's fate — if the parent is not viable, the children are cancelled.</p>
+          <ul class="meta">
+            <li><span class="lbl">Outcome</span><span class="vals">Cancel Children</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">05</div>
+        <div>
+          <h4>Submitter validation</h4>
+          <p>Confirms the sending party is a known, authorised submitter for the channel and source the message arrived on.
+            First of the eight checks in the validation block.</p>
+          <ul class="meta">
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.SOURCE</code> (channel · source product · source product group)</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="yes">
+        <div class="idx">06</div>
+        <div>
+          <h4>Mapping</h4>
+          <p>Maps the inbound format (MT, MX, clearing file, order) onto the TPH neutral payment structure. Mapping
+            parameters decide, for example, whether an inbound pacs.008 from STEP2 follows the credit transfer flow.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.MessageMappingService</code><code>PP.LocalClearingMsgMapService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.MSGMAPPINGPARAMETER</code></span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> the format is not a delivered one — a bespoke host layout or a
+            domestic scheme file needs mapping built in the messaging framework.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span><span class="chip sub custom">+ custom formats</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">07</div>
+        <div>
+          <h4>Capture message</h4>
+          <p>Persists the raw inbound message so it can be replayed, audited and shown in the GUI regardless of what the
+            rest of the flow does with it.</p>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">08</div>
+        <div>
+          <h4>Technical duplicate check</h4>
+          <p>Detects re-sent messages at file, bulk and message level before any business processing. Distinct from the
+            business duplicate check later in the flow (step 38).</p>
+          <ul class="meta">
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.MSG.ACCEPTANCE.PARAM</code> Check Duplicate Indicator · <code>EB.DUPLICATE.TYPE</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">09</div>
+        <div>
+          <h4>Validation of basic structure</h4>
+          <p>Syntactic validation of the message against its format definition — mandatory fields, field lengths, code
+            validity. Failures drop out as invalid transactions.</p>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">10</div>
+        <div>
+          <h4>Assign TRN &amp; TRN enrichment</h4>
+          <p>Generates the Transaction Reference Number that identifies the payment for its whole life, then enriches the
+            payment record around it.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.TransactionReferenceGenerationService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="yes">
+        <div class="idx">11</div>
+        <div>
+          <h4>Transform message</h4>
+          <p>Converts the validated message into the internal payment object the processing block consumes, applying any
+            format-specific transformation rules.</p>
+          <p class="trigger"><b>Turns custom when:</b> client-specific enrichment or attribute substitution is needed — this
+            is the natural place for a Python extension writing to <code>PP.POR.EXTENSION</code>.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span><span class="chip sub custom">+ extension</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">12</div>
+        <div>
+          <h4>Invalid transaction → Exception Q</h4>
+          <p>Anything failing the validation block is written to the Exception queue as an invalid transaction rather than
+            being silently dropped. Picked up from the GUI for manual handling.</p>
+          <ul class="meta">
+            <li><span class="lbl">Artefact</span><span class="vals">Internal MQ — Exception Q</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ queue setup</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">13</div>
+        <div>
+          <h4>Transact Delivery Module handoff</h4>
+          <p>Investigation and answer messages (MT19x / MT29x) bypass STP entirely and are handed to the Transact Delivery
+            Module from Message Acceptance.</p>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= STAGE B ================= -->
+  <section class="stage" data-stage="B">
+    <div class="stage-head">
+      <span class="stage-letter">B</span>
+      <h3>Classification, SLA &amp; automated repair</h3>
+      <span class="range">Steps 14–17</span>
+    </div>
+    <div class="steps">
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">14</div>
+        <div>
+          <h4>Assign weight (L / M / H)</h4>
+          <p>Every payment gets a high-level weight — light, medium or heavy — plus a specific weight. Weight is the single
+            most powerful configuration lever in TPH: it decides which physical program each downstream component invokes,
+            and whether a component is skipped altogether.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.WeightAssignmentService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.SPECIFIC.WEIGHT</code><code>PP.PROGRAMS.PER.WEIGHT</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">15</div>
+        <div>
+          <h4>Code words</h4>
+          <p>Resolves inbound code words carried in the message into processing instructions, and prepares outbound code
+            words for generation. Backed by the internal PAY component and its database.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.InboundCodeWordService</code><code>PP.OutboundCodeWordService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">16</div>
+        <div>
+          <h4>SLA determination</h4>
+          <p>Assigns the processing service level — typically driven per code word — which governs cut-off behaviour and
+            prioritisation for the rest of the flow.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.SLADeterminationService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="yes">
+        <div class="idx">17</div>
+        <div>
+          <h4>Automated Repair Tool</h4>
+          <p>Attempts rule-based auto-repair of incomplete or non-conforming payments before they reach the processing
+            block, so they stay straight-through. Can call out to the external Temenos Repair service.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.OrderEntryRepairService</code></span></li>
+            <li><span class="lbl">External</span><span class="vals">External Repair Tool (Temenos Repair)</span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> the external repair tool is a third-party product rather than the
+            Temenos one — the interface must be built.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span><span class="chip sub custom">+ external tool</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= STAGE C ================= -->
+  <section class="stage" data-stage="C">
+    <div class="stage-head">
+      <span class="stage-letter">C</span>
+      <h3>Payment processing block — parties, product, accounts</h3>
+      <span class="range">Steps 18–40</span>
+    </div>
+    <div class="steps">
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">18</div>
+        <div>
+          <h4>Payment Initiation — assign static data</h4>
+          <p>Opens the main processing block. Attaches all static data the payment needs — company, currency, country,
+            BIC and clearing directory references — so downstream components resolve against consistent values.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.PaymentInitialisationService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals">Static Data · <code>PP.COUNTRY.IBAN.STRUCTURE</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ static data</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">19</div>
+        <div>
+          <h4>Liquidity management</h4>
+          <p>Applies liquidity rules and priority to the payment before parties are resolved, so funding constraints are
+            known ahead of the balance checks.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">20</div>
+        <div>
+          <h4>Debit party determination</h4>
+          <p>Identifies who is being debited and derives the debit bank account. Reads bank conditions to resolve debit
+            bank account and debit bank condition attributes.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.DebitPartyDeterminationService</code><code>PP.BankConditionsService</code></span></li>
+            <li><span class="lbl">Component</span><span class="vals">Bank Conditions (internal, PAY)</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ bank conditions</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">21</div>
+        <div>
+          <h4>Warehouse decision</h4>
+          <p>A gate immediately after debit party: if the payment is to be warehoused it loops out of the main path here
+            and is parked until its due date, otherwise processing continues.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.WarehouseService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">22</div>
+        <div>
+          <h4>Own account determination</h4>
+          <p>Establishes whether debit and credit sides belong to the same client — an own-account transfer — which changes
+            charging, posting and routing downstream.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.OwnAccountDeterminationService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">23</div>
+        <div>
+          <h4>Direction determination</h4>
+          <p>Classifies the payment as outgoing, incoming, book or redirected. This is the value the two direction
+            branches later in the flow switch on.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.DirectionDeterminationService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">24</div>
+        <div>
+          <h4>Debit authority</h4>
+          <p>Confirms the bank is authorised to debit the account. Checks direct debit mandates and transaction stops held
+            in Transact, and skips the check entirely for message types listed as no-debit-authority.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.DebitAuthorityService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.NODA.LIST</code></span></li>
+            <li><span class="lbl">External</span><span class="vals">DD Mandate (Transact/External) · Transaction Stop (Transact)</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">25</div>
+        <div>
+          <h4>Product determination</h4>
+          <p>Derives the payment product from the weight-specific product condition tables. The product then links the
+            payment to its fee, ledger, client condition, posting and routing products — so this record set drives most
+            downstream behaviour.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.ProductDeterminationService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.HEAVYWEIGHTPRODUCTCOND</code><code>PP.MEDIUMWEIGHTPRODUCTCOND</code><code>PP.LIGHTWEIGHTPRODUCTCOND</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">26</div>
+        <div>
+          <h4>Direction branch — debit side</h4>
+          <p>The flow forks three ways on direction: Outgoing Debits (DD / RF / RD), Outgoing &amp; Redirect Credits
+            (RT / CT), and Incoming / Book. Each branch takes a different path to account validation.</p>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">27</div>
+        <div>
+          <h4>Routing &amp; settlement (debit side)</h4>
+          <p>For outgoing debits, selects the settlement channel and correspondent path. Resolution is by contract
+            specificity: party contract, then country contract, then bank contract.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.RoutingAndSettlementService</code><code>PP.RoutingAndSettlementDASService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.CONTRACT</code><code>PP.RSCHANNEL.SELECTION</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">28</div>
+        <div>
+          <h4>Credit side determination</h4>
+          <p>For incoming and book payments, resolves the credit side of the payment before the accounts are validated.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.CreditPartyDeterminationService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="yes">
+        <div class="idx">29</div>
+        <div>
+          <h4>Validate main accounts</h4>
+          <p>Both branches converge here. Validates the debit and credit main accounts against Account and Customer Info —
+            existence, status, currency, blocks.</p>
+          <ul class="meta">
+            <li><span class="lbl">External</span><span class="vals">Account and Customer Info (Transact / External)</span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> accounts live in a non-Transact core — the Account and Customer Info
+            interface has to be built against the external system.</p>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub custom">+ external core</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">30</div>
+        <div>
+          <h4>Balance check (without charges)</h4>
+          <p>First funds check, on the principal amount only, via a balance request to Transact. A conditional path handles
+            the case where the parent account has insufficient balance in a bulk.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.BalanceCheckService</code><code>PP.BalanceInterfaceService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.BALANCE.CHECK.REQUIRED</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ required flag</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">31</div>
+        <div>
+          <h4>Interpret debit party client conditions</h4>
+          <p>Applies the client's agreed conditions on the debit side — special handling, charging options, processing
+            preferences — resolved by peel-off from generic to client-specific records.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP_ClientConditionsService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.CLIENT.CONDITIONRECORD</code><code>PP.CLIENTCOND.PRODUCT</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">32</div>
+        <div>
+          <h4>Validate credit party</h4>
+          <p>Second direction branch. Outgoing redirect credits go via routing &amp; settlement first; incoming, book and
+            outgoing redirected debits validate the credit party directly against the reference/clearing directory.</p>
+          <ul class="meta">
+            <li><span class="lbl">External</span><span class="vals">Reference Directory (Transact)</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ directory load</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="yes">
+        <div class="idx">33</div>
+        <div>
+          <h4>Beneficiary Name Check (BNC)</h4>
+          <p>For incoming and book customer CT/DD payments, matches the beneficiary name on the message against the account
+            holder's name using the Temenos Name Matching Service.</p>
+          <ul class="meta">
+            <li><span class="lbl">External</span><span class="vals">Temenos Name Matching Service (Transact only)</span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> a third-party name-matching engine is used instead of the Temenos
+            service.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span><span class="chip sub custom">+ 3rd-party matcher</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">34</div>
+        <div>
+          <h4>Credit client / bank condition</h4>
+          <p>The credit-side mirror of step 31 — client conditions and bank conditions applied to the beneficiary side,
+            each with their own conditions-processing path.</p>
+          <ul class="meta">
+            <li><span class="lbl">External</span><span class="vals">Account &amp; Customer Info (Transact / External)</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">35</div>
+        <div>
+          <h4>Charge accounts validation</h4>
+          <p>Validates the debit and credit charge accounts that fees will later be posted to, before fee determination
+            commits to them.</p>
+          <ul class="meta">
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.FEETYPECREDITACCOUNT</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">36</div>
+        <div>
+          <h4>Date determination</h4>
+          <p>Derives processing date, debit value date and credit value date using holiday logic and send-date parameters,
+            both resolved by peel-off.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.DateDeterminationService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.HOLIDAY.LOGIC</code><code>PP.SEND.DATE</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">37</div>
+        <div>
+          <h4>Cover determination</h4>
+          <p>Decides whether a cover payment is required and matches incoming covers against their underlying payments via
+            the Cover Matching component in Transact.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.CoverDeterminationService</code></span></li>
+            <li><span class="lbl">External</span><span class="vals">Cover Matching (Transact)</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">38</div>
+        <div>
+          <h4>Duplicate check (business)</h4>
+          <p>Business-level duplicate detection on the fully enriched payment — same debtor, amount, beneficiary and date —
+            as opposed to the technical duplicate check at step 8.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.DuplicateCheckService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">39</div>
+        <div>
+          <h4>Payment finalisation — release children</h4>
+          <p>Closes the processing block. Finalises the payment and releases child payments of a bulk. Anything flagged for
+            repair leaves the STP path here into the manual Repair Q.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.PaymentFinalisationService</code></span></li>
+            <li><span class="lbl">Exception</span><span class="vals">Repair Q (manual)</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="yes">
+        <div class="idx">40</div>
+        <div>
+          <h4>Account cash position update</h4>
+          <p>Updates the cash position for the accounts involved and pushes it to Position Management, so intraday
+            liquidity reflects the payment before it is booked.</p>
+          <ul class="meta">
+            <li><span class="lbl">External</span><span class="vals">Position Management — PM (Transact / External)</span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> position management sits in an external treasury system.</p>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub custom">+ external PM</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= STAGE D ================= -->
+  <section class="stage" data-stage="D">
+    <div class="stage-head">
+      <span class="stage-letter">D</span>
+      <h3>Compliance, value calculation &amp; booking</h3>
+      <span class="range">Steps 41–48</span>
+    </div>
+    <div class="steps">
+
+      <article class="step" data-class="custom" data-dev="yes">
+        <div class="idx">41</div>
+        <div>
+          <h4>Sanction screening</h4>
+          <p>Inspects the payment against the sanctions filter and applies the result: seize funds, return/reject for
+            incoming, cancel for outgoing, or continue processing. Runs as daily filtering as well as inline, and feeds the
+            repair path on a hit.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.TemenosAMLService</code><code>PP.NorkomAMLService</code></span></li>
+            <li><span class="lbl">External</span><span class="vals">Sanction Screening (Transact / External)</span></li>
+          </ul>
+          <p class="trigger"><b>Why custom:</b> TPH orchestrates the decision and the outcome handling, but the filter
+            itself is an external engine. Unless you use a delivered adapter, the request/response integration, hit
+            handling and rescreen behaviour are a build item on every project.</p>
+        </div>
+        <div class="tags"><span class="chip custom">Customisation</span><span class="chip sub core">core orchestration</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">42</div>
+        <div>
+          <h4>Future due date → warehousing</h4>
+          <p>Tests whether the payment is due in the future. If yes it goes to Payment Warehousing (or Output Warehousing)
+            and re-enters the flow on the due date; if no it continues immediately.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.FutureDueDateService</code><code>PP.WarehouseService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">43</div>
+        <div>
+          <h4>Risk filtering</h4>
+          <p>Applies risk conditions defined per correspondent bank, country and currency. A hit routes the payment to the
+            RFQ queue where it is either stopped or released to continue.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.RiskFilterService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.RISK.FILTER.CONDITIONS</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="no">
+        <div class="idx">44</div>
+        <div>
+          <h4>Fee determination</h4>
+          <p>Calculates charges and tax from the client charges table against the fee product derived at product
+            determination. For bulks, the parent is released only after all child fees are determined.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.FeeDeterminationService</code><code>PP.FeeTypesService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.CLIENTCHARGES</code><code>PP.FEE.PRODUCT</code></span></li>
+            <li><span class="lbl">External</span><span class="vals">Charges / Tax (Transact)</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">45</div>
+        <div>
+          <h4>FX conversion</h4>
+          <p>Converts the amount where debit and credit currencies differ, retrieving the exchange rate from the Rate
+            Interface in Transact and selecting the open currency position account for the posting.</p>
+          <ul class="meta">
+            <li><span class="lbl">External</span><span class="vals">Rate Interface (Transact)</span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.OCP.ACCOUNT</code><code>PP.CURRENCY.DEALER</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ OCP accounts</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="yes">
+        <div class="idx">46</div>
+        <div>
+          <h4>Balance check (including charges and FX)</h4>
+          <p>Final funds check on the true total. Conditional paths cover cut-off time breaches, booking errors, and
+            insufficient balance on a bulk parent account.</p>
+          <ul class="meta">
+            <li><span class="lbl">External</span><span class="vals">Balance Request (Transact / External / FAMS)</span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> funds authorisation runs through FAMS or an external balance
+            provider rather than Transact directly.</p>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub custom">+ FAMS / external</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="yes">
+        <div class="idx">47</div>
+        <div>
+          <h4>Posting scheme &amp; booking</h4>
+          <p>Selects the posting set from company, posting product and payment attributes, then books the entries to the
+            Transact or external ledger. Drives statement output (MT940/950, camt.053/054) and reconciliation.</p>
+          <ul class="meta">
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.POSTING.SET</code><code>PP.LEDGER.PRODUCT.CODES</code><code>PP.STATEMENT.FORMAT</code></span></li>
+            <li><span class="lbl">External</span><span class="vals">Transact / External Ledger → Reconciliation</span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> booking goes to a non-Transact general ledger — the ledger interface
+            and reconciliation feed must be built.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span><span class="chip sub custom">+ external ledger</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">48</div>
+        <div>
+          <h4>Claim processing</h4>
+          <p>Raises charge claims that result in MT191 or MT199. A claim is logged for inbound or redirected payments when
+            field 71G is insufficient and there is no account to debit, or for a periodical charging request.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.ClaimsService</code></span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ claim rules</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= STAGE E ================= -->
+  <section class="stage" data-stage="E">
+    <div class="stage-head">
+      <span class="stage-letter">E</span>
+      <h3>Output generation &amp; delivery</h3>
+      <span class="range">Steps 49–54</span>
+    </div>
+    <div class="steps">
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">49</div>
+        <div>
+          <h4>Future send date → output warehousing</h4>
+          <p>Final gate before the Output block. A payment already booked but not yet due for despatch is held in Output
+            Warehousing until its send date.</p>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="yes">
+        <div class="idx">50</div>
+        <div>
+          <h4>Payment generation — SWIFT</h4>
+          <p>Generates the outbound SWIFT message in the required flavour (MT, MX, TARGET2 MX, CHAPS MX) and hands it to
+            SAA / Delivery, which passes it through the external filter service before despatch.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.PaymentGenerationService</code><code>PP.SwiftOutService</code><code>PP.TARGET2Service</code></span></li>
+            <li><span class="lbl">External</span><span class="vals">SAA (SWIFT) / Delivery → External Filter Service (Fircosoft)</span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> the outbound filter is a third-party product such as Fircosoft — the
+            interface and its response handling are built, not configured.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span><span class="chip sub custom">+ filter interface</span></div>
+      </article>
+
+      <article class="step" data-class="custom" data-dev="yes">
+        <div class="idx">51</div>
+        <div>
+          <h4>Payment generation — clearing</h4>
+          <p>Generates the clearing file or message for the domestic scheme, writes it to the Clearing Out Q and despatches
+            it externally. Bulking criteria and settlement booking indicator must stay in sync per transaction type.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.ClearingFrameworkService</code><code>PP.LocalClearingBACSService</code><code>PP.STEP2Service</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals"><code>PP.CLEARING.SETTING</code><code>PP.CLEARING.RETURNCODE</code><code>PP.CLEARING.NATURE.CODE</code></span></li>
+          </ul>
+          <p class="trigger"><b>Why custom:</b> configuration only covers schemes Temenos already delivers (SEPA, BACS,
+            TARGET2, STEP2, CHAPS, HKCLG). Any other domestic scheme needs a Local Clearing Extension built — mapping,
+            bulking, return handling — and this is typically the largest single development workstream on a TPH
+            implementation.</p>
+        </div>
+        <div class="tags"><span class="chip custom">Customisation</span><span class="chip sub config">config if delivered scheme</span></div>
+      </article>
+
+      <article class="step" data-class="config" data-dev="yes">
+        <div class="idx">52</div>
+        <div>
+          <h4>Confirmations &amp; advices</h4>
+          <p>Produces debit/credit XML advice, print advice, phone advice and SMS/email, gated on the credit advice
+            indicator in client conditions. Output goes to Auto Form and Output Management for despatch.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.ConfirmationsService</code><code>PP.EmailSMSService</code><code>PP.PrintService</code></span></li>
+            <li><span class="lbl">External</span><span class="vals">Auto Form · Output Management</span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> bank-branded advice templates or a non-standard notification
+            channel are required.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span><span class="chip sub custom">+ templates</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">53</div>
+        <div>
+          <h4>Transaction reporting &amp; Track and Trace</h4>
+          <p>Publishes payment status events externally. Track and Trace is updated when status reaches
+            <em>Final Completed</em>.</p>
+        </div>
+        <div class="tags"><span class="chip core">Core</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">54</div>
+        <div>
+          <h4>Acknowledgement processing</h4>
+          <p>Consumes ACK/NACK from the delivery channel. An ACK closes the payment; a NACK routes it to the Exception Q
+            for investigation and resend.</p>
+          <ul class="meta">
+            <li><span class="lbl">Exception</span><span class="vals">Exception Q on NACK</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ retry rules</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= STAGE F ================= -->
+  <section class="stage" data-stage="F">
+    <div class="stage-head">
+      <span class="stage-letter">F</span>
+      <h3>Post-processing, operations &amp; extension points</h3>
+      <span class="range">Steps 55–57</span>
+    </div>
+    <div class="steps">
+
+      <article class="step" data-class="config" data-dev="yes">
+        <div class="idx">55</div>
+        <div>
+          <h4>COB extracts</h4>
+          <p>End-of-day batch extracts off the completed payment set: AML batch extract, billing batch extract, Insight
+            batch extract and archive, delivered onward through Transact Delivery.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.SODEODService</code><code>PP.BillingService</code><code>PP.InsightService</code></span></li>
+          </ul>
+          <p class="trigger"><b>Turns custom when:</b> the AML extract must match a specific vendor's file specification.</p>
+        </div>
+        <div class="tags"><span class="chip config">Configuration</span><span class="chip sub custom">+ vendor format</span></div>
+      </article>
+
+      <article class="step" data-class="core" data-dev="no">
+        <div class="idx">56</div>
+        <div>
+          <h4>GUI — order entry, enquiries, repair, static data</h4>
+          <p>The operational front end: manual order entry, payment enquiries, the repair workbench, and maintenance of
+            static data for client conditions, code words, fees, product determination, posting scheme and routing &amp;
+            settlement.</p>
+          <ul class="meta">
+            <li><span class="lbl">Service</span><span class="vals"><code>PP.GUIFrameworkService</code></span></li>
+            <li><span class="lbl">Config</span><span class="vals">User roles · <code>PP.AUTHORIZATIONPRINCIPLE</code> (4-eye / 6-eye)</span></li>
+          </ul>
+        </div>
+        <div class="tags"><span class="chip core">Core</span><span class="chip sub config">+ roles</span></div>
+      </article>
+
+      <article class="step" data-class="custom" data-dev="yes">
+        <div class="idx">57</div>
+        <div>
+          <h4>Client extensions — the sanctioned customisation point</h4>
+          <p>Not a box on the diagram, but the mechanism that hangs off it. Python extensions in the messaging framework
+            (Camel layer) enrich payment attributes, override values and raise custom validations. The extension writes a
+            JSON payload to the <code>PP.POR.EXTENSION</code> landing table, which TPH substitutes into the payment while
+            processing. Errors are raised at a named stage: Debit Party, Credit Party or Date Validation.</p>
+          <ul class="meta">
+            <li><span class="lbl">Landing</span><span class="vals"><code>PP.POR.EXTENSION</code></span></li>
+            <li><span class="lbl">Context</span><span class="vals">GET APIs — payment dates · <code>porsupplementaryinfo</code></span></li>
+          </ul>
+          <p class="trigger"><b>Why custom:</b> this is where client-specific business rules belong. Using the extension
+            framework instead of modifying core keeps the implementation upgrade-safe.</p>
+        </div>
+        <div class="tags"><span class="chip custom">Customisation</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= ROLL-UP ================= -->
+  <section id="rollup">
+    <h2>The three lists</h2>
+    <p class="section-lede">Same 57 steps, grouped by primary classification — the view to take into a scoping or
+      estimation session.</p>
+
+    <div class="rollup">
+
+      <div class="rollup-col core">
+        <h3>Handled by core</h3>
+        <span class="sub">29 steps · the engine does it, no build, no setup beyond enabling the component</span>
+        <ol>
+          <li><span class="n">02</span>Message Acceptance &amp; Enrichment</li>
+          <li><span class="n">03</span>Bulk detection &amp; Batch Server debulking</li>
+          <li><span class="n">04</span>Parent / children release control</li>
+          <li><span class="n">07</span>Capture message</li>
+          <li><span class="n">09</span>Validation of basic structure</li>
+          <li><span class="n">10</span>Assign TRN &amp; TRN enrichment</li>
+          <li><span class="n">12</span>Invalid transaction → Exception Q</li>
+          <li><span class="n">13</span>Transact Delivery Module handoff</li>
+          <li><span class="n">18</span>Payment Initiation — assign static data</li>
+          <li><span class="n">20</span>Debit party determination</li>
+          <li><span class="n">21</span>Warehouse decision</li>
+          <li><span class="n">22</span>Own account determination</li>
+          <li><span class="n">23</span>Direction determination</li>
+          <li><span class="n">26</span>Direction branch — debit side</li>
+          <li><span class="n">28</span>Credit side determination</li>
+          <li><span class="n">29</span>Validate main accounts</li>
+          <li><span class="n">30</span>Balance check (without charges)</li>
+          <li><span class="n">32</span>Validate credit party</li>
+          <li><span class="n">37</span>Cover determination</li>
+          <li><span class="n">39</span>Payment finalisation — release children</li>
+          <li><span class="n">40</span>Account cash position update</li>
+          <li><span class="n">42</span>Future due date → warehousing</li>
+          <li><span class="n">45</span>FX conversion</li>
+          <li><span class="n">46</span>Balance check (incl. charges and FX)</li>
+          <li><span class="n">48</span>Claim processing</li>
+          <li><span class="n">49</span>Future send date → output warehousing</li>
+          <li><span class="n">53</span>Transaction reporting &amp; Track and Trace</li>
+          <li><span class="n">54</span>Acknowledgement processing</li>
+          <li><span class="n">56</span>GUI — order entry, enquiries, repair, static data</li>
+        </ol>
+      </div>
+
+      <div class="rollup-col config">
+        <h3>Handled by configuration</h3>
+        <span class="sub">25 steps · core code, behaviour driven by PP.* parameter records — no development</span>
+        <ol>
+          <li><span class="n">01</span>Delivering channels</li>
+          <li><span class="n">05</span>Submitter validation</li>
+          <li><span class="n">06</span>Mapping</li>
+          <li><span class="n">08</span>Technical duplicate check</li>
+          <li><span class="n">11</span>Transform message</li>
+          <li><span class="n">14</span>Assign weight (L / M / H)</li>
+          <li><span class="n">15</span>Code words</li>
+          <li><span class="n">16</span>SLA determination</li>
+          <li><span class="n">17</span>Automated Repair Tool</li>
+          <li><span class="n">19</span>Liquidity management</li>
+          <li><span class="n">24</span>Debit authority</li>
+          <li><span class="n">25</span>Product determination</li>
+          <li><span class="n">27</span>Routing &amp; settlement (debit side)</li>
+          <li><span class="n">31</span>Interpret debit party client conditions</li>
+          <li><span class="n">33</span>Beneficiary Name Check (BNC)</li>
+          <li><span class="n">34</span>Credit client / bank condition</li>
+          <li><span class="n">35</span>Charge accounts validation</li>
+          <li><span class="n">36</span>Date determination</li>
+          <li><span class="n">38</span>Duplicate check (business)</li>
+          <li><span class="n">43</span>Risk filtering</li>
+          <li><span class="n">44</span>Fee determination</li>
+          <li><span class="n">47</span>Posting scheme &amp; booking</li>
+          <li><span class="n">50</span>Payment generation — SWIFT</li>
+          <li><span class="n">52</span>Confirmations &amp; advices</li>
+          <li><span class="n">55</span>COB extracts</li>
+        </ol>
+      </div>
+
+      <div class="rollup-col custom">
+        <h3>Requires customisation</h3>
+        <span class="sub">3 steps always · 12 more only under the stated condition</span>
+        <ol>
+          <li><span class="n">41</span>Sanction screening — external filter integration</li>
+          <li><span class="n">51</span>Payment generation — clearing (non-delivered scheme)</li>
+          <li><span class="n">57</span>Client extensions — Python / <code>PP.POR.EXTENSION</code></li>
+        </ol>
+        <span class="sub" style="margin-top:18px">Conditional — custom only if the trigger applies</span>
+        <ol>
+          <li><span class="n">01</span>Proprietary host channel adapter</li>
+          <li><span class="n">06</span>Non-delivered message format mapping</li>
+          <li><span class="n">11</span>Client-specific enrichment extension</li>
+          <li><span class="n">17</span>Third-party repair tool interface</li>
+          <li><span class="n">29</span>Non-Transact core for accounts/customers</li>
+          <li><span class="n">33</span>Third-party name-matching engine</li>
+          <li><span class="n">40</span>External position management system</li>
+          <li><span class="n">46</span>FAMS or external balance provider</li>
+          <li><span class="n">47</span>External general ledger + reconciliation</li>
+          <li><span class="n">50</span>Fircosoft or other outbound filter</li>
+          <li><span class="n">52</span>Branded advice templates / extra channel</li>
+          <li><span class="n">55</span>Vendor-specific AML extract format</li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= EFFORT SUMMARY ================= -->
+  <section id="effort">
+    <h2>Where the effort actually lands</h2>
+    <p class="section-lede">Grouped by workstream rather than by step, for planning.</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Workstream</th>
+            <th>Steps</th>
+            <th>Nature of the work</th>
+            <th>Class</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Parameter setup</td>
+            <td><span class="muted">14, 15, 16, 24, 25, 27, 31, 34, 35, 36, 43, 44, 47</span></td>
+            <td class="muted">Building out the <code>PP.*</code> condition tables and their peel-off hierarchy. The bulk of
+              a TPH implementation. No code, heavy analysis.</td>
+            <td><span class="chip config">Config</span></td>
+          </tr>
+          <tr>
+            <td>Channel &amp; format onboarding</td>
+            <td><span class="muted">01, 05, 06, 08, 11</span></td>
+            <td class="muted">One pass per inbound channel and message format. Configuration for delivered formats; a
+              messaging-framework build for anything bespoke.</td>
+            <td><span class="chip config">Config</span></td>
+          </tr>
+          <tr>
+            <td>Local clearing scheme</td>
+            <td><span class="muted">51</span></td>
+            <td class="muted">Local Clearing Extension: mapping, bulking, settlement booking, return codes. Largest single
+              build item unless the scheme is one Temenos already delivers.</td>
+            <td><span class="chip custom">Custom</span></td>
+          </tr>
+          <tr>
+            <td>Compliance integration</td>
+            <td><span class="muted">33, 41, 55</span></td>
+            <td class="muted">Sanctions filter, name matching and AML extract. Request/response contracts, hit handling and
+              rescreen behaviour against external engines.</td>
+            <td><span class="chip custom">Custom</span></td>
+          </tr>
+          <tr>
+            <td>Core/ledger interfaces</td>
+            <td><span class="muted">29, 40, 46, 47</span></td>
+            <td class="muted">Zero work on a Transact-only estate. A full interface build per external system where
+              accounts, positions, funds authorisation or the GL sit outside Transact.</td>
+            <td><span class="chip custom">Custom</span></td>
+          </tr>
+          <tr>
+            <td>Client business rules</td>
+            <td><span class="muted">11, 57</span></td>
+            <td class="muted">Python extensions in the Camel layer writing to <code>PP.POR.EXTENSION</code>, raising errors
+              at the Debit Party, Credit Party or Date Validation stage.</td>
+            <td><span class="chip custom">Custom</span></td>
+          </tr>
+          <tr>
+            <td>Output &amp; advices</td>
+            <td><span class="muted">50, 52</span></td>
+            <td class="muted">SWIFT flavours configured; outbound filter service and branded advice templates built.</td>
+            <td><span class="chip config">Config</span></td>
+          </tr>
+          <tr>
+            <td>Operations &amp; roles</td>
+            <td><span class="muted">12, 39, 54, 56</span></td>
+            <td class="muted">Queue and role setup, authorisation principle, repair workbench access. Core screens, minor
+              configuration.</td>
+            <td><span class="chip core">Core</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= RULES ================= -->
+  <section id="rules">
+    <h2>Reading the classification correctly</h2>
+    <div class="callout">
+      <h3>Four things that decide the answer for any step</h3>
+      <ul>
+        <li><b>Weight is the master switch.</b> <code>PP.PROGRAMS.PER.WEIGHT</code> specifies which physical program each
+          component invokes per weight and specific weight — and whether the component is skipped entirely. A step marked
+          Core can still be turned off here without code.</li>
+        <li><b>Peel-off logic means configuration is layered, not flat.</b> Client conditions, bank conditions, product
+          conditions and holiday logic all resolve from the most specific matching record down to the most generic.
+          Estimate by the number of condition layers, not the number of tables.</li>
+        <li><b>"External" on the diagram does not automatically mean custom.</b> Boxes annotated <em>Transact</em> are a
+          delivered interface — configuration. Boxes annotated <em>Transact / External</em> are only a build when the
+          external option is taken.</li>
+        <li><b>Customisation belongs in the extension framework.</b> Client-specific behaviour goes through Python
+          extensions and <code>PP.POR.EXTENSION</code>, not modified core code — that is what keeps the implementation
+          upgrade-safe across releases.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <span>Derived from <b>docs/TPH STP Flow New.jpg</b> — every step corresponds to a box, decision or component on that diagram.</span>
+    <span>Service and table names verified against the R25 Payments release highlights service list, <i>Intro Temenos Payments</i> parameter tables, <i>TPH Configuring Clearing</i>, and <i>Introduction to Client Extensions</i> / <i>Payments Extensibility</i>.</span>
+    <span>Classification is a scoping default, not a contract — confirm per implementation against the delivered scheme and core-banking landscape.</span>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var buttons = Array.prototype.slice.call(document.querySelectorAll(".fbtn"));
+    var steps = Array.prototype.slice.call(document.querySelectorAll(".step"));
+    var stages = Array.prototype.slice.call(document.querySelectorAll(".stage"));
+
+    function matches(step, filter) {
+      if (filter === "all") return true;
+      if (filter === "dev") return step.getAttribute("data-dev") === "yes";
+      return step.getAttribute("data-class") === filter;
+    }
+
+    function apply(filter) {
+      steps.forEach(function (step) {
+        step.style.display = matches(step, filter) ? "" : "none";
+      });
+
+      stages.forEach(function (stage) {
+        var visible = Array.prototype.slice.call(stage.querySelectorAll(".step"))
+          .filter(function (s) { return s.style.display !== "none"; });
+        var note = stage.querySelector(".empty-note");
+        if (visible.length === 0) {
+          if (!note) {
+            note = document.createElement("p");
+            note.className = "empty-note";
+            note.textContent = "No steps in this stage match the current filter.";
+            stage.querySelector(".steps").appendChild(note);
+          }
+          note.style.display = "";
+        } else if (note) {
+          note.style.display = "none";
+        }
+      });
+
+      buttons.forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-filter") === filter));
+      });
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () { apply(b.getAttribute("data-filter")); });
+    });
+  })();
+</script>
