@@ -48,3 +48,10 @@ def test_jbc_without_app_is_not_a_pass(db, tmp_path):
     report = verify(f, [], db, tmp_path / "out", compile_fn=OK)
     assert report["passed"] is False
     assert "--app" in report["fields"][0]["error"]
+
+
+def test_report_lists_componentised_refs_for_the_compiler(db, tmp_path):
+    f = tmp_path / "V.b"
+    f.write_text("x = EB.SystemTables.getRNew(ST.Customer.Customer.EbCusMnemonic)\n")
+    report = verify(f, ["CUSTOMER"], db, tmp_path / "out", compile_fn=OK)
+    assert report["fields"][0]["compiler_checked"] == ["Customer.EbCusMnemonic"]

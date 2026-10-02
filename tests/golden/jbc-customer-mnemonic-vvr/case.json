@@ -1,0 +1,9 @@
+{
+  "name": "jbc-customer-mnemonic-vvr",
+  "artefact": "jBC VVR",
+  "skill": "temenos-jbc",
+  "requirement": "Reject CUSTOMER input when MNEMONIC is empty.",
+  "apps": ["CUSTOMER"],
+  "file": "V.CUS.MNEMONIC.CHECK.b",
+  "expected_fields": ["Customer.EbCusMnemonic"]
+}

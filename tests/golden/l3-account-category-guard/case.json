@@ -1,0 +1,9 @@
+{
+  "name": "l3-account-category-guard",
+  "artefact": "L3 RecordLifecycle.validateRecord",
+  "skill": "temenos-l3",
+  "requirement": "Block an ACCOUNT input if CATEGORY is empty.",
+  "apps": ["ACCOUNT"],
+  "file": "AcCategoryGuard.java",
+  "expected_fields": ["AC.CATEGORY"]
+}

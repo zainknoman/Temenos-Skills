@@ -736,8 +736,9 @@ $PACKAGE <YOUR.PACKAGE.NAME>
 SUBROUTINE <PKG.V.SOMETHING.VALIDATION>
 
     $USING EB.SystemTables
+    $USING <Comp>.<Module>          ;* component owning the application, e.g. ST.Customer
 *-----------------------------------------------------------------------------
-    fieldValue = EB.SystemTables.getRNew('<T24.FIELD.NAME>', '', 1, '')
+    fieldValue = EB.SystemTables.getRNew(<Comp>.<Module>.<Record>.<Field>)
 
     IF fieldValue EQ '' THEN
         EB.SystemTables.setE('<APPLICATION.NAME> ':fieldValue:' IS INVALID')
@@ -751,7 +752,10 @@ RETURN
 ```
 
 **Pattern notes:**
-- `getRNew(fieldName, subValue, occurrence, default)` — reads the uncommitted (pre-save) field value
+- `getRNew(<field>)` — **one argument**: the componentised field EQU, e.g. `ST.Customer.Customer.EbCusMnemonic`. Reads the uncommitted (pre-save) value. For a multi-value field index the result: `EB.SystemTables.getRNew(<field>)<1,MV>`. (Verified by compiling against R25 — golden case `tests/golden/jbc-customer-mnemonic-vvr`.)
+- **Componentised field names are not the Java alias.** They come from the component: `EB.CUS.SHORT.NAME` → `ST.Customer.Customer.EbCusShortName` (prefix kept), but `AC.CATEGORY` → `AC.AccountOpening.Account.Category` (prefix dropped). Never derive one from the other — copy the name from existing R25 source (`grep -o "ST\.Customer\.Customer\.[A-Za-z]*" C:\R25\bnk\T24_BP\*.b`) and let `pipeline/verify_artefact.py` compile it; tCompile rejects an unknown name with `<Record>.<Field> undefined in <Comp>.<Module>`.
+- Today's date: `EB.SystemTables.getToday()` — not `getRNew('TODAY', ...)`.
+- A `$PACKAGE` routine only compiles once its `.component` declares a method pointing at it (otherwise: `Wrong $PACKAGE ? : No method is pointing to '<ROUTINE>'`). Keep the `.component` beside the `.b`; `verify_artefact.py` compiles it first.
 - `setE(message)` — sets a validation error; blocks the save and shows the message to the user
 - No initialisation guard — T24 calls this inline during the commit cycle; T24 is already initialised
 - SUBROUTINE has no RETURN value — validation outcome is communicated through `setE`

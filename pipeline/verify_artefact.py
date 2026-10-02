@@ -33,7 +33,8 @@ def verify(path, apps, conn, out_dir, compile_fn=None, skip_compile=False):
         for app in apps:
             try:
                 res = check_fields(conn, app, source)
-                fields.append({"app": res.app, "verified": res.verified, "missing": res.missing})
+                fields.append({"app": res.app, "verified": res.verified, "missing": res.missing,
+                               "compiler_checked": res.compiler_checked})
                 ok &= not res.missing
             except UnknownApp as exc:
                 fields.append({"app": app, "error": str(exc), "verified": [], "missing": []})
@@ -72,6 +73,8 @@ def main():
                 print(f"NOT FOUND in {f['app']}: {m}")
             if f["verified"]:
                 print(f"VERIFIED in {f['app']}: {', '.join(f['verified'])}")
+            if f.get("compiler_checked"):
+                print(f"COMPONENTISED (checked by compiler) in {f['app']}: {', '.join(f['compiler_checked'])}")
         print(f"COMPILE: {report['compile']['status']}")
         if report["compile"]["status"] not in ("OK", "NOT_RUN"):
             print(report["compile"]["output"][-3000:])

@@ -60,3 +60,33 @@ def test_logs_and_dirs_redirected_into_out_dir(tmp_path):
         assert env[var].startswith(str(tmp_path))
     assert "temn.tafj.directory.classes" in TCOMPILE_OVERRIDES
     assert "temn.tafj.runtime.directory.current" in TCOMPILE_OVERRIDES
+
+
+def test_javac_ignores_stub_sources_inside_r25_jars(tmp_path):
+    # R25 JARs ship .java doc stubs next to .class files; javac must not compile them.
+    from compile_check import javac_command
+    cmd = javac_command("javac", tmp_path / "A.java", tmp_path / "out", "cp")
+    assert cmd[cmd.index("-sourcepath") + 1] == ""
+
+
+def test_java_classpath_includes_tafj_ext(tmp_path):
+    # AccountRecord(JSONObject) needs org.json from TAFJ/ext/json.jar.
+    from compile_check import java_classpath
+    cp = java_classpath(tmp_path)
+    for part in ("t24lib", "lib", "ext"):
+        assert any(p.rstrip("\*").endswith(part) for p in cp.split(";")), part
+
+
+def test_component_stub_dir_redirected():
+    # Compiling a .component writes TAFC stubs to temn.tafj.compiler.tafc.component.dir,
+    # which in R25 points at C:\R25\TAFJ\tafc_components (caught by the write guard 2026-10-02).
+    assert "temn.tafj.compiler.tafc.component.dir" in TCOMPILE_OVERRIDES
+
+
+def test_component_files_beside_a_routine_compile_first(tmp_path):
+    from compile_check import compile_order
+    (tmp_path / "PKG.Comp.component").write_text("component PKG.Comp\n")
+    routine = tmp_path / "V.X.b"
+    routine.write_text("SUBROUTINE V.X\n")
+    assert compile_order(routine) == [tmp_path / "PKG.Comp.component", routine]
+    assert compile_order(tmp_path / "PKG.Comp.component") == [tmp_path / "PKG.Comp.component"]

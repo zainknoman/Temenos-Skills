@@ -28,6 +28,8 @@ TCOMPILE_OVERRIDES = {
     "temn.tafj.runtime.directory.current": "UD",
     "temn.tafj.runtime.directory.como": "como",
     "temn.tafj.directory.updates": "updates",
+    # .component compiles write TAFC stub .b/.h files here (R25 default: TAFJ/tafc_components/**).
+    "temn.tafj.compiler.tafc.component.dir": "tafc_components",
 }
 
 # Read by TAFJ\bin\tafj_conf.bat; without them tCompile appends to C:\R25\TAFJ\log\compiler.log.
@@ -60,6 +62,20 @@ def _guarded(run, out_dir, r25):
     return result
 
 
+def java_classpath(r25=R25):
+    # t24lib = T24 API/record classes; TAFJ/lib = TStructure/TField/T24Record;
+    # TAFJ/ext = third-party jars the record classes reference (org.json via json.jar).
+    r25 = Path(r25)
+    return ";".join(f"{d}\\*" for d in (r25 / "bnk" / "t24lib", r25 / "TAFJ" / "lib", r25 / "TAFJ" / "ext"))
+
+
+def javac_command(javac, src, out_dir, cp):
+    # Empty -sourcepath: R25 JARs ship .java doc stubs beside the .class files, and
+    # javac would otherwise compile those stubs (765 errors) instead of using the classes.
+    return [javac, "-proc:none", "-nowarn", "-sourcepath", "", "-d", str(Path(out_dir) / "classes"),
+            "-cp", cp, str(src)]
+
+
 def compile_java(src, out_dir, r25=R25):
     src, out_dir, r25 = Path(src), Path(out_dir), Path(r25)
     if not (r25 / "bnk" / "t24lib").is_dir():
@@ -67,13 +83,10 @@ def compile_java(src, out_dir, r25=R25):
     javac = shutil.which("javac")
     if not javac:
         return CompileResult("SKIPPED", "javac not on PATH")
-    cp = f"{r25 / 'bnk' / 't24lib'}\\*;{r25 / 'TAFJ' / 'lib'}\\*"
+    cp = java_classpath(r25)
 
     def run():
-        proc = subprocess.run(
-            [javac, "-proc:none", "-nowarn", "-d", str(out_dir / "classes"), "-cp", cp, str(src)],
-            capture_output=True, text=True,
-        )
+        proc = subprocess.run(javac_command(javac, src, out_dir, cp), capture_output=True, text=True)
         return CompileResult("OK" if proc.returncode == 0 else "FAIL", proc.stdout + proc.stderr)
 
     return _guarded(run, out_dir, r25)
@@ -102,10 +115,20 @@ def _scratch_properties(src, out_dir, r25):
     for key, sub in TCOMPILE_OVERRIDES.items():
         path = src.parent if sub == "src" else out_dir / sub
         path.mkdir(parents=True, exist_ok=True)
-        lines.append(f"{key}={path}")
+        lines.append(f"{key}={path}/**" if sub == "tafc_components" else f"{key}={path}")
     props = out_dir / "tafj-scratch.properties"
     props.write_text("\n".join(lines) + "\n", encoding="latin-1")
     return props
+
+
+def compile_order(src):
+    """A componentised routine only compiles once its .component definition is
+    compiled ("No method is pointing to <ROUTINE> in <PACKAGE>"), so .component
+    files beside a .b go first, into the same classes directory."""
+    src = Path(src)
+    if src.suffix == ".component":
+        return [src]
+    return sorted(src.parent.glob("*.component")) + [src]
 
 
 def compile_jbc(src, out_dir, r25=R25):
@@ -118,11 +141,16 @@ def compile_jbc(src, out_dir, r25=R25):
     env = scratch_env(out_dir)
 
     def run():
-        proc = subprocess.run(
-            ["cmd", "/c", str(tcompile), "-cf", str(props), str(src)],
-            capture_output=True, text=True, env=env,
-        )
-        text = proc.stdout + proc.stderr
-        return CompileResult(jbc_status(proc.returncode, text), text)
+        outputs = []
+        for item in compile_order(src):
+            proc = subprocess.run(
+                ["cmd", "/c", str(tcompile), "-cf", str(props), str(item)],
+                capture_output=True, text=True, env=env,
+            )
+            text = proc.stdout + proc.stderr
+            outputs.append(f"== {item.name}\n{text}")
+            if jbc_status(proc.returncode, text) != "OK":
+                return CompileResult("FAIL", "\n".join(outputs))
+        return CompileResult("OK", "\n".join(outputs))
 
     return _guarded(run, out_dir, r25)

@@ -413,9 +413,10 @@ $PACKAGE TRADE.FINANCE
 SUBROUTINE TF.V.LC.EXPIRY.VALIDATION
 
     $USING EB.SystemTables
+    $USING LC.Contract
 *-----------------------------------------------------------------------------
-    expiryDate = EB.SystemTables.getRNew('EXPIRY.DATE', '', 1, '')
-    today      = EB.SystemTables.getRNew('TODAY', '', 1, '')
+    expiryDate = EB.SystemTables.getRNew(LC.Contract.LetterOfCredit.TfLcExpiryDate)
+    today      = EB.SystemTables.getToday()
 
     IF expiryDate LT today THEN
         EB.SystemTables.setE('LC.ISSUANCE ':expiryDate:' EXPIRY DATE CANNOT BE IN THE PAST')

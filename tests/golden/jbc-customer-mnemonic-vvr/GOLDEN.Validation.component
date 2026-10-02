@@ -1,0 +1,4 @@
+component GOLDEN.Validation
+metamodelVersion 1.6
+
+    public method vCusMnemonicCheck() { jBC: V.CUS.MNEMONIC.CHECK }

@@ -41,5 +41,16 @@ def test_comments_are_ignored():
 def test_check_reports_missing(db):
     src = "a = R.NEW(AC.CATEGORY)\nb = R.NEW(AC.CATEGORYY)\nc = AC.AccountOpening.Account.Customer\n"
     result = check_fields(db, "ACCOUNT", src)
-    assert result.verified == ["AC.CATEGORY", "Account_Customer"]
+    assert result.verified == ["AC.CATEGORY"]
     assert result.missing == ["AC.CATEGORYY"]
+    # Componentised names are NOT java aliases (R25: EB.CUS.SHORT.NAME -> Customer.EbCusShortName,
+    # AC.CATEGORY -> Account.Category), so they are left to the compiler, never "verified" here.
+    assert result.compiler_checked == ["Account.Customer"]
+
+
+def test_componentised_name_is_not_verified_by_java_alias(db):
+    # Customer_Mnemonic exists as a java alias, but ST.Customer.Customer.Mnemonic is undefined in R25.
+    result = check_fields(db, "CUSTOMER", "x = EB.SystemTables.getRNew(ST.Customer.Customer.Mnemonic)\n")
+    assert result.verified == []
+    assert result.missing == []
+    assert result.compiler_checked == ["Customer.Mnemonic"]

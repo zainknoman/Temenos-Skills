@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """Find T24 field references in generated source and check them against
 the Layer A schema DB. Legacy Infobasic uses EQU names (AC.CATEGORY);
-componentised jBC uses <Comp>.<Module>.<Record>.<Field>, which maps to the
-java_alias column (<Record>_<Field>). Java L3 code is not checked here --
+componentised jBC uses <Comp>.<Module>.<Record>.<Field>, whose <Field> part is
+NOT the java alias (see check_fields) -- those are listed for the compiler to
+check. Java L3 code is not checked here --
 javac against the R25 record classes is the field gate for Java."""
 import os
 import re
 from collections import namedtuple
 
 FieldRefs = namedtuple("FieldRefs", "legacy componentised")
-FieldCheck = namedtuple("FieldCheck", "app verified missing")
+FieldCheck = namedtuple("FieldCheck", "app verified missing compiler_checked")
 
 
 class UnknownApp(Exception):
@@ -52,13 +53,15 @@ def extract_refs(source, prefix, record_cls):
 
 
 def check_fields(conn, app, source):
+    """Legacy EQU names are verified against the schema DB. Componentised names
+    are NOT java aliases -- R25 maps EB.CUS.SHORT.NAME to Customer.EbCusShortName
+    but AC.CATEGORY to Account.Category -- so they are reported as compiler_checked
+    and left to tCompile, which rejects unknown ones ("X undefined in ST.Customer")."""
     app = app.upper()
-    prefix = app_prefix(conn, app)
-    refs = extract_refs(source, prefix, record_class(app))
-    rows = conn.execute("SELECT field_name, java_alias FROM fields WHERE app = ?", (app,)).fetchall()
-    names = {r[0] for r in rows}
-    aliases = {r[1] for r in rows}
-    found = refs.legacy | refs.componentised
-    missing = sorted(f for f in found if f not in names and f not in aliases)
-    verified = sorted(found - set(missing))
-    return FieldCheck(app, verified, missing)
+    cls = record_class(app)
+    refs = extract_refs(source, app_prefix(conn, app), cls)
+    names = {r[0] for r in conn.execute("SELECT field_name FROM fields WHERE app = ?", (app,))}
+    missing = sorted(f for f in refs.legacy if f not in names)
+    verified = sorted(refs.legacy - set(missing))
+    compiler_checked = sorted(a.replace(f"{cls}_", f"{cls}.", 1) for a in refs.componentised)
+    return FieldCheck(app, verified, missing, compiler_checked)
