@@ -73,14 +73,15 @@ All reference files live under `references/` relative to this skill.
 2. List every field the code will read or write.
 3. Verify each field name mechanically — don't eyeball the markdown table:
    ```
-   python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGORY"
+   python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGORY" [--release R25]
    ```
    Exit 0 = every field verified (prints position/alias/type/mandatory for each). Exit 1 = at least one field not found, with the exact missing names listed. If the `t24-knowledge` MCP server is registered (see `CLAUDE.md` P4), `lookup_fields(app)` is the same data as a structured tool call instead of a Bash invocation.
+   **Release:** knowledge exists for **R23** (default) and **R25**. If the developer names a release, pass `--release` and use only that release's names — fields, positions and especially jBC names differ (1,740 jBC names changed R23→R25; see `build/releases/R23-to-R25.md`). If no release is given, say that R23 was used.
 4. **If a field is missing: HALT. Ask the developer for the correct field name. Never guess.**
 5. State which fields you used and confirm they're verified, e.g. "Using fields: `AC.CUSTOMER`, `AC.CATEGORY` — both verified in `table-schema/ACCOUNT.md`" — before the code block.
 6. **After generating** a `.b` or `.java` artefact, save it (keep any `.component` file beside its `.b`) and run the full gate:
    ```
-   python pipeline/verify_artefact.py --file <path> --app <APP> [--app <APP2>]
+   python pipeline/verify_artefact.py --file <path> --app <APP> [--app <APP2>] [--release R25]
    ```
    `PASS` = every legacy field verified **and** the file compiled against the R25 install (`tCompile` for jBC/Infobasic, `javac` for L3 Java). `FAIL` = fix and re-run before presenting the code. `COMPILE: SKIPPED` (no `C:\R25` on this machine) = say so explicitly; never present the code as compile-verified.
    Componentised field names (`ST.Customer.Customer.EbCusShortName`) are **not** the Java alias and are not in `table-schema/` — the gate lists them as "checked by compiler", and tCompile is the authority for them.
