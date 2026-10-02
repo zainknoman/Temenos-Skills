@@ -36,9 +36,9 @@ Incident: the first two trial compiles ran before the log env vars were found an
 ## Releases (found 2026-10-02)
 
 - `jar/` (the pipeline source for `temenos_knowledge.db`, `table-schema/`, `component_fields`) is **R23**: `META-INF/MANIFEST.MF` says `R23_AMR.0`, signed 2023-05-22.
-- `C:\R25nk	24lib` (used by the compile gate) is **R25**: `R25_AMR.0`, signed 2025-03-26. Component classes differ, e.g. `component_ST_Customer_16_cl` has 1,152 int constants in R23 vs 1,254 in R25.
+- `C:\R25\bnk\t24lib` (used by the compile gate) is **R25**: `R25_AMR.0`, signed 2025-03-26. Component classes differ, e.g. `component_ST_Customer_16_cl` has 1,152 int constants in R23 vs 1,254 in R25.
 - Exports must be labelled with the release of the JARs the DB was built from: `--release` is now required (an earlier export was wrongly labelled R25).
-- Pending: per-release knowledge (build R25 from `C:\R25nk	24lib`, read-only) so T24Tools can offer a release choice.
+- Pending: per-release knowledge (build R25 from `C:\R25\bnk\t24lib`, read-only) so T24Tools can offer a release choice.
 
 ## Componentised field names (2026-10-02)
 
@@ -50,7 +50,7 @@ Incident: the first two trial compiles ran before the log env vars were found an
 
 Built by `pipeline/build_release.py --release R25` into `releases/R25/temenos_knowledge.db` (git-ignored), reading only from `C:\R25` (write guard clean). The R25 JavaDoc ships as a self-extracting `T24.javadoc.jar` (`java -jar` generates the HTML), so it is copied into `build/releases/R25/javadoc/` and generated there.
 
-| | R23 (`jar/`) | R25 (`C:\R25nk	24lib`) |
+| | R23 (`jar/`) | R25 (`C:\R25\bnk\t24lib`) |
 |---|---|---|
 | Applications | 4,596 | 4,838 |
 | Fields | 162,842 | 171,887 |
