@@ -213,7 +213,7 @@ python pipeline/release_t24tools.py --release R23
 python pipeline/component_parse.py --jars jar --release R23
 
 # R25 knowledge DB, read-only from C:\R25 (copies + generates the javadoc in build/; write guard on)
-python pipeline/build_release.py --release R25 --javadoc-jar "C:\R25nk\Transact_L3_Javadoc\T24.javadoc.jar"
+python pipeline/build_release.py --release R25 --javadoc-jar "C:\R25\bnk\Transact_L3_Javadoc\T24.javadoc.jar"
 python pipeline/release_diff.py --old R23 --new R25          # what changed -> build/releases/R23-to-R25.md
 python pipeline/release_t24tools.py --release R25            # R25 export + templates.json
 
