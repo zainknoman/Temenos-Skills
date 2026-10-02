@@ -131,6 +131,7 @@ Identify: target T24 application(s), operation type, artefact type.
 - [ ] Error handling present
 - [ ] File header present with ValidationCode block
 - [ ] Return type matches artefact type (FUNCTION vs SUBROUTINE)
+- [ ] `python pipeline/verify_artefact.py --file <path> --app <APP>` returns PASS (or COMPILE: SKIPPED is stated to the developer)
 
 ---
 
@@ -195,6 +196,11 @@ python pipeline/query_docs.py "what controls dormancy in ACCOUNT?" --topic ACCOU
 
 # Field Verification Gate — mechanical check, run before emitting code (P1)
 python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGORY"
+
+# Accuracy gate (P7) — field check + compile against C:\R25 (read-only; writes only to build/verify/)
+python pipeline/verify_artefact.py --file out/V.CUS.CHECK.b --app CUSTOMER
+python pipeline/run_golden.py          # every golden case in tests/golden must PASS
+python -m pytest tests/pipeline -q     # harness unit tests (pip install -r requirements-dev.txt)
 
 # Optional: register the MCP server (P4) for lookup_fields/search_rules as tool calls
 claude mcp add t24-knowledge -- python mcp_server/server.py
@@ -292,3 +298,6 @@ package com.temenos.t24.custom.<module>;
   data), `bnk/t24lib` (650MB compiled JARs, redundant with `jar/`),
   `3rdParty/Database/MBR25.bak` (8.7GB DB backup binary), `jboss-eap-8.1` and
   `DesignStudioT24` internals (third-party/IDE, not T24 knowledge).
+- [ ] **P7** Accuracy harness + T24Tools export — `plan/2026-10-02-accuracy-harness-and-t24tools-export.md`.
+  Gate: `pipeline/verify_artefact.py` (field check + R25 compile), golden cases in
+  `tests/golden/`. Write-free tCompile setup and output format: `plan/state/decisions.md`.

@@ -78,6 +78,12 @@ All reference files live under `references/` relative to this skill.
    Exit 0 = every field verified (prints position/alias/type/mandatory for each). Exit 1 = at least one field not found, with the exact missing names listed. If the `t24-knowledge` MCP server is registered (see `CLAUDE.md` P4), `lookup_fields(app)` is the same data as a structured tool call instead of a Bash invocation.
 4. **If a field is missing: HALT. Ask the developer for the correct field name. Never guess.**
 5. State which fields you used and confirm they're verified, e.g. "Using fields: `AC.CUSTOMER`, `AC.CATEGORY` — both verified in `table-schema/ACCOUNT.md`" — before the code block.
+6. **After generating** a `.b` or `.java` artefact, save it (keep any `.component` file beside its `.b`) and run the full gate:
+   ```
+   python pipeline/verify_artefact.py --file <path> --app <APP> [--app <APP2>]
+   ```
+   `PASS` = every legacy field verified **and** the file compiled against the R25 install (`tCompile` for jBC/Infobasic, `javac` for L3 Java). `FAIL` = fix and re-run before presenting the code. `COMPILE: SKIPPED` (no `C:\R25` on this machine) = say so explicitly; never present the code as compile-verified.
+   Componentised field names (`ST.Customer.Customer.EbCusShortName`) are **not** the Java alias and are not in `table-schema/` — the gate lists them as "checked by compiler", and tCompile is the authority for them.
 
 `table-schema/*.md` gives field name + position, plus type/mandatory/description for 59% of fields (backfilled from JavaDoc HTML — see `CLAUDE.md` Layer A). A blank type/mandatory cell means "not captured," never treat it as "optional." MV/SV status is **not** in this file at all — it comes only from the JAR-structure rule below.
 
