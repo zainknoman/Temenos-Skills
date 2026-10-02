@@ -1,0 +1,25 @@
+{
+  "name": "infobasic-vvr",
+  "artefact": "Validation routine (VVR)",
+  "skill": "temenos-infobasic",
+  "requirement": "Reject an empty CUSTOMER mnemonic at field level.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "V.GOLDEN.VVR.b",
+  "expected_fields": [
+    "EB.CUS.MNEMONIC"
+  ],
+  "template": "infobasic/vvr",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "vGoldenVvr",
+    "ROUTINE_NAME": "V.GOLDEN.VVR",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.MNEMONIC",
+    "ERROR_TEXT": "MNEMONIC IS MANDATORY"
+  }
+}

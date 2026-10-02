@@ -1,0 +1,22 @@
+{
+  "name": "jbc-nofile",
+  "artefact": "NoFile enquiry",
+  "skill": "temenos-jbc",
+  "requirement": "List CUSTOMER ids for a sector.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "E.GOLDEN.JBC.NOFILE.b",
+  "expected_fields": [],
+  "template": "jbc/nofile",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Api",
+    "ROUTINE_NAME": "E.GOLDEN.JBC.NOFILE",
+    "METHOD_NAME": "listBySector",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR"
+  }
+}

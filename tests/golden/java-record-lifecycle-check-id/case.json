@@ -1,0 +1,19 @@
+{
+  "name": "java-record-lifecycle-check-id",
+  "artefact": "RecordLifecycle.checkId (ID routine)",
+  "skill": "temenos-l3",
+  "requirement": "Prefix CUSTOMER ids with SMP.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GoldenCheckId.java",
+  "expected_fields": [],
+  "template": "java/record-lifecycle-check-id",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenCheckId",
+    "APP": "CUSTOMER",
+    "ID_PREFIX": "SMP"
+  }
+}

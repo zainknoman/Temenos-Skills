@@ -1,0 +1,19 @@
+{
+  "name": "java-enquiry-nofile",
+  "artefact": "Enquiry.setIds (NoFile enquiry)",
+  "skill": "temenos-l3",
+  "requirement": "List CUSTOMER ids for a sector.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GoldenNofile.java",
+  "expected_fields": [],
+  "template": "java/enquiry-nofile",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenNofile",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR"
+  }
+}

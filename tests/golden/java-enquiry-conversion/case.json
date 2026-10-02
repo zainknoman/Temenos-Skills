@@ -1,0 +1,19 @@
+{
+  "name": "java-enquiry-conversion",
+  "artefact": "Enquiry.setValue (conversion routine)",
+  "skill": "temenos-l3",
+  "requirement": "Show NOT SET for empty values.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GoldenConversion.java",
+  "expected_fields": [],
+  "template": "java/enquiry-conversion",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenConversion",
+    "APP": "CUSTOMER",
+    "EMPTY_TEXT": "NOT SET"
+  }
+}

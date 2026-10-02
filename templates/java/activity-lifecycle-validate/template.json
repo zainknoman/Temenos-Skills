@@ -1,0 +1,12 @@
+{
+  "id": "java/activity-lifecycle-validate", "language": "java", "type": "activity-lifecycle-validate",
+  "label": "AA ActivityLifecycle.validateRecord",
+  "description": "AA activity validation hook: rejects the arrangement activity when one of its fields is empty. APP is always AA.ARRANGEMENT.ACTIVITY.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.aa"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleActivityCheck"},
+    {"id": "APP", "label": "Application", "kind": "app", "fixed": "AA.ARRANGEMENT.ACTIVITY"},
+    {"id": "FIELD", "label": "Activity field", "kind": "field", "of": "APP"},
+    {"id": "ERROR_TEXT", "label": "Error message", "kind": "text", "example": "FIELD IS MANDATORY"}
+  ]
+}

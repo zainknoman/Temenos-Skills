@@ -1,0 +1,20 @@
+{
+  "name": "java-service-lifecycle",
+  "artefact": "ServiceLifecycle (multi-thread service)",
+  "skill": "temenos-l3",
+  "requirement": "Process CUSTOMERs of sector 1001 in a service.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GoldenService.java",
+  "expected_fields": [],
+  "template": "java/service-lifecycle",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenService",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR",
+    "SELECT_VALUE": "1001"
+  }
+}

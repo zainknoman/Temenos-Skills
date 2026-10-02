@@ -1,0 +1,29 @@
+{
+  "name": "infobasic-var",
+  "artefact": "Authorisation routine (VAR)",
+  "skill": "temenos-infobasic",
+  "requirement": "On FT authorisation, stop if the debit account has no category.",
+  "apps": [
+    "FUNDS.TRANSFER",
+    "ACCOUNT"
+  ],
+  "file": "V.GOLDEN.VAR.b",
+  "expected_fields": [
+    "FT.DEBIT.ACCT.NO",
+    "AC.CATEGORY"
+  ],
+  "template": "infobasic/var",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "vGoldenVar",
+    "ROUTINE_NAME": "V.GOLDEN.VAR",
+    "APP": "FUNDS.TRANSFER",
+    "FIELD": "FT.DEBIT.ACCT.NO",
+    "LINK_APP": "ACCOUNT",
+    "LINK_FIELD": "AC.CATEGORY",
+    "ERROR_TEXT": "DEBIT ACCOUNT HAS NO CATEGORY"
+  }
+}

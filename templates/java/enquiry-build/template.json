@@ -1,0 +1,12 @@
+{
+  "id": "java/enquiry-build", "language": "java", "type": "enquiry-build",
+  "label": "Enquiry.setFilterCriteria (build routine)",
+  "description": "Enquiry BUILD.ROUTINE: adds a fixed selection criterion before the enquiry runs.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.enquiry"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleBuildRoutine"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Field to filter on", "kind": "field", "of": "APP"},
+    {"id": "FILTER_VALUE", "label": "Value (EQ)", "kind": "text", "example": "1001"}
+  ]
+}

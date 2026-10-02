@@ -1,0 +1,67 @@
+{
+  "id": "infobasic/var",
+  "language": "infobasic",
+  "type": "var",
+  "label": "Authorisation routine (VAR)",
+  "description": "Authorisation routine (VERSION AUTH.ROUTINE): reads the record referenced by a field (OPF + F.READ) and stops if a field of it is empty. R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleRoutine"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field holding the linked record id",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "LINK_APP",
+      "label": "Linked application",
+      "kind": "app"
+    },
+    {
+      "id": "LINK_FIELD",
+      "label": "Field of the linked record that must be set",
+      "kind": "field",
+      "of": "LINK_APP"
+    },
+    {
+      "id": "ERROR_TEXT",
+      "label": "Error message",
+      "kind": "text",
+      "example": "LINKED RECORD IS INCOMPLETE"
+    }
+  ]
+}

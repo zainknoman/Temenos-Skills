@@ -1,0 +1,12 @@
+{
+  "id": "java/record-lifecycle-validate-field", "language": "java", "type": "record-lifecycle-validate-field",
+  "label": "RecordLifecycle.validateField (deprecated in R25)",
+  "description": "Field validation hook. Deprecated in R25 -- prefer validateRecord or defaultFieldValues.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.hook"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleHook"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Field", "kind": "field", "of": "APP"},
+    {"id": "ERROR_TEXT", "label": "Error message", "kind": "text", "example": "FIELD IS MANDATORY"}
+  ]
+}

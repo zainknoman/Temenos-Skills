@@ -1,0 +1,11 @@
+{
+  "id": "java/enquiry-conversion", "language": "java", "type": "enquiry-conversion",
+  "label": "Enquiry.setValue (conversion routine)",
+  "description": "Enquiry CONVERSION hook: shows a text instead of an empty value. R25 signature: setValue(String value, String currentId, TStructure currentRecord, List<FilterCriteria>, EnquiryContext).",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.enquiry"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleConversion"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "EMPTY_TEXT", "label": "Text to show for an empty value", "kind": "text", "example": "NOT SET"}
+  ]
+}

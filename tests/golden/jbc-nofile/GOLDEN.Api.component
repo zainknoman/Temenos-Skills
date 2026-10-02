@@ -1,0 +1,4 @@
+component GOLDEN.Api
+metamodelVersion 1.6
+
+    public method listBySector(OUT returnData string) { jBC: E.GOLDEN.JBC.NOFILE }

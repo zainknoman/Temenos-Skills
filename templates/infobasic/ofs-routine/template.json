@@ -1,0 +1,62 @@
+{
+  "id": "infobasic/ofs-routine",
+  "language": "infobasic",
+  "type": "ofs-routine",
+  "label": "OFS routine (OFS.POST.MESSAGE)",
+  "description": "Posts an OFS input message that sets one field of a record, via OFS.POST.MESSAGE (OFS.MESSAGE.SERVICE must be running). R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleRoutine"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "VERSION_NAME",
+      "label": "Version name (after the comma)",
+      "kind": "text",
+      "example": "SAMPLE.OFS"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field to set",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "OFS_SOURCE",
+      "label": "OFS.SOURCE id",
+      "kind": "text",
+      "example": "TEST.OFS"
+    }
+  ]
+}

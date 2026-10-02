@@ -1,0 +1,15 @@
+{
+  "id": "java/record-lifecycle-update", "language": "java", "type": "record-lifecycle-update",
+  "label": "RecordLifecycle.updateRecord (input / before-auth routine)",
+  "description": "Raises a secondary transaction on another application in the same commit (templatehook.TransactionData).",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.hook"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleHook"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Field holding the target record id", "kind": "field", "of": "APP"},
+    {"id": "TARGET_APP", "label": "Target application", "kind": "app"},
+    {"id": "TARGET_VERSION", "label": "Target version (after the comma)", "kind": "text", "example": "SAMPLE.UPDATE"},
+    {"id": "TARGET_FIELD", "label": "Target field to set", "kind": "field", "of": "TARGET_APP"},
+    {"id": "TARGET_VALUE", "label": "Value to set", "kind": "text", "example": "Y"}
+  ]
+}

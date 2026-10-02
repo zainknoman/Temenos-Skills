@@ -1,0 +1,24 @@
+{
+  "name": "java-record-lifecycle-update",
+  "artefact": "RecordLifecycle.updateRecord (input / before-auth routine)",
+  "skill": "temenos-l3",
+  "requirement": "Update the debit ACCOUNT in the same commit.",
+  "apps": [
+    "FUNDS.TRANSFER",
+    "ACCOUNT"
+  ],
+  "file": "GoldenUpdateRecord.java",
+  "expected_fields": [],
+  "template": "java/record-lifecycle-update",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenUpdateRecord",
+    "APP": "FUNDS.TRANSFER",
+    "FIELD": "FT.DEBIT.ACCT.NO",
+    "TARGET_APP": "ACCOUNT",
+    "TARGET_VERSION": "GOLDEN.UPDATE",
+    "TARGET_FIELD": "AC.CATEGORY",
+    "TARGET_VALUE": "1001"
+  }
+}

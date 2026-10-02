@@ -1,0 +1,4 @@
+component {{PACKAGE}}
+metamodelVersion 1.6
+
+    public method {{METHOD_NAME}}(OUT returnData string) { jBC: {{ROUTINE_NAME}} }

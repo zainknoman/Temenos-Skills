@@ -1,0 +1,12 @@
+{
+  "id": "java/service-lifecycle", "language": "java", "type": "service-lifecycle",
+  "label": "ServiceLifecycle (multi-thread service)",
+  "description": "TSA service: getIds selects the records to process; process handles one id per thread.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.service"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleService"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Selection field", "kind": "field", "of": "APP"},
+    {"id": "SELECT_VALUE", "label": "Select records where the field equals", "kind": "text", "example": "PENDING"}
+  ]
+}

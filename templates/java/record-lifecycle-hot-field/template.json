@@ -1,0 +1,13 @@
+{
+  "id": "java/record-lifecycle-hot-field", "language": "java", "type": "record-lifecycle-hot-field",
+  "label": "RecordLifecycle.defaultFieldValuesOnHotField (hot field)",
+  "description": "When the hot field is changed, sets another field to a value.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.hook"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleHook"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Hot field", "kind": "field", "of": "APP"},
+    {"id": "TARGET_FIELD", "label": "Field to set", "kind": "field", "of": "APP"},
+    {"id": "DEFAULT_VALUE", "label": "Value to set", "kind": "text", "example": "1001"}
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "java-aa-calculation-charge",
+  "artefact": "AA Calculation.getChargeAmount",
+  "skill": "temenos-l3",
+  "requirement": "Charge 1.5% of the base amount, minimum 10.",
+  "apps": [
+    "AA.ARRANGEMENT.ACTIVITY"
+  ],
+  "file": "GoldenChargeCalc.java",
+  "expected_fields": [],
+  "template": "java/aa-calculation-charge",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenChargeCalc",
+    "APP": "AA.ARRANGEMENT.ACTIVITY",
+    "RATE_PERCENT": "1.5",
+    "MIN_CHARGE": "10"
+  }
+}

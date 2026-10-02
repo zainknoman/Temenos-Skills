@@ -1,0 +1,56 @@
+{
+  "id": "infobasic/vvr",
+  "language": "infobasic",
+  "type": "vvr",
+  "label": "Validation routine (VVR)",
+  "description": "Field validation routine (VERSION VALIDATION.RTN): rejects an empty value typed into the field (COMI). R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleRoutine"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field it validates",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "ERROR_TEXT",
+      "label": "Error message",
+      "kind": "text",
+      "example": "FIELD IS MANDATORY"
+    }
+  ]
+}

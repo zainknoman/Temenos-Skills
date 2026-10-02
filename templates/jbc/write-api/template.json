@@ -1,0 +1,16 @@
+{
+  "id": "jbc/write-api", "language": "jbc", "type": "write-api",
+  "label": "WRITE method (OFS)",
+  "description": "Component method that sets one field of a record by posting an OFS message (EB.Interface.OfsPostMessage; OFS.MESSAGE.SERVICE must be running).",
+  "inputs": [
+    {"id": "PACKAGE", "label": "Package", "kind": "package", "example": "SAMPLE.Api"},
+    {"id": "ROUTINE_NAME", "label": "Routine name", "kind": "routineName", "example": "SAMPLE.GET.VALUE"},
+    {"id": "METHOD_NAME", "label": "Component method", "kind": "identifier", "example": "getValue"},
+    {"id": "DESCRIPTION", "label": "Description", "kind": "text", "example": "Sample component method"},
+    {"id": "AUTHOR", "label": "Author", "kind": "text", "example": "developer"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "VERSION_NAME", "label": "Version name (after the comma)", "kind": "text", "example": "SAMPLE.OFS"},
+    {"id": "FIELD", "label": "Field to set", "kind": "field", "of": "APP"},
+    {"id": "OFS_SOURCE", "label": "OFS.SOURCE id", "kind": "text", "example": "TEST.OFS"}
+  ]
+}

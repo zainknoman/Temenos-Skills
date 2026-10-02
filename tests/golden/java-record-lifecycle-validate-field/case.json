@@ -1,0 +1,20 @@
+{
+  "name": "java-record-lifecycle-validate-field",
+  "artefact": "RecordLifecycle.validateField (deprecated in R25)",
+  "skill": "temenos-l3",
+  "requirement": "Reject an empty sector (deprecated hook).",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GoldenValidateField.java",
+  "expected_fields": [],
+  "template": "java/record-lifecycle-validate-field",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenValidateField",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR",
+    "ERROR_TEXT": "SECTOR IS MANDATORY"
+  }
+}

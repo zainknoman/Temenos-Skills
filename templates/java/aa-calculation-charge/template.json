@@ -1,0 +1,12 @@
+{
+  "id": "java/aa-calculation-charge", "language": "java", "type": "aa-calculation-charge",
+  "label": "AA Calculation.getChargeAmount",
+  "description": "AA charge calculation hook: returns a percentage of the base amount, never less than a minimum charge.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.aa"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleChargeCalc"},
+    {"id": "APP", "label": "Application", "kind": "app", "fixed": "AA.ARRANGEMENT.ACTIVITY"},
+    {"id": "RATE_PERCENT", "label": "Charge rate (percent of base amount)", "kind": "number", "example": "1.5"},
+    {"id": "MIN_CHARGE", "label": "Minimum charge", "kind": "number", "example": "10"}
+  ]
+}

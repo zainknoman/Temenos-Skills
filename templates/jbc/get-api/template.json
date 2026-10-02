@@ -1,0 +1,14 @@
+{
+  "id": "jbc/get-api", "language": "jbc", "type": "get-api",
+  "label": "GET method",
+  "description": "Component method that reads a record by id and returns one field. Generates the .b routine and its .component declaration.",
+  "inputs": [
+    {"id": "PACKAGE", "label": "Package", "kind": "package", "example": "SAMPLE.Api"},
+    {"id": "ROUTINE_NAME", "label": "Routine name", "kind": "routineName", "example": "SAMPLE.GET.VALUE"},
+    {"id": "METHOD_NAME", "label": "Component method", "kind": "identifier", "example": "getValue"},
+    {"id": "DESCRIPTION", "label": "Description", "kind": "text", "example": "Sample component method"},
+    {"id": "AUTHOR", "label": "Author", "kind": "text", "example": "developer"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Field to return", "kind": "field", "of": "APP"}
+  ]
+}

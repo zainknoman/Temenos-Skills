@@ -1,0 +1,11 @@
+{
+  "id": "java/record-lifecycle-check-id", "language": "java", "type": "record-lifecycle-check-id",
+  "label": "RecordLifecycle.checkId (ID routine)",
+  "description": "Version ID routine: prefixes the record id when it is keyed without the prefix.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.hook"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleHook"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "ID_PREFIX", "label": "Id prefix", "kind": "text", "example": "SMP"}
+  ]
+}

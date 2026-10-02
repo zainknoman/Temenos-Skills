@@ -1,0 +1,4 @@
+component {{PACKAGE}}
+metamodelVersion 1.6
+
+    public method {{METHOD_NAME}}(IN recordId string, IN newValue string) { jBC: {{ROUTINE_NAME}} }

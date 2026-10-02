@@ -1,0 +1,4 @@
+component GOLDEN.Legacy
+metamodelVersion 1.6
+
+    public method goldenOfsUpdate(IN recordId string, IN newValue string) { jBC: GOLDEN.OFS.UPDATE }

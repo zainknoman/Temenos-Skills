@@ -1,0 +1,4 @@
+component GOLDEN.Legacy
+metamodelVersion 1.6
+
+    public method eGoldenNofile(OUT idList string) { jBC: E.GOLDEN.NOFILE }

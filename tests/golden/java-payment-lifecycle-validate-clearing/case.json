@@ -1,0 +1,20 @@
+{
+  "name": "java-payment-lifecycle-validate-clearing",
+  "artefact": "PaymentLifecycle.validatePaymentForClearing",
+  "skill": "temenos-l3",
+  "requirement": "Reject a payment with no credit party.",
+  "apps": [
+    "POR.TRANSACTION"
+  ],
+  "file": "GoldenClearingCheck.java",
+  "expected_fields": [],
+  "template": "java/payment-lifecycle-validate-clearing",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenClearingCheck",
+    "APP": "POR.TRANSACTION",
+    "ERROR_CODE": "AC01",
+    "ERROR_TEXT": "CREDIT PARTY MISSING"
+  }
+}

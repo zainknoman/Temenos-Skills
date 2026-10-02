@@ -1,0 +1,12 @@
+{
+  "id": "java/payment-order-validate", "language": "java", "type": "payment-order-validate",
+  "label": "PaymentOrderLifecycle.validatePaymentOrderRecord",
+  "description": "PAYMENT.ORDER validation hook: rejects the order when one of its fields is empty. APP is always PAYMENT.ORDER.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.payments"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SamplePaymentOrderCheck"},
+    {"id": "APP", "label": "Application", "kind": "app", "fixed": "PAYMENT.ORDER"},
+    {"id": "FIELD", "label": "Payment order field", "kind": "field", "of": "APP"},
+    {"id": "ERROR_TEXT", "label": "Error message", "kind": "text", "example": "FIELD IS MANDATORY"}
+  ]
+}

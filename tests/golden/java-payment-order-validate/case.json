@@ -1,0 +1,20 @@
+{
+  "name": "java-payment-order-validate",
+  "artefact": "PaymentOrderLifecycle.validatePaymentOrderRecord",
+  "skill": "temenos-l3",
+  "requirement": "Reject a PAYMENT.ORDER with no debit account.",
+  "apps": [
+    "PAYMENT.ORDER"
+  ],
+  "file": "GoldenPaymentOrderCheck.java",
+  "expected_fields": [],
+  "template": "java/payment-order-validate",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenPaymentOrderCheck",
+    "APP": "PAYMENT.ORDER",
+    "FIELD": "PO.DEBIT.ACCOUNT",
+    "ERROR_TEXT": "DEBIT ACCOUNT IS MANDATORY"
+  }
+}

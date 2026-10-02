@@ -13,11 +13,23 @@
       {"id": "write-api", "label": "WRITE method (OFS)"},
       {"id": "nofile", "label": "NoFile enquiry"}
     ]},
-    {"id": "java", "label": "Java (L3)", "types": [
+    {"id": "java", "label": "Java (L3 hooks)", "types": [
+      {"id": "record-lifecycle-check-id", "label": "RecordLifecycle.checkId (ID routine)"},
+      {"id": "record-lifecycle-default", "label": "RecordLifecycle.defaultFieldValues (check-record / auto-field)"},
+      {"id": "record-lifecycle-hot-field", "label": "RecordLifecycle.defaultFieldValuesOnHotField (hot field)"},
       {"id": "record-lifecycle-validate", "label": "RecordLifecycle.validateRecord"},
+      {"id": "record-lifecycle-validate-field", "label": "RecordLifecycle.validateField (deprecated in R25)"},
+      {"id": "record-lifecycle-update", "label": "RecordLifecycle.updateRecord (input / before-auth)"},
+      {"id": "record-lifecycle-post-update", "label": "RecordLifecycle.postUpdateRequest (authorisation)"},
+      {"id": "record-lifecycle-override-auto-approve", "label": "RecordLifecycle.isOverrideAutoApprove (override)"},
       {"id": "service-lifecycle", "label": "ServiceLifecycle (multi-thread service)"},
-      {"id": "enquiry", "label": "NoFile Enquiry"},
-      {"id": "activity-lifecycle", "label": "AA ActivityLifecycle"}
+      {"id": "enquiry-nofile", "label": "Enquiry.setIds (NoFile enquiry)"},
+      {"id": "enquiry-build", "label": "Enquiry.setFilterCriteria (build routine)"},
+      {"id": "enquiry-conversion", "label": "Enquiry.setValue (conversion routine)"},
+      {"id": "activity-lifecycle-validate", "label": "AA ActivityLifecycle.validateRecord"},
+      {"id": "aa-calculation-charge", "label": "AA Calculation.getChargeAmount"},
+      {"id": "payment-lifecycle-validate-clearing", "label": "PaymentLifecycle.validatePaymentForClearing"},
+      {"id": "payment-order-validate", "label": "PaymentOrderLifecycle.validatePaymentOrderRecord"}
     ]}
   ]
 }

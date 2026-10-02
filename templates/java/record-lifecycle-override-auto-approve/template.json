@@ -1,0 +1,11 @@
+{
+  "id": "java/record-lifecycle-override-auto-approve", "language": "java", "type": "record-lifecycle-override-auto-approve",
+  "label": "RecordLifecycle.isOverrideAutoApprove (override hook)",
+  "description": "Auto-approves one specific override (OVERRIDE record SUBROUTINE field, EB.API hook OVERRIDE.SUBROUTINE.HOOK).",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.hook"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleHook"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "OVERRIDE_ID", "label": "Override id to auto-approve", "kind": "text", "example": "SAMPLE.OVERRIDE"}
+  ]
+}

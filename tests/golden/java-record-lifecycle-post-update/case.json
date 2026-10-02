@@ -1,0 +1,25 @@
+{
+  "name": "java-record-lifecycle-post-update",
+  "artefact": "RecordLifecycle.postUpdateRequest (authorisation routine)",
+  "skill": "temenos-l3",
+  "requirement": "After authorisation, update the debit ACCOUNT via OFS.",
+  "apps": [
+    "FUNDS.TRANSFER",
+    "ACCOUNT"
+  ],
+  "file": "GoldenPostUpdate.java",
+  "expected_fields": [],
+  "template": "java/record-lifecycle-post-update",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenPostUpdate",
+    "APP": "FUNDS.TRANSFER",
+    "FIELD": "FT.DEBIT.ACCT.NO",
+    "TARGET_APP": "ACCOUNT",
+    "TARGET_VERSION": "GOLDEN.UPDATE",
+    "TARGET_FIELD": "AC.CATEGORY",
+    "TARGET_VALUE": "1001",
+    "OFS_SOURCE": "TEST.OFS"
+  }
+}

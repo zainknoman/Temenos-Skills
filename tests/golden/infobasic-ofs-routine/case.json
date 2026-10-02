@@ -1,0 +1,24 @@
+{
+  "name": "infobasic-ofs-routine",
+  "artefact": "OFS routine (OFS.POST.MESSAGE)",
+  "skill": "temenos-infobasic",
+  "requirement": "Set a CUSTOMER's sector through OFS.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GOLDEN.OFS.UPDATE.b",
+  "expected_fields": [],
+  "template": "infobasic/ofs-routine",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "goldenOfsUpdate",
+    "ROUTINE_NAME": "GOLDEN.OFS.UPDATE",
+    "APP": "CUSTOMER",
+    "VERSION_NAME": "GOLDEN.OFS",
+    "FIELD": "EB.CUS.SECTOR",
+    "OFS_SOURCE": "TEST.OFS"
+  }
+}

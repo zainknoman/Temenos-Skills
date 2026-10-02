@@ -1,0 +1,12 @@
+{
+  "id": "java/payment-lifecycle-validate-clearing", "language": "java", "type": "payment-lifecycle-validate-clearing",
+  "label": "PaymentLifecycle.validatePaymentForClearing",
+  "description": "Payments (TPH) clearing validation hook: rejects a payment with no credit party, returning an ISO reason code.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.payments"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleClearingCheck"},
+    {"id": "APP", "label": "Application", "kind": "app", "fixed": "POR.TRANSACTION"},
+    {"id": "ERROR_CODE", "label": "ISO reason code", "kind": "text", "example": "AC01"},
+    {"id": "ERROR_TEXT", "label": "Message text", "kind": "text", "example": "CREDIT PARTY MISSING"}
+  ]
+}

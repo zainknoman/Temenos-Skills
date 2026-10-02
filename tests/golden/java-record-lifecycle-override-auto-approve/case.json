@@ -1,0 +1,19 @@
+{
+  "name": "java-record-lifecycle-override-auto-approve",
+  "artefact": "RecordLifecycle.isOverrideAutoApprove (override hook)",
+  "skill": "temenos-l3",
+  "requirement": "Auto-approve one override.",
+  "apps": [
+    "FUNDS.TRANSFER"
+  ],
+  "file": "GoldenOverride.java",
+  "expected_fields": [],
+  "template": "java/record-lifecycle-override-auto-approve",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenOverride",
+    "APP": "FUNDS.TRANSFER",
+    "OVERRIDE_ID": "SAMPLE.OVERRIDE"
+  }
+}

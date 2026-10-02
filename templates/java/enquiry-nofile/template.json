@@ -1,0 +1,11 @@
+{
+  "id": "java/enquiry-nofile", "language": "java", "type": "enquiry-nofile",
+  "label": "Enquiry.setIds (NoFile enquiry)",
+  "description": "NOFILE enquiry: returns the ids of APP whose FIELD equals the enquiry selection value.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.enquiry"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleNofileEnquiry"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Selection field", "kind": "field", "of": "APP"}
+  ]
+}

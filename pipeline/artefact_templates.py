@@ -18,7 +18,7 @@ import json
 import re
 from pathlib import Path
 
-from artefact_fields import record_class
+from artefact_fields import dotted_prefix, record_class
 
 TEMPLATES = Path("templates")
 PLACEHOLDER = re.compile(r"{{([A-Z_]+)}}")
@@ -82,14 +82,23 @@ def resolve(template, user_inputs, conn, today):
         if spec.get("kind") != "field" or spec["id"] not in user_inputs:
             continue
         app = user_inputs[spec["of"]].upper()
-        value, component = _field_value(language, conn, app, user_inputs[spec["id"]].upper())
+        equ = user_inputs[spec["id"]].upper()
+        value, component = _field_value(language, conn, app, equ)
         values[spec["id"]] = value
+        # <ID>_NAME: the field name without the app prefix -- what OFS messages and
+        # enquiry/SELECT statements use (FT.CREDIT.ACCT.NO -> CREDIT.ACCT.NO).
+        prefix = dotted_prefix([r[0] for r in conn.execute("SELECT field_name FROM fields WHERE app = ?", (app,))])
+        values[f"{spec['id']}_NAME"] = equ[len(prefix):] if prefix and equ.startswith(prefix) else equ
         if component:
-            values.setdefault("APP_COMPONENT", component)
+            # ST.Customer.Customer.EbCusMnemonic -> APP_COMPONENT ST.Customer, APP_RECORD Customer
+            values.setdefault(f"{spec['of']}_COMPONENT", component)
+            values.setdefault(f"{spec['of']}_RECORD", value[len(component) + 1:].split(".")[0])
     for spec in template["inputs"]:
         if spec.get("kind") == "app" and spec["id"] in user_inputs:
             cls = record_class(user_inputs[spec["id"]].upper())
-            values.setdefault("RECORD_CLASS", cls)
+            values[f"{spec['id']}_CLASS"] = cls          # per app input, e.g. LINK_APP_CLASS
+            values[f"{spec['id']}_PACKAGE"] = cls.lower()  # records.<package>.<Class>Record
+            values.setdefault("RECORD_CLASS", cls)          # first app input
             values.setdefault("RECORD_PACKAGE", cls.lower())
     return values
 

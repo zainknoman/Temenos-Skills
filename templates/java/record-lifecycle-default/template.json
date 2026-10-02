@@ -1,0 +1,12 @@
+{
+  "id": "java/record-lifecycle-default", "language": "java", "type": "record-lifecycle-default",
+  "label": "RecordLifecycle.defaultFieldValues (check-record / auto-field routine)",
+  "description": "Defaults a field when it is empty.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.hook"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleHook"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Field", "kind": "field", "of": "APP"},
+    {"id": "DEFAULT_VALUE", "label": "Default value", "kind": "text", "example": "1001"}
+  ]
+}

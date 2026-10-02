@@ -1,0 +1,24 @@
+{
+  "name": "jbc-write-api",
+  "artefact": "WRITE method (OFS)",
+  "skill": "temenos-jbc",
+  "requirement": "Set a CUSTOMER's sector through OFS.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GOLDEN.SET.SECTOR.b",
+  "expected_fields": [],
+  "template": "jbc/write-api",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Api",
+    "ROUTINE_NAME": "GOLDEN.SET.SECTOR",
+    "METHOD_NAME": "setSector",
+    "APP": "CUSTOMER",
+    "VERSION_NAME": "GOLDEN.OFS",
+    "FIELD": "EB.CUS.SECTOR",
+    "OFS_SOURCE": "TEST.OFS"
+  }
+}
