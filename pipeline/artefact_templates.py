@@ -137,3 +137,51 @@ def prove(template, conn, golden_root=Path("tests/golden")):
         if golden.read_text(encoding="utf-8").replace("\r\n", "\n") != content.replace("\r\n", "\n"):
             return False, f"{name} differs from the golden file"
     return True, "matches golden case " + case["name"]
+
+
+CATALOGUE = TEMPLATES / "catalogue.json"
+TEMPLATES_SCHEMA_VERSION = 1
+
+
+def export_templates(out, catalogue=CATALOGUE, root=TEMPLATES, conns=None, golden_root=Path("tests/golden")):
+    """Write templates.json for T24Tools: the language/type catalogue with
+    `proven` computed here (never hand-set) plus each template's files and its
+    golden case (userInputs, values resolved per release, expected output) so
+    the JS renderer can be tested for parity. A template is proven only if it
+    proves against every release DB in `conns`."""
+    conns = conns or {}
+    templates = {t["id"]: t for t in load_templates(root)}
+    cat = json.loads(Path(catalogue).read_text(encoding="utf-8"))
+    exported, languages = {}, []
+    for lang in cat["languages"]:
+        types = []
+        for typ in lang["types"]:
+            tid = f"{lang['id']}/{typ['id']}"
+            entry = {"id": typ["id"], "label": typ["label"], "proven": False}
+            template = templates.get(tid)
+            if template:
+                results = {rel: prove(template, conn, golden_root) for rel, conn in conns.items()}
+                proven = bool(results) and all(ok for ok, _ in results.values())
+                if not proven:
+                    print(f"WARNING: template {tid} not proven: "
+                          + "; ".join(f"{rel}: {why}" for rel, (ok, why) in results.items() if not ok)
+                          + ("no release DB to prove against" if not results else ""))
+                else:
+                    case = golden_case(template, golden_root)
+                    resolved = {rel: resolve(template, case["userInputs"], conn, case["today"])
+                                for rel, conn in conns.items()}
+                    exported[tid] = {
+                        **{k: v for k, v in template.items() if k != "files"},
+                        "files": template["files"],
+                        "golden": {"case": case["name"], "userInputs": case["userInputs"], "today": case["today"],
+                                   "resolved": resolved,
+                                   "output": render(template, next(iter(resolved.values())))},
+                    }
+                    entry.update(proven=True, template=tid)
+            types.append(entry)
+        languages.append({"id": lang["id"], "label": lang["label"], "types": types})
+    doc = {"schemaVersion": TEMPLATES_SCHEMA_VERSION, "languages": languages, "templates": exported}
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    return doc

@@ -1,0 +1,23 @@
+{
+  "languages": [
+    {"id": "infobasic", "label": "Infobasic (legacy)", "types": [
+      {"id": "vvr", "label": "Validation routine (VVR)"},
+      {"id": "vir", "label": "Input routine (VIR)"},
+      {"id": "var", "label": "Authorisation routine (VAR)"},
+      {"id": "nofile", "label": "NoFile enquiry"},
+      {"id": "ofs-routine", "label": "OFS routine (OFS.POST.MESSAGE)"}
+    ]},
+    {"id": "jbc", "label": "jBC (componentised)", "types": [
+      {"id": "validation", "label": "Validation routine (VVR)"},
+      {"id": "get-api", "label": "GET method"},
+      {"id": "write-api", "label": "WRITE method (OFS)"},
+      {"id": "nofile", "label": "NoFile enquiry"}
+    ]},
+    {"id": "java", "label": "Java (L3)", "types": [
+      {"id": "record-lifecycle-validate", "label": "RecordLifecycle.validateRecord"},
+      {"id": "service-lifecycle", "label": "ServiceLifecycle (multi-thread service)"},
+      {"id": "enquiry", "label": "NoFile Enquiry"},
+      {"id": "activity-lifecycle", "label": "AA ActivityLifecycle"}
+    ]}
+  ]
+}

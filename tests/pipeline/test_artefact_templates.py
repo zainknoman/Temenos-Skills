@@ -82,3 +82,36 @@ def test_one_changed_character_breaks_the_proof(tmp_path):
     template = next(t for t in load_templates() if t["id"] == "jbc/validation")
     ok, reason = prove(template, sqlite3.connect(REAL_R23), golden_root=tmp_path / "golden")
     assert not ok and "differs" in reason
+
+
+def _catalogue(tmp_path, types):
+    import json
+    path = tmp_path / "catalogue.json"
+    path.write_text(json.dumps({"languages": [{"id": "jbc", "label": "jBC", "types": types}]}))
+    return path
+
+
+def test_export_marks_proven_and_unproven_types(db_with_components, tmp_path):
+    from artefact_templates import export_templates
+    cat = _catalogue(tmp_path, [{"id": "validation", "label": "VVR"}, {"id": "get-api", "label": "GET"}])
+    doc = export_templates(tmp_path / "templates.json", catalogue=cat, conns={"R23": db_with_components})
+    types = {t["id"]: t for t in doc["languages"][0]["types"]}
+    assert types["validation"]["proven"] is True and types["validation"]["template"] == "jbc/validation"
+    assert types["get-api"] == {"id": "get-api", "label": "GET", "proven": False}
+    t = doc["templates"]["jbc/validation"]
+    assert "{{ROUTINE_NAME}}.b" in t["files"]
+    assert t["golden"]["output"]["V.CUS.MNEMONIC.CHECK.b"].startswith("*---")
+    assert t["golden"]["resolved"]["R23"]["FIELD"] == "ST.Customer.Customer.EbCusMnemonic"
+
+
+def test_template_failing_its_proof_is_exported_unproven(db_with_components, tmp_path, capsys):
+    import shutil
+    from artefact_templates import export_templates
+    shutil.copytree("tests/golden", tmp_path / "golden")
+    g = tmp_path / "golden" / "jbc-customer-mnemonic-vvr" / "V.CUS.MNEMONIC.CHECK.b"
+    g.write_text(g.read_text(encoding="utf-8").replace("RETURN", "RETURN ", 1), encoding="utf-8")
+    cat = _catalogue(tmp_path, [{"id": "validation", "label": "VVR"}])
+    doc = export_templates(tmp_path / "t.json", catalogue=cat, conns={"R23": db_with_components},
+                           golden_root=tmp_path / "golden")
+    assert doc["languages"][0]["types"][0]["proven"] is False
+    assert "jbc/validation" in capsys.readouterr().out
