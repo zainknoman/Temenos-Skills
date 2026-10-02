@@ -55,3 +55,21 @@ def test_report_lists_componentised_refs_for_the_compiler(db, tmp_path):
     f.write_text("x = EB.SystemTables.getRNew(ST.Customer.Customer.EbCusMnemonic)\n")
     report = verify(f, ["CUSTOMER"], db, tmp_path / "out", compile_fn=OK)
     assert report["fields"][0]["compiler_checked"] == ["Customer.EbCusMnemonic"]
+
+
+def test_each_run_starts_from_an_empty_build_dir(db, tmp_path):
+    # Stale classes (e.g. a .component compiled on an earlier run and since deleted)
+    # must not let a later compile pass.
+    f = tmp_path / "V.b"
+    f.write_text("x = R.NEW(AC.CATEGORY)\n")
+    stale = tmp_path / "out" / "V" / "classes" / "component_OLD_cl.class"
+    stale.parent.mkdir(parents=True)
+    stale.write_text("old")
+    seen = {}
+
+    def spy(src, out):
+        seen["stale_present"] = stale.exists()
+        return CompileResult("OK", "")
+
+    verify(f, ["ACCOUNT"], db, tmp_path / "out", compile_fn=spy)
+    assert seen["stale_present"] is False

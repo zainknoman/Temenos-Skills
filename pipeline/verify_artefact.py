@@ -7,6 +7,7 @@ compile status is OK -- a SKIPPED compile is a failure, not a pass.
 """
 import argparse
 import json
+import shutil
 import sqlite3
 import sys
 from pathlib import Path
@@ -42,7 +43,9 @@ def verify(path, apps, conn, out_dir, compile_fn=None, skip_compile=False):
     if skip_compile:
         compiled = {"status": "NOT_RUN", "output": ""}
     else:
-        result = (compile_fn or _default_compiler(path))(path, Path(out_dir) / path.stem)
+        build_dir = Path(out_dir) / path.stem
+        shutil.rmtree(build_dir, ignore_errors=True)  # never let classes from an earlier run satisfy this one
+        result = (compile_fn or _default_compiler(path))(path, build_dir)
         compiled = {"status": result.status, "output": result.output}
         ok &= result.status == "OK"
     return {"file": str(path), "fields": fields, "compile": compiled, "passed": bool(ok)}
