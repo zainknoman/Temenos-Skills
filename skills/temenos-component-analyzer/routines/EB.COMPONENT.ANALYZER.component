@@ -1,0 +1,10 @@
+component EB.ComponentAnalyzer
+metamodelVersion 1.6
+
+public method analyse(
+    IN applicationName string,
+    OUT report string
+)
+{
+    jBC: EB.COMPONENT.ANALYZER
+}
