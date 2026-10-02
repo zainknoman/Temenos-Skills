@@ -17,8 +17,8 @@ public class AcCategoryGuard extends RecordLifecycle {
             TStructure liveRecord, TransactionContext transactionContext) {
 
         AccountRecord rec = new AccountRecord(currentRecord);
-        String category = rec.getCategory().getValue();
-        if (category == null || category.isEmpty()) {
+        String value = rec.getCategory().getValue();
+        if (value == null || value.isEmpty()) {
             rec.getCategory().setError("CATEGORY IS MANDATORY");
         }
         currentRecord.set(rec.toStructure());

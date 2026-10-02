@@ -3,7 +3,20 @@
   "artefact": "L3 RecordLifecycle.validateRecord",
   "skill": "temenos-l3",
   "requirement": "Block an ACCOUNT input if CATEGORY is empty.",
-  "apps": ["ACCOUNT"],
+  "apps": [
+    "ACCOUNT"
+  ],
   "file": "AcCategoryGuard.java",
-  "expected_fields": ["AC.CATEGORY"]
+  "expected_fields": [
+    "AC.CATEGORY"
+  ],
+  "template": "java/record-lifecycle-validate",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "AcCategoryGuard",
+    "APP": "ACCOUNT",
+    "FIELD": "AC.CATEGORY",
+    "ERROR_TEXT": "CATEGORY IS MANDATORY"
+  }
 }

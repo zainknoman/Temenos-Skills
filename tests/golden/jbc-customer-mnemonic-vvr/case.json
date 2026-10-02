@@ -3,7 +3,23 @@
   "artefact": "jBC VVR",
   "skill": "temenos-jbc",
   "requirement": "Reject CUSTOMER input when MNEMONIC is empty.",
-  "apps": ["CUSTOMER"],
+  "apps": [
+    "CUSTOMER"
+  ],
   "file": "V.CUS.MNEMONIC.CHECK.b",
-  "expected_fields": ["ST.Customer.Customer.EbCusMnemonic"]
+  "expected_fields": [
+    "ST.Customer.Customer.EbCusMnemonic"
+  ],
+  "template": "jbc/validation",
+  "today": "2026-10-02",
+  "userInputs": {
+    "PACKAGE": "GOLDEN.Validation",
+    "ROUTINE_NAME": "V.CUS.MNEMONIC.CHECK",
+    "METHOD_NAME": "vCusMnemonicCheck",
+    "DESCRIPTION": "Reject CUSTOMER input when MNEMONIC is empty",
+    "AUTHOR": "golden-case",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.MNEMONIC",
+    "ERROR_TEXT": "MNEMONIC IS MANDATORY"
+  }
 }

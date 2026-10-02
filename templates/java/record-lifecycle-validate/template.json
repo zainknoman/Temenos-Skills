@@ -1,0 +1,14 @@
+{
+  "id": "java/record-lifecycle-validate",
+  "language": "java",
+  "type": "record-lifecycle-validate",
+  "label": "RecordLifecycle.validateRecord",
+  "description": "L3 Java hook that rejects the record when a field is empty.",
+  "inputs": [
+    {"id": "JAVA_PACKAGE", "label": "Java package", "kind": "javaPackage", "example": "com.samplebank.t24.hook"},
+    {"id": "CLASS_NAME", "label": "Class name", "kind": "className", "example": "SampleFieldGuard"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Field", "kind": "field", "of": "APP"},
+    {"id": "ERROR_TEXT", "label": "Error message", "kind": "text", "example": "FIELD IS MANDATORY"}
+  ]
+}

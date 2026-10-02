@@ -1,0 +1,17 @@
+{
+  "id": "jbc/validation",
+  "language": "jbc",
+  "type": "validation",
+  "label": "Validation routine (VVR)",
+  "description": "Reject the record when a field is empty. Generates the .b routine and its .component declaration.",
+  "inputs": [
+    {"id": "PACKAGE", "label": "Package", "kind": "package", "example": "SAMPLE.Validation"},
+    {"id": "ROUTINE_NAME", "label": "Routine name", "kind": "routineName", "example": "V.SAMPLE.CHECK"},
+    {"id": "METHOD_NAME", "label": "Component method", "kind": "identifier", "example": "vSampleCheck"},
+    {"id": "DESCRIPTION", "label": "Description", "kind": "text", "example": "Reject input when the field is empty"},
+    {"id": "AUTHOR", "label": "Author", "kind": "text", "example": "developer"},
+    {"id": "APP", "label": "Application", "kind": "app"},
+    {"id": "FIELD", "label": "Field", "kind": "field", "of": "APP"},
+    {"id": "ERROR_TEXT", "label": "Error message", "kind": "text", "example": "FIELD IS MANDATORY"}
+  ]
+}

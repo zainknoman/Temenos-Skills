@@ -7,15 +7,15 @@
 * Modification History:
 * Date       | Author          | Description
 * -----------|-----------------|--------------------------------------------
-* 2026-10-02 | golden-case     | Initial version
+* 2026-10-02 | golden-case | Initial version
 *-----------------------------------------------------------------------------
 $PACKAGE GOLDEN.Validation
 SUBROUTINE V.CUS.MNEMONIC.CHECK
     $USING EB.SystemTables
     $USING ST.Customer
 
-    lvMnemonic = EB.SystemTables.getRNew(ST.Customer.Customer.EbCusMnemonic)
-    IF lvMnemonic EQ '' THEN
+    lvValue = EB.SystemTables.getRNew(ST.Customer.Customer.EbCusMnemonic)
+    IF lvValue EQ '' THEN
         EB.SystemTables.setE('MNEMONIC IS MANDATORY')
     END
 RETURN
