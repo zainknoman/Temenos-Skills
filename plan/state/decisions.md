@@ -45,3 +45,17 @@ Incident: the first two trial compiles ran before the log env vars were found an
 - Source of truth: `public static int _<Record>_<Field>` constants assigned their field position in `<clinit>` of `com/temenos/t24/component_<Mod>_<Name>_<n>_cl.class` (2,006 classes in R23).
 - Record names are not unique across components (`AA.Customer`, `DX.Customer` define their own `Customer` tables), so a constant is joined to `fields` on (app, position) **only if** its name spells the EQU name with or without the app prefix (`EbCusMnemonic` ~ `EB.CUS.MNEMONIC`, `Category` ~ `AC.CATEGORY`, `AccountTitleOne` ~ `AC.ACCOUNT.TITLE.1`).
 - R23 result: 62,238 of 162,842 fields (38%) in 1,815 apps; 62 fields appear in two components (e.g. ACCOUNT via `AC.AccountOpening` and `AZ.Contract`) — the export uses the component with the most fields.
+
+## R25 knowledge DB (built 2026-10-02)
+
+Built by `pipeline/build_release.py --release R25` into `releases/R25/temenos_knowledge.db` (git-ignored), reading only from `C:\R25` (write guard clean). The R25 JavaDoc ships as a self-extracting `T24.javadoc.jar` (`java -jar` generates the HTML), so it is copied into `build/releases/R25/javadoc/` and generated there.
+
+| | R23 (`jar/`) | R25 (`C:\R25nk	24lib`) |
+|---|---|---|
+| Applications | 4,596 | 4,838 |
+| Fields | 162,842 | 171,887 |
+| Enriched from JavaDoc | 96,159 | 101,461 |
+| Component classes | 2,006 | 2,090 |
+| Fields with a jBC name | 62,238 | 69,119 |
+
+R23 → R25 (`pipeline/release_diff.py`, report in `build/releases/R23-to-R25.md`): 245 apps added, 3 removed, 557 changed; 2,580 fields added, 651 removed, 177 moved; **1,740 jBC names changed** -- R25 keeps the app prefix in many local/country modules where R23 dropped it (`ARACCT...Reserved7` -> `...AracctSweepReserved7`) and spells numbers as digits (`AchXrefReservedOneTwo` -> `AchXrefReserved12`). jBC written with R23 names for those fields will not compile on R25.
