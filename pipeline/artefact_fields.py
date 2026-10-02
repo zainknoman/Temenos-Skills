@@ -21,12 +21,18 @@ def record_class(app):
     return "".join(part.capitalize() for part in app.split("."))
 
 
+def dotted_prefix(names):
+    """Longest common prefix of the field names, cut back to a '.' boundary
+    ("AC.CUSTOMER", "AC.CATEGORY" -> "AC."); "" when the names share none."""
+    common = os.path.commonprefix(list(names))
+    return common[: common.rfind(".") + 1]
+
+
 def app_prefix(conn, app):
     names = [r[0] for r in conn.execute("SELECT field_name FROM fields WHERE app = ?", (app,))]
     if not names:
         raise UnknownApp(f"no schema rows for app '{app}'")
-    common = os.path.commonprefix(names)
-    return common[: common.rfind(".") + 1]
+    return dotted_prefix(names)
 
 
 def _strip_comments(source):
