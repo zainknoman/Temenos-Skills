@@ -2,7 +2,7 @@
 """Gate + export in one step: run the golden accuracy suite; only if it
 passes, write the T24Tools export. Use after any JAR/DB regeneration.
 
-  python pipeline/release_t24tools.py --release R25
+  python pipeline/release_t24tools.py --release R23
 """
 import argparse
 import subprocess
@@ -21,7 +21,7 @@ def release(golden_cmd, export_cmd):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--release", default="R25")
+    ap.add_argument("--release", required=True, help="release of the JARs the DB was built from, e.g. R23")
     args = ap.parse_args()
     sys.exit(release(
         golden_cmd=[sys.executable, str(HERE / "run_golden.py")],

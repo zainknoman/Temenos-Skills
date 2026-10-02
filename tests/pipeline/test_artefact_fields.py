@@ -30,7 +30,7 @@ def test_componentised_refs_skip_method_calls():
         "r = AC.AccountOpening.Account.Read(id, err)\n"
     )
     refs = extract_refs(src, "AC.", "Account")
-    assert refs.componentised == {"Account_Category"}
+    assert refs.componentised == {"AC.AccountOpening.Account.Category"}
 
 
 def test_comments_are_ignored():
@@ -45,7 +45,7 @@ def test_check_reports_missing(db):
     assert result.missing == ["AC.CATEGORYY"]
     # Componentised names are NOT java aliases (R25: EB.CUS.SHORT.NAME -> Customer.EbCusShortName,
     # AC.CATEGORY -> Account.Category), so they are left to the compiler, never "verified" here.
-    assert result.compiler_checked == ["Account.Customer"]
+    assert result.compiler_checked == ["AC.AccountOpening.Account.Customer"]
 
 
 def test_componentised_name_is_not_verified_by_java_alias(db):
@@ -53,4 +53,19 @@ def test_componentised_name_is_not_verified_by_java_alias(db):
     result = check_fields(db, "CUSTOMER", "x = EB.SystemTables.getRNew(ST.Customer.Customer.Mnemonic)\n")
     assert result.verified == []
     assert result.missing == []
-    assert result.compiler_checked == ["Customer.Mnemonic"]
+    assert result.compiler_checked == ["ST.Customer.Customer.Mnemonic"]
+
+
+def test_componentised_refs_verified_when_component_table_exists(db_with_components):
+    src = ("a = EB.SystemTables.getRNew(ST.Customer.Customer.EbCusMnemonic)\n"
+           "b = EB.SystemTables.getRNew(ST.Customer.Customer.Mnemonic)\n")
+    result = check_fields(db_with_components, "CUSTOMER", src)
+    assert result.verified == ["ST.Customer.Customer.EbCusMnemonic"]
+    assert result.missing == ["ST.Customer.Customer.Mnemonic"]
+    assert result.compiler_checked == []
+
+
+def test_component_must_match_not_just_record_and_field(db_with_components):
+    # AA.Customer has its own 'Customer' table -- EbCusMnemonic is not one of its fields.
+    result = check_fields(db_with_components, "CUSTOMER", "a = AA.Customer.Customer.EbCusMnemonic\n")
+    assert result.missing == ["AA.Customer.Customer.EbCusMnemonic"]

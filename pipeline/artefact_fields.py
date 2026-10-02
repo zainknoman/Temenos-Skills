@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Find T24 field references in generated source and check them against
 the Layer A schema DB. Legacy Infobasic uses EQU names (AC.CATEGORY);
-componentised jBC uses <Comp>.<Module>.<Record>.<Field>, whose <Field> part is
-NOT the java alias (see check_fields) -- those are listed for the compiler to
-check. Java L3 code is not checked here --
+componentised jBC uses <Comp>.<Module>.<Record>.<Field>, verified against the
+component_fields table (component_parse.py) -- NOT the java alias. Without
+that table they are left to the compiler. Java L3 code is not checked here --
 javac against the R25 record classes is the field gate for Java."""
 import os
 import re
@@ -52,22 +52,36 @@ def extract_refs(source, prefix, record_cls):
         pattern = re.compile(r"(?<![\w.])" + re.escape(prefix) + r"[A-Z0-9]+(?:\.[A-Z0-9]+)*(?![\w.(])")
         legacy = set(pattern.findall(code))
     comp_pattern = re.compile(
-        r"\b[A-Z]{2,}\.[A-Z][A-Za-z0-9]*\." + re.escape(record_cls) + r"\.([A-Z][A-Za-z0-9]*)\b(?!\s*\()"
+        r"\b[A-Z]{2,}\.[A-Z][A-Za-z0-9]*\." + re.escape(record_cls) + r"\.[A-Z][A-Za-z0-9]*\b(?!\s*\()"
     )
-    componentised = {f"{record_cls}_{m}" for m in comp_pattern.findall(code)}
+    componentised = set(comp_pattern.findall(code))
     return FieldRefs(legacy, componentised)
 
 
+def _has_component_table(conn):
+    return conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'component_fields'").fetchone() is not None
+
+
 def check_fields(conn, app, source):
-    """Legacy EQU names are verified against the schema DB. Componentised names
-    are NOT java aliases -- R25 maps EB.CUS.SHORT.NAME to Customer.EbCusShortName
-    but AC.CATEGORY to Account.Category -- so they are reported as compiler_checked
-    and left to tCompile, which rejects unknown ones ("X undefined in ST.Customer")."""
+    """Legacy EQU names are verified against the `fields` table. Componentised
+    names (<Comp>.<Module>.<Record>.<Field>) are verified against the
+    `component_fields` table built by component_parse.py from the component
+    classes -- they are NOT java aliases (EB.CUS.SHORT.NAME is
+    ST.Customer.Customer.EbCusShortName, AC.CATEGORY is
+    AC.AccountOpening.Account.Category). Without that table they are reported
+    as compiler_checked and tCompile decides."""
     app = app.upper()
-    cls = record_class(app)
-    refs = extract_refs(source, app_prefix(conn, app), cls)
+    refs = extract_refs(source, app_prefix(conn, app), record_class(app))
     names = {r[0] for r in conn.execute("SELECT field_name FROM fields WHERE app = ?", (app,))}
-    missing = sorted(f for f in refs.legacy if f not in names)
-    verified = sorted(refs.legacy - set(missing))
-    compiler_checked = sorted(a.replace(f"{cls}_", f"{cls}.", 1) for a in refs.componentised)
-    return FieldCheck(app, verified, missing, compiler_checked)
+    missing = [f for f in refs.legacy if f not in names]
+    verified = [f for f in refs.legacy if f in names]
+    compiler_checked = []
+    if _has_component_table(conn):
+        known = {f"{c}.{r}.{f}" for c, r, f in conn.execute(
+            "SELECT component, record, comp_field FROM component_fields WHERE app = ?", (app,))}
+        verified += [r for r in refs.componentised if r in known]
+        missing += [r for r in refs.componentised if r not in known]
+    else:
+        compiler_checked = sorted(refs.componentised)
+    return FieldCheck(app, sorted(verified), sorted(missing), compiler_checked)

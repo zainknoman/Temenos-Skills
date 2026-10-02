@@ -54,7 +54,7 @@ def test_report_lists_componentised_refs_for_the_compiler(db, tmp_path):
     f = tmp_path / "V.b"
     f.write_text("x = EB.SystemTables.getRNew(ST.Customer.Customer.EbCusMnemonic)\n")
     report = verify(f, ["CUSTOMER"], db, tmp_path / "out", compile_fn=OK)
-    assert report["fields"][0]["compiler_checked"] == ["Customer.EbCusMnemonic"]
+    assert report["fields"][0]["compiler_checked"] == ["ST.Customer.Customer.EbCusMnemonic"]
 
 
 def test_each_run_starts_from_an_empty_build_dir(db, tmp_path):

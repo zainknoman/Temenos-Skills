@@ -5,5 +5,5 @@
   "requirement": "Reject CUSTOMER input when MNEMONIC is empty.",
   "apps": ["CUSTOMER"],
   "file": "V.CUS.MNEMONIC.CHECK.b",
-  "expected_fields": ["Customer.EbCusMnemonic"]
+  "expected_fields": ["ST.Customer.Customer.EbCusMnemonic"]
 }

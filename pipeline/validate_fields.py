@@ -29,6 +29,14 @@ def main():
         (app,),
     ).fetchall()
     known = {r[0].upper(): r for r in rows}
+    has_components = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'component_fields'").fetchone()
+    comp_names = {}
+    if has_components:
+        for field_name, comp, record, comp_field in conn.execute(
+                "SELECT field_name, component, record, comp_field FROM component_fields WHERE app = ? "
+                "ORDER BY component", (app,)):
+            comp_names.setdefault(field_name.upper(), []).append(f"{comp}.{record}.{comp_field}")
     conn.close()
 
     if not rows:
@@ -45,9 +53,10 @@ def main():
     print(f"VERIFIED: all {len(requested)} field(s) exist in {app} schema:")
     for f in requested:
         field_name, position, java_alias, field_type, mandatory = known[f]
+        jbc = f", jBC {' | '.join(comp_names[f])}" if f in comp_names else ""
         print(
             f"  {field_name}  (pos {position}, alias {java_alias}, "
-            f"type={field_type or '?'}, mandatory={mandatory or '?'})"
+            f"type={field_type or '?'}, mandatory={mandatory or '?'}{jbc})"
         )
     sys.exit(0)
 

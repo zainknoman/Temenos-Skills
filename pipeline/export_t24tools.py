@@ -7,7 +7,7 @@ the same DB, so CI can diff it.
 The export is Temenos-derived data: it stays in build/ for personal use and is
 never committed to the public T24Tools repo (plan/state/decisions.md).
 
-  python pipeline/export_t24tools.py --out build/t24tools/R25 --release R25
+  python pipeline/export_t24tools.py --release R23   (jar/ is R23 -- see MANIFEST.MF)
 """
 import argparse
 import gzip
@@ -18,9 +18,9 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from artefact_fields import dotted_prefix, record_class
+from artefact_fields import _has_component_table, dotted_prefix, record_class
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2  # v2: per-field componentised name + per-app components
 GZIP_WARN_BYTES = 5_000_000
 
 
@@ -28,7 +28,26 @@ def _blank_to_none(value):
     return value if value not in (None, "") else None
 
 
+def _component_names(conn):
+    """({app: [component, ...] most fields first}, {(app, position): full componentised name}).
+    A field exposed by several components (ACCOUNT via AC.AccountOpening and
+    AZ.Contract) takes its name from the component with the most fields for that app."""
+    if not _has_component_table(conn):
+        return {}, {}
+    counts = defaultdict(lambda: defaultdict(int))
+    rows = conn.execute("SELECT app, component, record, comp_field, position FROM component_fields").fetchall()
+    for app, comp, *_ in rows:
+        counts[app][comp] += 1
+    order = {app: sorted(c, key=lambda k: (-c[k], k)) for app, c in counts.items()}
+    names = {}
+    for app, comp, record, field, pos in sorted(rows, key=lambda r: order[r[0]].index(r[1])):
+        names.setdefault((app, pos), f"{comp}.{record}.{field}")
+    return order, names
+
+
 def build_export(conn, release):
+    if not release:
+        raise ValueError("release is required (the release of the JARs the DB was built from, e.g. R23)")
     rows = conn.execute(
         "SELECT app, position, field_name, java_alias, field_type, mandatory, description "
         "FROM fields ORDER BY app, position, field_name"
@@ -36,13 +55,16 @@ def build_export(conn, release):
     by_app = defaultdict(list)
     for row in rows:
         by_app[row[0]].append(row[1:])
+    components, comp_names = _component_names(conn)
     apps, descs = {}, {}
     for app in sorted(by_app):
         recs = by_app[app]
         apps[app] = {
             "prefix": dotted_prefix([r[1] for r in recs]),
             "recordClass": record_class(app),
-            "fields": [[r[0], r[1], r[2], _blank_to_none(r[3]), _blank_to_none(r[4])] for r in recs],
+            "components": components.get(app, []),
+            "fields": [[r[0], r[1], r[2], _blank_to_none(r[3]), _blank_to_none(r[4]), comp_names.get((app, r[0]))]
+                       for r in recs],
         }
         d = {r[1]: r[5] for r in recs if _blank_to_none(r[5])}
         if d:
@@ -80,13 +102,14 @@ def write_export(conn, out_dir, release, now=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default="temenos_knowledge.db")
-    ap.add_argument("--out", default="build/t24tools/R25")
-    ap.add_argument("--release", default="R25")
+    ap.add_argument("--out", help="default: build/t24tools/<release>")
+    ap.add_argument("--release", required=True, help="release of the JARs the DB was built from, e.g. R23")
     args = ap.parse_args()
     conn = sqlite3.connect(args.db)
-    m = write_export(conn, Path(args.out), args.release)
+    out = Path(args.out or f"build/t24tools/{args.release}")
+    m = write_export(conn, out, args.release)
     conn.close()
-    print(f"Exported {m['apps']} apps / {m['fields']} fields to {args.out}")
+    print(f"Exported {m['apps']} apps / {m['fields']} fields ({args.release}) to {out}")
 
 
 if __name__ == "__main__":

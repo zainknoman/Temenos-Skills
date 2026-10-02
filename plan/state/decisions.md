@@ -32,3 +32,16 @@ Output format:
 - The compiler reports undefined legacy field EQUs as `The variable 'AC.NOT.A.FIELD' is not initialised.`
 
 Incident: the first two trial compiles ran before the log env vars were found and appended to `C:\R25\TAFJ\log\compiler.log`. That was a log append only; no config, source, data or class files under `C:\R25` changed.
+
+## Releases (found 2026-10-02)
+
+- `jar/` (the pipeline source for `temenos_knowledge.db`, `table-schema/`, `component_fields`) is **R23**: `META-INF/MANIFEST.MF` says `R23_AMR.0`, signed 2023-05-22.
+- `C:\R25nk	24lib` (used by the compile gate) is **R25**: `R25_AMR.0`, signed 2025-03-26. Component classes differ, e.g. `component_ST_Customer_16_cl` has 1,152 int constants in R23 vs 1,254 in R25.
+- Exports must be labelled with the release of the JARs the DB was built from: `--release` is now required (an earlier export was wrongly labelled R25).
+- Pending: per-release knowledge (build R25 from `C:\R25nk	24lib`, read-only) so T24Tools can offer a release choice.
+
+## Componentised field names (2026-10-02)
+
+- Source of truth: `public static int _<Record>_<Field>` constants assigned their field position in `<clinit>` of `com/temenos/t24/component_<Mod>_<Name>_<n>_cl.class` (2,006 classes in R23).
+- Record names are not unique across components (`AA.Customer`, `DX.Customer` define their own `Customer` tables), so a constant is joined to `fields` on (app, position) **only if** its name spells the EQU name with or without the app prefix (`EbCusMnemonic` ~ `EB.CUS.MNEMONIC`, `Category` ~ `AC.CATEGORY`, `AccountTitleOne` ~ `AC.ACCOUNT.TITLE.1`).
+- R23 result: 62,238 of 162,842 fields (38%) in 1,815 apps; 62 fields appear in two components (e.g. ACCOUNT via `AC.AccountOpening` and `AZ.Contract`) — the export uses the component with the most fields.

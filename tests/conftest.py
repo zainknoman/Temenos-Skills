@@ -27,3 +27,18 @@ def db():
     conn.executemany("INSERT INTO fields VALUES (?,?,?,?,?,?,?,?)", ROWS)
     yield conn
     conn.close()
+
+
+COMPONENT_ROWS = [
+    ("R23", "CUSTOMER", "ST.Customer", "Customer", "EbCusMnemonic", 1, "EB.CUS.MNEMONIC"),
+    ("R23", "CUSTOMER", "ST.Customer", "Customer", "EbCusShortName", 2, "EB.CUS.SHORT.NAME"),
+    ("R23", "ACCOUNT", "AC.AccountOpening", "Account", "Category", 2, "AC.CATEGORY"),
+]
+
+
+@pytest.fixture
+def db_with_components(db):
+    db.execute("""CREATE TABLE component_fields (release TEXT, app TEXT, component TEXT, record TEXT,
+                  comp_field TEXT, position INTEGER, field_name TEXT)""")
+    db.executemany("INSERT INTO component_fields VALUES (?,?,?,?,?,?,?)", COMPONENT_ROWS)
+    return db
