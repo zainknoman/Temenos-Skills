@@ -28,3 +28,6 @@ cache/pdf_extracts/
 # OS
 .DS_Store
 Thumbs.db
+
+# Harness / export output (regenerable)
+build/
