@@ -7,11 +7,11 @@ regression suite: a skill change that breaks a golden case is a bug.
 """
 import argparse
 import json
-import sqlite3
 import sys
 from pathlib import Path
 
 from verify_artefact import verify
+from releases import add_release_args, connect
 
 GOLDEN = Path("tests/golden")
 
@@ -28,10 +28,10 @@ def load_cases(root=GOLDEN):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--case")
-    ap.add_argument("--db", default="temenos_knowledge.db")
+    add_release_args(ap)
     args = ap.parse_args()
 
-    conn = sqlite3.connect(args.db)
+    conn = connect(args)
     failures = 0
     for case in load_cases():
         if args.case and case["name"] != args.case:

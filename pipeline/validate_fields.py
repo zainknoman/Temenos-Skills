@@ -9,18 +9,19 @@ Exit code 0 = every field verified. Exit code 1 = at least one field missing
 most important rule: never invent a T24 field name.
 """
 import argparse
-import sqlite3
 import sys
+
+from releases import add_release_args, connect
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--app", required=True, help="T24 application, e.g. ACCOUNT")
     ap.add_argument("--fields", required=True, help="comma-separated field names to verify")
-    ap.add_argument("--db", default="temenos_knowledge.db")
+    add_release_args(ap)
     args = ap.parse_args()
 
-    conn = sqlite3.connect(args.db)
+    conn = connect(args)
     app = args.app.upper()
     requested = [f.strip().upper() for f in args.fields.split(",") if f.strip()]
 

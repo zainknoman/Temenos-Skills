@@ -8,12 +8,12 @@ compile status is OK -- a SKIPPED compile is a failure, not a pass.
 import argparse
 import json
 import shutil
-import sqlite3
 import sys
 from pathlib import Path
 
 from artefact_fields import UnknownApp, check_fields
 from compile_check import compile_java, compile_jbc
+from releases import add_release_args, connect
 
 DEFAULT_OUT = Path("build/verify")
 
@@ -55,13 +55,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--file", required=True)
     ap.add_argument("--app", action="append", default=[], help="repeatable")
-    ap.add_argument("--db", default="temenos_knowledge.db")
+    add_release_args(ap)
     ap.add_argument("--out", default=str(DEFAULT_OUT))
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--no-compile", action="store_true", help="field gate only (development use)")
     args = ap.parse_args()
 
-    conn = sqlite3.connect(args.db)
+    conn = connect(args)
     report = verify(Path(args.file), [a.upper() for a in args.app], conn, args.out,
                     skip_compile=args.no_compile)
     conn.close()
