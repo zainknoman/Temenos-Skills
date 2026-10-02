@@ -837,7 +837,7 @@ if (function.equals("AUTH")) { /* auth-only logic */ }
 if (function.equals("INPUT")) { /* input-only logic */ }
 if (function.equals("DELETE")) { /* delete-only logic */ }
 
-// Current version ID (e.g. "CUSTOMER,JIB.OFS.UPDATE"):
+// Current version ID (e.g. "CUSTOMER,SAMPLE.OFS.UPDATE"):
 String versionId = transactionContext.getCurrentVersionId();
 if (versionId.contains("DECISION")) { /* version-specific logic */ }
 ```
@@ -862,7 +862,7 @@ SomeRecord rec2 = new SomeRecord(da.getRecord("BNK", "APPLICATION.NAME", "", "RE
 SomeRecord rNau = new SomeRecord(da.getRecord("BNK", "APPLICATION.NAME", "$NAU", "RECORD_ID"));
 
 // da.getRecord() can return null — check before wrapping in a record class:
-TStructure rawRec = da.getRecord("EB.JIB.GOAML.TXN.LIST", txnPurpose);
+TStructure rawRec = da.getRecord("EB.SAMPLE.GOAML.TXN.LIST", txnPurpose);
 if (rawRec == null) return;
 SomeRecord typedRec = new SomeRecord(rawRec);
 
@@ -1314,7 +1314,7 @@ AaPrdDesAccountRecord accPrd = aaCnt.getAccountCondition("BALANCE");
 When writing L3 Java code, follow these rules extracted from real bank implementations:
 
 ### 1. Package naming
-- Standard bank custom hooks: `com.temenos.t24` or `com.jib` or `com.jibbank` — all lowercase
+- Standard bank custom hooks: `com.temenos.t24` or `com.<bankname>` (e.g. `com.samplebank`) — all lowercase
 - API utilities and sub-packages: all lowercase
 
 ### 2. Class skeleton
@@ -1368,7 +1368,7 @@ DataAccess da = new DataAccess(this); // 'this' = the hook instance
 - `postUpdateRequest` (ServiceLifecycle) → `com.temenos.t24.api.complex.eb.servicehook.TransactionData`
 
 ### 7. Record class naming convention
-Application name maps to record class: `LETTER.OF.CREDIT` → `LetterOfCreditRecord`, `CUSTOMER` → `CustomerRecord`, `EB.JIB.POST.RESTRICT` → `EbJibPostRestrictRecord`
+Application name maps to record class: `LETTER.OF.CREDIT` → `LetterOfCreditRecord`, `CUSTOMER` → `CustomerRecord`, `EB.SAMPLE.POST.RESTRICT` → `EbSamplePostRestrictRecord`
 
 ### 8. MV field add vs set
 - `list.add(index, group)` — insert at position
@@ -2120,10 +2120,10 @@ public List<FilterCriteria> setFilterCriteria(List<FilterCriteria> filterCriteri
     if (recivFlag.contains("Y")) {
         try {
             CustomerRecord cusRec = new CustomerRecord(da.getRecord("CUSTOMER", cif));
-            LocalRefList chldCifs = cusRec.getLocalRefGroups("KMB.CHILD.CIF");
+            LocalRefList chldCifs = cusRec.getLocalRefGroups("L.CHILD.CIF");
             String chCifList = "";
             for (int i = 0; i < chldCifs.size(); i++) {
-                String chCif = chldCifs.get(i).getLocalRefField("KMB.CHILD.CIF").getValue();
+                String chCif = chldCifs.get(i).getLocalRefField("L.CHILD.CIF").getValue();
                 chCifList = (i == 0) ? chCif : chCifList + " " + chCif;
             }
             cif += " " + chCifList;  // space-delimited list = T24 EQ multi-value match
@@ -2360,7 +2360,7 @@ public class MyGenerateAccountId extends AccountingEntry {
         // Guard conditions:
         boolean isNew      = idType.contentEquals("NEW") && checkDigitType.contentEquals("F");
         boolean isAcInput  = idType.contentEquals("") && checkDigitType.contentEquals("")
-                          && currentVersionId.equals(",KMB.AC.INPUT");
+                          && currentVersionId.equals(",SAMPLE.AC.INPUT");
 
         // Table locking pattern for sequence numbers:
         MyAccountSequenceTable seqTable = new MyAccountSequenceTable(this);
@@ -2449,8 +2449,8 @@ com.temenos.t24.api.complex.eb.servicehook.TransactionData td =
     new com.temenos.t24.api.complex.eb.servicehook.TransactionData();
 td.setTransactionId(cusNo + "." + limPrd + ".01");
 td.setFunction("I");
-td.setVersionId("LIMIT,KMB.INPUT");
-td.setSourceId("KMB.OFS.LIMIT");
+td.setVersionId("LIMIT,SAMPLE.INPUT");
+td.setSourceId("SAMPLE.OFS.LIMIT");
 td.setNumberOfAuthoriser("0");
 transactionData.add(td);
 ```
@@ -2460,7 +2460,7 @@ transactionData.add(td);
 Real-world utility method for checking record existence and storing result:
 
 ```java
-// CommonRecordVal pattern (seen in KmbNofGetCifLastDetails, KmbNofMurabahaList):
+// CommonRecordVal pattern (seen in NoFile enquiries such as SampleNofGetCifLastDetails, SampleNofMurabahaList):
 public class CommonRecordVal {
     public static TStructure tStructure = null;
 

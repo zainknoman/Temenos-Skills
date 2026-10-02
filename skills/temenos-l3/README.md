@@ -5,7 +5,7 @@
 **Platform:** Temenos T24 / Transact (TAFJ environment, R19+)
 
 A Claude Code skill that turns any conversation into a Temenos L3 Java expert session.  
-Built from real bank implementation code (JIB/AOAB) and three official Temenos documents:
+Built from real bank implementation code (anonymised client projects) and three official Temenos documents:
 
 | Source | Content |
 |---|---|
@@ -127,7 +127,7 @@ Ask yourself which lifecycle event you need:
 Ask Claude:
 ```
 /temenos-l3 generate the skeleton for a RecordLifecycle validateRecord hook
-for the CUSTOMER application, package com.jib
+for the CUSTOMER application, package com.samplebank
 ```
 
 Claude will produce a correctly structured class with:
@@ -206,9 +206,9 @@ Claude will check for:
 Claude will generate:
 ```
 SOURCE.TYPE  = Method
-JAVA.CLASS   = com.jib.MyCustomerHook
+JAVA.CLASS   = com.samplebank.MyCustomerHook
 JAVA.METHOD  = validateRecord
-JAVA.PACKAGE = com.jib
+JAVA.PACKAGE = com.samplebank
 ```
 
 And tell you which VERSION field to attach it to.
@@ -220,7 +220,7 @@ And tell you which VERSION field to attach it to.
 #### Generate a complete hook from scratch
 ```
 /temenos-l3 write a complete RecordLifecycle validateRecord hook for
-FUNDS.TRANSFER in package com.jib that:
+FUNDS.TRANSFER in package com.samplebank that:
 1. Validates debit and credit currencies are not the same
 2. Throws T24CoreException if debit account has posting restriction DEBIT
 3. Sets an override if amount exceeds 50000 in local currency
@@ -285,4 +285,4 @@ All content in `SKILL.md` is sourced exclusively from:
 1. `Introduction to L3 Java Customisation.pdf` — Temenos Transact (Updated May 2023)
 2. `T24 USER GUIDE TO L3 API - Version & Enquiry Routines.pdf` — Temenos (2020)
 3. `CSD - Java Programming Standards.pdf` — Temenos CSD (v1.1, Aug 2022)
-4. Real implementation Java files from JIB/AOAB bank projects (for code pattern examples)
+4. Real implementation Java files from anonymised bank projects (for code pattern examples)

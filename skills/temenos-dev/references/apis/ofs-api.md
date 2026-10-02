@@ -182,12 +182,21 @@ FieldName:MultiValueNumber:SubValueNumber=ErrorMessage,...
 Instead, use `OFS.POST.MESSAGE`:
 
 ```basic
-CALL OFS.POST.MESSAGE(OFS.SOURCE.ID, OFS.MESSAGES, QUEUE.KEY)
+* Legacy (non-componentised) code
+CALL OFS.POST.MESSAGE(OFS.REC, OFS.MSG.ID, OFS.SOURCE.ID, OPTIONS)
+
+* Componentised code ($USING EB.Interface)
+EB.Interface.OfsPostMessage(OFS.REC, OFS.MSG.ID, OFS.SOURCE.ID, OPTIONS)
 ```
 
-- `OFS.SOURCE.ID` — the OFS.SOURCE record to use
-- `OFS.MESSAGES` — one or many OFS messages (multiple messages delimited by a Value Mark, `@VM`)
-- `QUEUE.KEY` — on return: the key to the `OFS.MESSAGE.QUEUE` table entry
+| Argument | Direction | Meaning |
+|----------|-----------|---------|
+| `OFS.REC` | in | A valid OFS message |
+| `OFS.MSG.ID` | out | The OFS message ID of the entry written to `OFS.MESSAGE.QUEUE` (pass `''`) |
+| `OFS.SOURCE.ID` | in | A valid `OFS.SOURCE` record id (its `SOURCE.TYPE` should be `GLOBUS`) |
+| `OPTIONS` | in | Not currently used — pass `''` |
+
+Source: Temenos *Subroutine Guide* ("Arguments: (OFS.REC, OFS.MSG.ID, OFS.SOURCE.ID, OPTIONS)"); every call in R25 `bnk/T24_BP/*.b` uses this 4-argument order (verified 2026-10-02, e.g. `EB.Interface.OfsPostMessage(OFS.POST.MSG, ofsMsgId, ofsSourceId, options)`).
 
 ### How OFS.POST.MESSAGE Works
 
