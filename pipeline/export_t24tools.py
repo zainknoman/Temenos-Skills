@@ -73,7 +73,8 @@ def build_export(conn, release):
         d = {r[1]: r[5] for r in recs if _blank_to_none(r[5])}
         if d:
             descs[app] = d
-    return {"release": release, "apps": apps}, {"release": release, "apps": descs}
+    head = {"release": release, "schemaVersion": SCHEMA_VERSION}
+    return {**head, "apps": apps}, {**head, "apps": descs}
 
 
 def _dump(doc, path):

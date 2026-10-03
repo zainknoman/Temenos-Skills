@@ -82,3 +82,12 @@ def test_export_v3_carries_value_kind(db_with_kinds):
     assert cus["EB.CUS.SHORT.NAME"][6] == "MV"
     acc = {f[1]: f for f in fields["apps"]["ACCOUNT"]["fields"]}
     assert acc["AC.ACCOUNT.TITLE.1"][6] is None      # unknown, never guessed
+
+
+def test_every_export_file_states_its_schema_version_and_release(db, tmp_path):
+    # T24Tools validates fields.json on its own (the manifest is not loaded), so the file must
+    # carry schemaVersion itself -- without it the browser rejects the file.
+    write_export(db, tmp_path, "R23", now="2026-10-03T00:00:00Z")
+    for name in ("fields.json", "descriptions.json"):
+        doc = json.loads((tmp_path / name).read_text(encoding="utf-8"))
+        assert doc["schemaVersion"] == 3 and doc["release"] == "R23", name
