@@ -25,7 +25,11 @@ Viewer into T24Tools and give the JSON Viewer a meaningful name.
 
 ### Data source
 - **R23:** existing extraction cache `cache/*.json` (2,050 JARs, 92,912 classes, 5,925 packages), written by `pipeline/extract.py`.
-- **R25:** run `pipeline/extract.py` over `C:\R25\bnk\t24lib` (2,136 JARs), cache in `build/releases/R25/class-cache/`. Read-only on `C:\R25` (see the `c-r25-read-only` rule); nothing is written under it.
+- **R25:** no class data exists yet (the R25 knowledge DB holds fields only, and no R25 JAR is byte-identical to its R23 version, so the R23 cache cannot be reused). It is read directly, in about a minute, without `javatools` and without the ~90-minute `extract.py` run:
+  - every class → JAR, package, superclass, interfaces, interface/abstract flags: a small standard-library reader of each `.class` file's header (constant pool + access flags), straight from the JARs in `C:\R25\bnk\t24lib` (read-only; nothing is written under it);
+  - type: from the JAR name, the same `classify_component` rules as R23 (moved to `pipeline/jar_types.py` so they import without `javatools`);
+  - methods (D4 types only): from the already-generated R25 JavaDoc `build/releases/R25/javadoc/T24.javadoc/` (`<div class="signature">` lines). These carry short type names (`TStructure`), unlike R23's fully-qualified ones; classes without a JavaDoc page get no methods.
+- **Both releases:** public classes only (`extract.py` skips non-public ones; the R25 reader does the same) and `java.lang.Object` is stored as an empty superclass.
 
 ### Tool
 `pipeline/class_export.py --release <R> [--cache <dir>] [--out build/t24tools/<R>/classes.json]`,
@@ -53,7 +57,7 @@ as today.
 }
 ```
 Class tuple: `[name, packageIdx, jarIdx, typeIdx, flags, superclass, interfaces, methods?]`
-- `flags` bit 1 = interface, bit 2 = abstract, bit 4 = not public (every class is exported; non-public ones cannot be imported).
+- `flags` bit 1 = interface, bit 2 = abstract.
 - `superclass` is the fully-qualified name or `""`; `interfaces` is a list of fully-qualified names.
 - `methods` (public only, `[name, returnType, [paramTypes]]`, fully-qualified types) is present only for types in D4; otherwise the tuple has 7 elements.
 - A class present in more than one JAR appears once per JAR (split package — real information, not deduplicated).
