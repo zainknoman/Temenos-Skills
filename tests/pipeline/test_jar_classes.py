@@ -130,3 +130,9 @@ def test_javadoc_methods_reads_jdk11_pre_method_signature(tmp_path):
                    '<pre>public class Context extends Object</pre>')
     with zipfile.ZipFile(jar) as z:
         assert javadoc_methods(z, "com.x.core.Context") == [["getId", "String", []]]
+
+
+def test_annotated_method_signatures_are_kept():
+    assert parse_signature('<a href="x">@Deprecated</a>\npublic&nbsp;static&nbsp;void&nbsp;run(String s)') == \
+        ["run", "void", ["String"]]
+    assert parse_signature('@SuppressWarnings("unchecked") public&nbsp;int&nbsp;size()') == ["size", "int", []]

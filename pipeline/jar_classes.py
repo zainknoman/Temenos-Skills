@@ -53,7 +53,8 @@ def read_class_header(data):
         return None
 
 
-_SIG = re.compile(r"^((?:(?:public|protected|private|static|final|abstract|synchronized|default|native)\s+)*)"
+_SIG = re.compile(r"^(?:@[\w.]+(?:\([^)]*\))?\s+)*"  # annotations, e.g. @Deprecated
+                  r"((?:(?:public|protected|private|static|final|abstract|synchronized|default|native)\s+)*)"
                   r"(?:<.*?>\s+)?"  # a generic method's type parameters, e.g. <T>
                   r"(.+?)\s+(\w+)\((.*)\)(?:\s+throws\s+.*)?$")
 # Method signatures as JavaDoc writes them: <div class="signature"> (JDK 17+) or
