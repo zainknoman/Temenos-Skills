@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export a release's Java class index for T24Tools' JAR Viewer:
+r"""Export a release's Java class index for T24Tools' JAR Viewer:
 build/t24tools/<release>/classes.json, plus its entry in that folder's manifest.json.
 
 Source is the extract.py cache (R23) or the JARs + JavaDoc themselves (R25, see
@@ -9,6 +9,7 @@ method signatures are kept only for the types a developer codes against
 (METHOD_TYPES) -- for all classes they would be ~190 MB.
 
   python pipeline/class_export.py --release R23
+  python pipeline/class_export.py --release R25   # reads C:\R25 JARs + build/releases/R25 JavaDoc
 """
 import argparse
 import hashlib
@@ -16,9 +17,13 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from jar_classes import METHOD_TYPES, load_jars
+
 SCHEMA_VERSION = 1
-METHOD_TYPES = {"hook", "public-api", "batch", "service", "integration"}  # Task 2 moves this to jar_classes.py
-CLASS_CACHE = Path("cache")  # R23; Task 2 replaces this with CLASS_SOURCE
+CLASS_SOURCE = {
+    "R23": {"cache": Path("cache")},
+    "R25": {"jars": Path(r"C:\R25\bnk\t24lib"), "javadoc": Path("build/releases/R25/javadoc/T24.javadoc")},
+}
 INTERFACE, ABSTRACT = 1, 2
 
 
@@ -77,13 +82,20 @@ def write_class_index(jar_classes, out_dir, release, now=None):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--release", required=True, choices=["R23"])
+    ap.add_argument("--release", required=True, choices=sorted(CLASS_SOURCE))
     ap.add_argument("--out", help="default: build/t24tools/<release>")
     args = ap.parse_args()
-    if not any(CLASS_CACHE.glob("*.json")):
-        raise SystemExit(f"no class cache at {CLASS_CACHE} -- run pipeline/extract.py first")
+    src = CLASS_SOURCE[args.release]
+    if "cache" in src:
+        if not any(src["cache"].glob("*.json")):
+            raise SystemExit(f"no class cache at {src['cache']} -- run pipeline/extract.py first")
+        jar_classes = load_cache(src["cache"])
+    else:
+        if not src["javadoc"].is_dir():
+            print(f"WARNING: no JavaDoc at {src['javadoc']} -- classes without methods (run build_release.py)")
+        jar_classes = load_jars(src["jars"], src["javadoc"])
     out = Path(args.out or f"build/t24tools/{args.release}")
-    entry = write_class_index(load_cache(CLASS_CACHE), out, args.release)
+    entry = write_class_index(jar_classes, out, args.release)
     print(f"Wrote {out / 'classes.json'} ({entry['bytes'] / 1e6:.1f} MB)")
 
 
