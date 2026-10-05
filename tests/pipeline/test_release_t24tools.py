@@ -27,3 +27,12 @@ def test_templates_are_exported_after_the_fields_and_not_when_golden_fails(tmp_p
     assert not marker.exists()
     assert release(golden_cmd=OK, export_cmd=OK, templates_cmd=templates) == 0
     assert marker.exists()
+
+
+def test_classes_are_exported_after_the_fields_and_not_when_golden_fails(tmp_path):
+    marker = tmp_path / "classes"
+    classes = [sys.executable, "-c", f"open(r'{marker}', 'w').close()"]
+    assert release(golden_cmd=FAIL, export_cmd=OK, class_cmd=classes) == 1
+    assert not marker.exists()
+    assert release(golden_cmd=OK, export_cmd=OK, class_cmd=classes) == 0
+    assert marker.exists()
