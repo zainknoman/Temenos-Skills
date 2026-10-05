@@ -9,7 +9,7 @@ method signatures are kept only for the types a developer codes against
 (METHOD_TYPES) -- for all classes they would be ~190 MB.
 
   python pipeline/class_export.py --release R23
-  python pipeline/class_export.py --release R25   # reads C:\R25 JARs + build/releases/R25 JavaDoc
+  python pipeline/class_export.py --release R25   # reads C:\R25 T24 + TAFJ JARs + JavaDoc (read-only)
 """
 import argparse
 import hashlib
@@ -17,12 +17,14 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from jar_classes import METHOD_TYPES, load_jars
+from jar_classes import METHOD_TYPES, load_jars, load_tafj
 
 SCHEMA_VERSION = 1
 CLASS_SOURCE = {
     "R23": {"cache": Path("cache")},
-    "R25": {"jars": Path(r"C:\R25\bnk\t24lib"), "javadoc": Path("build/releases/R25/javadoc/T24.javadoc")},
+    "R25": {"jars": Path(r"C:\R25\bnk\t24lib"), "javadoc": Path("build/releases/R25/javadoc/T24.javadoc"),
+            # TAFJ runtime: the superclasses of the T24 classes (T24Context, T24Record, jRunTime, ...)
+            "tafj": Path(r"C:\R25\TAFJ\lib"), "tafj_javadoc": Path(r"C:\R25\TAFJ\javadoc\TAFJClient-javadoc.jar")},
 }
 INTERFACE, ABSTRACT = 1, 2
 
@@ -100,6 +102,8 @@ def main():
         if not src["javadoc"].is_dir():
             print(f"WARNING: no JavaDoc at {src['javadoc']} -- classes without methods (run build_release.py)")
         jar_classes = load_jars(src["jars"], src["javadoc"])
+    if "tafj" in src:
+        jar_classes += load_tafj(src["tafj"], src["tafj_javadoc"])
     out = Path(args.out or f"build/t24tools/{args.release}")
     entry = write_class_index(jar_classes, out, args.release)
     print(f"Wrote {out / 'classes.json'} ({entry['bytes'] / 1e6:.1f} MB)")

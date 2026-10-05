@@ -210,7 +210,9 @@ python -m pytest tests/pipeline -q     # harness unit tests (pip install -r requ
 python pipeline/release_t24tools.py --release R23
 
 # Class -> JAR index (classes.json) for the T24Tools JAR Viewer; release_t24tools.py runs it after fields.json.
-# R23 from the extract.py cache; R25 straight from C:\R25 JAR headers + build/releases/R25 JavaDoc (read-only, ~1 min).
+# R23 from the extract.py cache; R25 straight from C:\R25 JAR headers (bnk/t24lib + the TAFJ*/Temn* JARs in
+# TAFJ/lib, type "tafj", which hold the T24 classes' superclasses) + build/releases/R25 and TAFJClient JavaDoc
+# (read-only). No R23 TAFJ is available, so R23 has no tafj classes.
 python pipeline/class_export.py --release R23
 
 # Componentised (jBC) field names -- from component_*_cl.class in the JARs into table component_fields

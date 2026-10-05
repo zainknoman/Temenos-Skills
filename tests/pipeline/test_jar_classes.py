@@ -1,7 +1,7 @@
 import struct
 import zipfile
 
-from jar_classes import javadoc_methods, load_jars, parse_signature, read_class_header
+from jar_classes import javadoc_methods, load_jars, load_tafj, parse_signature, read_class_header
 from jar_types import classify_component
 
 PUBLIC, INTERFACE, ABSTRACT = 0x0001, 0x0200, 0x0400
@@ -82,3 +82,36 @@ def test_javadoc_methods_and_load_jars(tmp_path):
                     "methods": [{"name": "checkId", "return_type": "String", "params": ["String"], "is_public": True}]}
     [iface] = out["AA_Core.jar"]
     assert iface["is_interface"] and iface["is_abstract"] and iface["methods"] == []
+
+
+def test_javadoc_methods_read_from_a_javadoc_jar(tmp_path):
+    jar = tmp_path / "Client-javadoc.jar"
+    with zipfile.ZipFile(jar, "w") as z:
+        z.writestr("com/x/core/Context.html",
+                   '<div class="signature">public&nbsp;String&nbsp;getId()</div>')
+    with zipfile.ZipFile(jar) as z:
+        assert javadoc_methods(z, "com.x.core.Context") == [["getId", "String", []]]
+        assert javadoc_methods(z, "com.x.core.Missing") == []
+    assert javadoc_methods(None, "com.x.core.Context") == []
+
+
+def test_load_tafj_takes_only_tafj_and_temenos_jars_as_type_tafj(tmp_path):
+    lib = tmp_path / "lib"
+    lib.mkdir()
+    with zipfile.ZipFile(lib / "TAFJClient.jar", "w") as z:
+        z.writestr("com/x/core/Context.class", class_bytes("com.x.core.Context"))
+    with zipfile.ZipFile(lib / "TemnSecurity.jar", "w") as z:
+        z.writestr("com/x/sec/Guard.class", class_bytes("com.x.sec.Guard"))
+    with zipfile.ZipFile(lib / "ant.jar", "w") as z:
+        z.writestr("org/apache/Ant.class", class_bytes("org.apache.Ant"))
+    doc = tmp_path / "TAFJClient-javadoc.jar"
+    with zipfile.ZipFile(doc, "w") as z:
+        z.writestr("com/x/core/Context.html", '<div class="signature">public&nbsp;String&nbsp;getId()</div>')
+
+    out = dict(load_tafj(lib, doc))
+    assert sorted(out) == ["TAFJClient.jar", "TemnSecurity.jar"]
+    [ctx] = out["TAFJClient.jar"]
+    assert ctx["component_type"] == "tafj"
+    assert ctx["methods"] == [{"name": "getId", "return_type": "String", "params": [], "is_public": True}]
+    assert out["TemnSecurity.jar"][0]["methods"] == []
+    assert dict(load_tafj(lib, tmp_path / "missing-javadoc.jar"))["TAFJClient.jar"][0]["methods"] == []

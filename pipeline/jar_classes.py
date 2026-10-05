@@ -2,8 +2,10 @@
 """Public classes of a JAR folder without javatools: each .class header is read
 with the standard library (constant pool -> this / super / interfaces + access
 flags), and public method signatures come from JavaDoc HTML pages
-(<div class="signature">). Used for R25 by class_export.py; output has the
-extract.py cache shape: [(jar_name, [class dicts])]. Read-only on the JARs."""
+(<div class="signature">), from a JavaDoc folder or a -javadoc.jar read in memory.
+Used for R25 by class_export.py (the T24 JARs, plus the TAFJ runtime JARs that hold
+their superclasses); output has the extract.py cache shape: [(jar_name, [class dicts])].
+Read-only on the JARs."""
 import html
 import re
 import struct
@@ -13,7 +15,8 @@ from pathlib import Path
 from jar_types import classify_component
 
 ACC_PUBLIC, ACC_INTERFACE, ACC_ABSTRACT = 0x0001, 0x0200, 0x0400
-METHOD_TYPES = {"hook", "public-api", "batch", "service", "integration"}
+METHOD_TYPES = {"hook", "public-api", "batch", "service", "integration", "tafj"}
+TAFJ_JARS = ("TAFJ*.jar", "Temn*.jar")  # TAFJ runtime + Temenos platform JARs; skips the third-party ones
 _SKIP_TAGS = {3: 4, 4: 4, 9: 4, 10: 4, 11: 4, 12: 4, 17: 4, 18: 4, 8: 2, 16: 2, 19: 2, 20: 2, 15: 3}
 
 
@@ -78,18 +81,31 @@ def parse_signature(raw):
     return [m.group(3), m.group(2), _split_params(m.group(4))]
 
 
-def javadoc_methods(javadoc_root, qualified):
-    page = Path(javadoc_root) / (qualified.replace("$", ".").replace(".", "/") + ".html")
-    if not javadoc_root or not page.is_file():
+def javadoc_methods(javadoc, qualified):
+    """Public methods from a class's JavaDoc page; `javadoc` is a folder, an open -javadoc.jar
+    (zipfile.ZipFile) or None."""
+    if not javadoc:
         return []
-    sigs = re.findall(r'<div class="signature">(.*?)</div>', page.read_text(encoding="utf-8", errors="replace"), re.S)
+    rel = qualified.replace("$", ".").replace(".", "/") + ".html"
+    if isinstance(javadoc, zipfile.ZipFile):
+        try:
+            text = javadoc.read(rel).decode("utf-8", "replace")
+        except KeyError:
+            return []
+    else:
+        page = Path(javadoc) / rel
+        if not page.is_file():
+            return []
+        text = page.read_text(encoding="utf-8", errors="replace")
+    sigs = re.findall(r'<div class="signature">(.*?)</div>', text, re.S)
     return [m for m in (parse_signature(s) for s in sigs) if m]
 
 
-def load_jars(jars_dir, javadoc_root=None):
+def load_jars(jars_dir, javadoc_root=None, *, jars=None, jar_type=None):
+    """`jars` overrides the recursive *.jar scan; `jar_type` overrides the type from the JAR name."""
     out = []
-    for jar in sorted(Path(jars_dir).rglob("*.jar")):
-        jtype = classify_component(jar.name)
+    for jar in sorted(jars if jars is not None else Path(jars_dir).rglob("*.jar")):
+        jtype = jar_type or classify_component(jar.name)
         classes = []
         try:
             with zipfile.ZipFile(jar) as z:
@@ -113,3 +129,13 @@ def load_jars(jars_dir, javadoc_root=None):
             continue
         out.append((jar.name, classes))
     return out
+
+
+def load_tafj(lib_dir, javadoc_jar=None):
+    """The TAFJ runtime JARs (TAFJ_JARS in lib_dir, not recursive) as type "tafj"; methods from
+    the TAFJ -javadoc.jar, read in memory, when it exists."""
+    jars = sorted({j for pattern in TAFJ_JARS for j in Path(lib_dir).glob(pattern)})
+    if javadoc_jar and Path(javadoc_jar).is_file():
+        with zipfile.ZipFile(javadoc_jar) as doc:
+            return load_jars(lib_dir, doc, jars=jars, jar_type="tafj")
+    return load_jars(lib_dir, None, jars=jars, jar_type="tafj")

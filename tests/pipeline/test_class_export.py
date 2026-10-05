@@ -50,7 +50,7 @@ def test_record_lifecycle_round_trips_to_its_jar_and_superclass():
 
 
 def test_methods_only_for_method_types_and_only_public():
-    assert {"hook", "public-api", "batch", "service", "integration"} == METHOD_TYPES
+    assert {"hook", "public-api", "batch", "service", "integration", "tafj"} == METHOD_TYPES
     decoded = _decode(build_class_index(_jars(), "R23", "t"))
     assert decoded["com.temenos.t24.internal.Helper"][0]["methods"] is None
 
