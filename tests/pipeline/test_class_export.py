@@ -86,3 +86,9 @@ def test_write_adds_classes_json_to_existing_manifest(tmp_path):
     assert manifest["files"]["fields.json"] == {"bytes": 1, "sha256": "a"}
     assert manifest["files"]["classes.json"] == entry == {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
     assert manifest["classes"] == 4 and manifest["jars"] == 3
+
+
+def test_java_lang_object_superclass_is_stored_blank():
+    plain = _cls("Plain", "com.temenos.x", "internal", superclass="java.lang.Object")
+    [row] = build_class_index([("X.jar", [plain])], "R23", "t")["classes"]
+    assert row[5] == ""

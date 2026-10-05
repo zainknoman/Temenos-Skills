@@ -44,6 +44,12 @@ def _flags(c):
     return (INTERFACE if c.get("is_interface") else 0) | (ABSTRACT if c.get("is_abstract") else 0)
 
 
+def _superclass(c):
+    """java.lang.Object is every class's root, so it is stored blank (the extract.py cache keeps it)."""
+    sup = c.get("superclass") or ""
+    return "" if sup == "java.lang.Object" else sup
+
+
 def build_class_index(jar_classes, release, now):
     rows = [(c, jar) for jar, classes in jar_classes for c in classes]
     jars = sorted({jar for _, jar in rows})
@@ -53,7 +59,7 @@ def build_class_index(jar_classes, release, now):
     classes = []
     for c, jar in sorted(rows, key=lambda r: (r[0]["name"], r[0]["package"], r[1])):
         ctype = c.get("component_type") or ""
-        row = [c["name"], p[c["package"]], j[jar], t[ctype], _flags(c), c.get("superclass") or "",
+        row = [c["name"], p[c["package"]], j[jar], t[ctype], _flags(c), _superclass(c),
                list(c.get("interfaces") or [])]
         if ctype in METHOD_TYPES:
             row.append([[m["name"], m.get("return_type", ""), list(m.get("params") or [])]
