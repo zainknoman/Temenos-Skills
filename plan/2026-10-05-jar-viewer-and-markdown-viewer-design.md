@@ -76,7 +76,7 @@ command to "Running the extraction pipeline".
 - `src/navigation.js` `NAV_TABS`: `json` → label "Application Viewer"; add `['jar', 'JAR Viewer']` and `['md', 'Markdown Viewer']`. Ids are permanent (`?tool=` deep links).
 - `src/App.jsx`: remove the R23/R25 `fields.json` download links from the header.
 - `src/build/knowledgeFiles.js`: publish `classes.json` alongside `fields.json` and `manifest.json` under `knowledge/<R>/`.
-- README: tool table (Application Viewer, JAR Viewer, Markdown Viewer), `?tool=jar` / `?tool=md`, knowledge files paragraph (no header download). The disclaimer is reworded to match D2 (published knowledge files are generated from Temenos product JARs; not affiliated with Temenos).
+- README: tool table (Application Viewer, JAR Viewer, Markdown Viewer), `?tool=jar` / `?tool=md`, knowledge files paragraph (no header download). The disclaimer's "contains no Temenos data" sentence is replaced with a statement that the only Temenos-derived data T24Tools uses is application field names (`fields.json`) and Java class and JAR names (`classes.json`); the not-affiliated / trademark sentences stay as they are.
 
 ### Application Viewer
 The existing JSON Viewer, renamed in the tab, its heading and docs. No behaviour change.
