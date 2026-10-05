@@ -53,7 +53,7 @@ as today.
 }
 ```
 Class tuple: `[name, packageIdx, jarIdx, typeIdx, flags, superclass, interfaces, methods?]`
-- `flags` bit 1 = interface, bit 2 = abstract.
+- `flags` bit 1 = interface, bit 2 = abstract, bit 4 = not public (every class is exported; non-public ones cannot be imported).
 - `superclass` is the fully-qualified name or `""`; `interfaces` is a list of fully-qualified names.
 - `methods` (public only, `[name, returnType, [paramTypes]]`, fully-qualified types) is present only for types in D4; otherwise the tuple has 7 elements.
 - A class present in more than one JAR appears once per JAR (split package — real information, not deduplicated).
@@ -85,7 +85,7 @@ The existing JSON Viewer, renamed in the tab, its heading and docs. No behaviour
 - `classIndex.js` (pure): `isClassIndex(doc)`, `decodeClassIndex(doc)` (validates `kind`/`schemaVersion`), `searchClasses(index, query, { types, limit })`, `classesInJar(index, jar)`, `findClass(index, qualified)`, `compareReleases(a, b)` → per qualified name `same | moved(fromJar, toJar) | onlyA | onlyB`.
 - `JarViewer.jsx`:
   - **Load:** "Load R23 / R25 from this site" + drop/upload `classes.json`; both releases may be loaded. Session-only (not written to storage — two ~7 MB files would fill most of the browser's storage).
-  - **Search** one box over class name, qualified name, package, JAR. Type filter defaults to all types except `internal` and `test`. Results ranked: exact simple name, prefix, contains. Virtual list for large result sets.
+  - **Search** one box over class name, qualified name, package, JAR. Type filter defaults to all types except `internal` and `test`. Results ranked: exact simple name, prefix, contains in name, contains in qualified name / JAR; the best 200 are shown with the total count (refine to narrow).
   - **Class detail:** JAR, package, type, flags, superclass (link when it is in the index), interfaces, method signatures when present, **Copy** button for `import <qualified>;`.
   - **JAR mode:** query matching a JAR name lists its classes grouped by package.
   - **Release badges** when both releases are loaded: same JAR / moved A → B / R25 only / R23 only.
@@ -93,7 +93,7 @@ The existing JSON Viewer, renamed in the tab, its heading and docs. No behaviour
 ### Markdown Viewer (`src/features/markdownViewer/`)
 - Ported from RepoMind: `src/lib/markdown.js` (`renderMarkdown`: marked → DOMPurify, mermaid fences → `<div class="mermaid">`), `src/services/diagram.js` (`renderMermaidBlocks`, dynamic `import('mermaid')`, `securityLevel: 'strict'`), `MarkdownViewer.jsx`.
 - Inputs: paste (textarea) or drop/upload one or more `.md` files with a file list (switch/remove), session-only.
-- Output: MDFV manuscript sheet with filename tab, light and dark theme.
+- Output: MDFV manuscript sheet with filename tab, light and dark theme. MDFV's Google Fonts are not loaded (the CSP allows `font-src 'self' data:` only); the sheet uses local serif / monospace stacks.
 - Dependencies (exact versions, like the rest of `package.json`): `marked`, `dompurify`, `mermaid`. Mermaid is a separate lazy chunk served from the site; the CSP is unchanged.
 
 ### Error handling
