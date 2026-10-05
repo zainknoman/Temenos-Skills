@@ -206,8 +206,12 @@ python pipeline/run_golden.py          # every golden case in tests/golden must 
 python -m pytest tests/pipeline -q     # harness unit tests (pip install -r requirements-dev.txt)
 
 # T24Tools export (P7) -- written to build/t24tools/<release>/ only if every golden case passes.
-# Temenos-derived data: personal use only, never commit it to the public T24Tools repo.
+# Published with T24Tools (docs/t24tools/<R>/: fields.json, classes.json, manifest.json), loadable in-tool; no download link in the T24Tools header.
 python pipeline/release_t24tools.py --release R23
+
+# Class -> JAR index (classes.json) for the T24Tools JAR Viewer; release_t24tools.py runs it after fields.json.
+# R23 from the extract.py cache; R25 straight from C:\R25 JAR headers + build/releases/R25 JavaDoc (read-only, ~1 min).
+python pipeline/class_export.py --release R23
 
 # Componentised (jBC) field names -- from component_*_cl.class in the JARs into table component_fields
 python pipeline/component_parse.py --jars jar --release R23
