@@ -115,3 +115,18 @@ def test_load_tafj_takes_only_tafj_and_temenos_jars_as_type_tafj(tmp_path):
     assert ctx["methods"] == [{"name": "getId", "return_type": "String", "params": [], "is_public": True}]
     assert out["TemnSecurity.jar"][0]["methods"] == []
     assert dict(load_tafj(lib, tmp_path / "missing-javadoc.jar"))["TAFJClient.jar"][0]["methods"] == []
+
+
+def test_jdk11_javadoc_method_signatures_are_read():
+    assert parse_signature("public&nbsp;&lt;T&gt;&nbsp;T&nbsp;getInstanceOf&#8203;(<a href=\"x\">Class</a>&lt;T&gt;&nbsp;clazz)") == \
+        ["getInstanceOf", "T", ["Class<T>"]]
+
+
+def test_javadoc_methods_reads_jdk11_pre_method_signature(tmp_path):
+    jar = tmp_path / "Client-javadoc.jar"
+    with zipfile.ZipFile(jar, "w") as z:
+        z.writestr("com/x/core/Context.html",
+                   '<pre class="methodSignature">public&nbsp;String&nbsp;getId&#8203;()</pre>'
+                   '<pre>public class Context extends Object</pre>')
+    with zipfile.ZipFile(jar) as z:
+        assert javadoc_methods(z, "com.x.core.Context") == [["getId", "String", []]]

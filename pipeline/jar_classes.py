@@ -54,7 +54,11 @@ def read_class_header(data):
 
 
 _SIG = re.compile(r"^((?:(?:public|protected|private|static|final|abstract|synchronized|default|native)\s+)*)"
+                  r"(?:<.*?>\s+)?"  # a generic method's type parameters, e.g. <T>
                   r"(.+?)\s+(\w+)\((.*)\)(?:\s+throws\s+.*)?$")
+# Method signatures as JavaDoc writes them: <div class="signature"> (JDK 17+) or
+# <pre class="methodSignature"> (JDK 11, e.g. the TAFJ JavaDoc).
+_SIGNATURE_HTML = re.compile(r'<div class="signature">(.*?)</div>|<pre class="methodSignature">(.*?)</pre>', re.S)
 
 
 def _split_params(text):
@@ -74,7 +78,8 @@ def _split_params(text):
 
 def parse_signature(raw):
     """[name, returnType, [paramTypes]] for a public method signature div, else None."""
-    text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", raw)).replace("\xa0", " ")).strip()
+    text = html.unescape(re.sub(r"<[^>]+>", "", raw)).replace("\xa0", " ").replace("\u200b", "")
+    text = re.sub(r"\s+", " ", text).strip()
     m = _SIG.match(text)
     if not m or "public" not in m.group(1).split():
         return None
@@ -97,7 +102,7 @@ def javadoc_methods(javadoc, qualified):
         if not page.is_file():
             return []
         text = page.read_text(encoding="utf-8", errors="replace")
-    sigs = re.findall(r'<div class="signature">(.*?)</div>', text, re.S)
+    sigs = [div or pre for div, pre in _SIGNATURE_HTML.findall(text)]
     return [m for m in (parse_signature(s) for s in sigs) if m]
 
 
