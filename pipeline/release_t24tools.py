@@ -39,9 +39,11 @@ TEMPLATES_SNIPPET = (
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--release", required=True, help="release of the knowledge DB, e.g. R23")
+    ap.add_argument("--install", default=None, help="T24 install for the golden compile (see run_golden.py --install)")
     args = ap.parse_args()
+    install = ["--install", args.install] if args.install else []
     sys.exit(release(
-        golden_cmd=[sys.executable, str(HERE / "run_golden.py"), "--release", args.release],
+        golden_cmd=[sys.executable, str(HERE / "run_golden.py"), "--release", args.release, *install],
         export_cmd=[sys.executable, str(HERE / "export_t24tools.py"), "--release", args.release,
                     "--db", str(_db(args.release)), "--out", f"build/t24tools/{args.release}"],
         class_cmd=[sys.executable, str(HERE / "class_export.py"), "--release", args.release,

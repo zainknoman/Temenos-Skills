@@ -1,5 +1,6 @@
 import os
 import time
+from pathlib import Path
 
 from compile_check import (LOG_ENV_VARS, TCOMPILE_OVERRIDES, compile_java, compile_jbc,
                            jbc_status, r25_writes_since, scratch_env)
@@ -90,3 +91,97 @@ def test_component_files_beside_a_routine_compile_first(tmp_path):
     routine.write_text("SUBROUTINE V.X\n")
     assert compile_order(routine) == [tmp_path / "PKG.Comp.component", routine]
     assert compile_order(tmp_path / "PKG.Comp.component") == [tmp_path / "PKG.Comp.component"]
+
+
+# --- choosing the install (R25 machine vs R23 machine, no code change) ------------------------
+
+def _fake_install(root, layout="r25", release="R23"):
+    import zipfile
+    bnk = root / "bnk" if layout == "r25" else root / "T24" / "bnk"
+    (bnk / "t24lib").mkdir(parents=True)
+    with zipfile.ZipFile(bnk / "t24lib" / "A.jar", "w") as z:
+        z.writestr("META-INF/MANIFEST.MF", f"Manifest-Version: 1.0\nImplementation-Version: {release}_AMR.0 java 11\n")
+    (root / "TAFJ" / "bin").mkdir(parents=True)
+    (root / "TAFJ" / "bin" / "tCompile.bat").write_text("")
+    return root
+
+
+def test_r25_stays_first_choice(tmp_path):
+    from compile_check import find_install
+    r25 = _fake_install(tmp_path / "r25", release="R25")
+    other = _fake_install(tmp_path / "other", layout="tafj")
+    assert find_install(env={}, known=(r25, other)) == r25
+
+
+def test_falls_back_to_first_present_install(tmp_path):
+    from compile_check import find_install
+    other = _fake_install(tmp_path / "other", layout="tafj")
+    assert find_install(env={}, known=(tmp_path / "absent", other)) == other
+
+
+def test_explicit_install_and_env_win(tmp_path):
+    from compile_check import INSTALL_ENV, find_install
+    r25 = _fake_install(tmp_path / "r25")
+    assert find_install(explicit=tmp_path / "x", env={}, known=(r25,)) == tmp_path / "x"
+    assert find_install(env={INSTALL_ENV: str(tmp_path / "y")}, known=(r25,)) == tmp_path / "y"
+
+
+def test_bnk_under_t24_layout_and_release_from_manifest(tmp_path):
+    from compile_check import bnk_dir, install_release, java_classpath
+    root = _fake_install(tmp_path / "e", layout="tafj", release="R23")
+    assert bnk_dir(root) == root / "T24" / "bnk"
+    assert install_release(root) == "R23"
+    assert str(root / "T24" / "bnk" / "t24lib") in java_classpath(root)
+
+
+def test_java_home_untouched_for_r25_bundled_jdk_elsewhere(tmp_path):
+    from compile_check import JAVA_HOME_ENV, R25, install_java_home
+    root = tmp_path / "e"
+    (root / "3rdParty" / "JDK" / "jdk-11" / "bin").mkdir(parents=True)
+    assert install_java_home(R25, env={}) is None
+    assert install_java_home(root, env={}) == root / "3rdParty" / "JDK" / "jdk-11"
+    assert install_java_home(root, env={JAVA_HOME_ENV: "J"}) == Path("J")
+
+
+def test_moved_install_homes_repointed_in_scratch_only(tmp_path):
+    from compile_check import _scratch_properties
+    root = _fake_install(tmp_path / "e", layout="tafj")
+    (root / "TAFJ" / "conf").mkdir()
+    original = "tafj.home=Z:\gone\TAFJ\nt24.home=Z:\gone\bnk\nx=1\n"
+    (root / "TAFJ" / "conf" / "tafj.properties").write_text(original, encoding="latin-1")
+    src = tmp_path / "src" / "A.b"
+    src.parent.mkdir()
+    src.write_text("")
+    props = _scratch_properties(src, tmp_path / "out", root).read_text(encoding="latin-1")
+    assert f"tafj.home={root / 'TAFJ'}" in props and f"t24.home={root / 'T24' / 'bnk'}" in props
+    assert (root / "TAFJ" / "conf" / "tafj.properties").read_text(encoding="latin-1") == original
+
+
+def test_existing_homes_are_kept(tmp_path):
+    from compile_check import _scratch_properties
+    root = _fake_install(tmp_path / "r", layout="r25")
+    (root / "TAFJ" / "conf").mkdir()
+    (root / "TAFJ" / "conf" / "tafj.properties").write_text(f"tafj.home={root / 'TAFJ'}\n", encoding="latin-1")
+    src = tmp_path / "A.b"
+    src.write_text("")
+    props = _scratch_properties(src, tmp_path / "out", root).read_text(encoding="latin-1")
+    assert props.count("tafj.home=") == 1
+
+
+def test_write_guard_skips_unreadable_entries(tmp_path, monkeypatch):
+    import compile_check
+    root = tmp_path / "inst"
+    root.mkdir()
+    (root / "ok.txt").write_text("x")
+    (root / "broken").write_text("x")
+    marker = tmp_path / "m"
+    marker.write_text("")
+    real_stat = Path.stat
+
+    def flaky(self, *a, **k):
+        if self.name == "broken":
+            raise FileNotFoundError(self)
+        return real_stat(self, *a, **k)
+
+    monkeypatch.setattr(Path, "stat", flaky)
+    assert compile_check.r25_writes_since(marker, r25=root) in ([], [root / "ok.txt"])

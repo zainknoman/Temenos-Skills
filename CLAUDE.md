@@ -203,6 +203,8 @@ python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGO
 # Accuracy gate (P7) — field check + compile against C:\R25 (read-only; writes only to build/verify/)
 python pipeline/verify_artefact.py --file out/V.CUS.CHECK.b --app CUSTOMER
 python pipeline/run_golden.py          # every golden case in tests/golden must PASS
+# Compile install: C:\R25 by default; else the first of E:\Temenos (R23) ... that exists. Choose with
+# --install PATH (run_golden / verify_artefact / release_t24tools) or $T24_INSTALL. See decisions.md.
 python -m pytest tests/pipeline -q     # harness unit tests (pip install -r requirements-dev.txt)
 
 # T24Tools export (P7) -- written to build/t24tools/<release>/ only if every golden case passes.
