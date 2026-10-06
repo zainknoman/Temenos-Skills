@@ -19,6 +19,5 @@
     "APP": "CUSTOMER",
     "FIELD": "EB.CUS.SECTOR",
     "FILTER_VALUE": "1001"
-  },
-  "compiled": false
+  }
 }

@@ -6,6 +6,10 @@
 Proven skeleton in this repo: `tests/golden/infobasic-local-table/` (template
 `templates/infobasic/local-table`).
 
+**R25:** both routines need `$PACKAGE <Pkg>` and a `private method` entry in `<Pkg>.component`, or tCompile fails with `No component defined. $PACKAGE is mandatory` (R25's own `T24_BP/TEMPLATE.b` has `$PACKAGE EB.Template` before `SUBROUTINE`). The trigger property is `Table.trigger` (as in `TEMPLATE.b`). Two styles compile on R25 and are both valid:
+- **TAFJ Infobasic** (`$INSERT I_Table`, `Table.* = ...`, `CALL Table.defineId/addFieldDefinition/...`) - `tests/golden/infobasic-local-table/`.
+- **Componentised jBC** (`$USING EB.Template`: `EB.Template.setTableName(...)` etc., then `EB.Template.TableDefineid/TableAddfielddefinition/TableAddfield/TableSetauditposition()` as in R25 `T24_BP/TEMPLATE.FIELDS.b`) - `tests/golden/jbc-local-table/` (template `templates/jbc/local-table`).
+
 ## Method routines (life cycle)
 
 The application name `<APP>` is the main routine; each method is a separate subroutine

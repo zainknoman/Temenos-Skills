@@ -20,6 +20,5 @@
     "ROUTINE_NAME": "GOLDEN.AA.GET.STATUS",
     "APP": "AA.ARRANGEMENT",
     "FIELD": "AA.ARR.ARR.STATUS"
-  },
-  "compiled": false
+  }
 }

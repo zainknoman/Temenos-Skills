@@ -11,6 +11,8 @@
   "userInputs": {
     "DESCRIPTION": "Golden case",
     "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "goldenParameter",
     "TABLE_NAME": "GOLDEN.PARAMETER",
     "TITLE": "Golden parameter",
     "PRODUCT": "EB",
@@ -18,6 +20,5 @@
     "ID_LENGTH": "20",
     "FIELD_NAME": "DESCRIPTION",
     "FIELD_LENGTH": "35"
-  },
-  "compiled": false
+  }
 }

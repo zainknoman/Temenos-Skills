@@ -19,6 +19,5 @@
     "APP": "AA.ARRANGEMENT",
     "RATE_PERCENT": "1.5",
     "MIN_AMOUNT": "10"
-  },
-  "compiled": false
+  }
 }

@@ -3,8 +3,20 @@
   "language": "infobasic",
   "type": "local-table",
   "label": "Local table definition (TEMPLATE + .FIELDS)",
-  "description": "A new local application: the main routine sets the table properties (I_Table) and <TABLE>.FIELDS defines the id, one field, reserved fields and the audit fields. Not compiled on a T24 install yet: compile it before deploying.",
+  "description": "A new local application in TAFJ Infobasic style: the main routine sets the table properties ($INSERT I_Table, Table.*) and <TABLE>.FIELDS defines the id, one field, reserved fields and the audit fields (CALL Table.*). R25 requires $PACKAGE plus a .component declaration for both routines, so all three are generated.",
   "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleParameter"
+    },
     {
       "id": "TABLE_NAME",
       "label": "Table name",

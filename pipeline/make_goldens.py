@@ -93,10 +93,8 @@ CASES = {
                                      "FIELD": "PO.DEBIT.ACCOUNT", "ERROR_TEXT": "DEBIT ACCOUNT IS MANDATORY"}),
 }
 
-# Added 2026-10-06 without an R25 install: rendered and field-checked on R23 and R25, and the Java hooks
-# compiled against the R23 hook and record JARs -- but none of them compiled on a T24 install. They
-# export with "compiled": false until run_golden.py passes on R25 and the flag is removed.
-CASES_NOT_COMPILED = {
+# Added 2026-10-06; all compile on R25 (run_golden.py --release R25, 2026-10-06).
+CASES.update({
     "infobasic/id-routine": ("infobasic-id-routine", "Reject a CUSTOMER id without the SMP prefix.",
                              {**COMMON_LEGACY, "METHOD_NAME": "vGoldenIdRtn", "ROUTINE_NAME": "V.GOLDEN.ID.RTN", "APP": "CUSTOMER",
                               "ID_PREFIX": "SMP", "ERROR_TEXT": "ID MUST START WITH SMP"}),
@@ -137,7 +135,7 @@ CASES_NOT_COMPILED = {
                                 {**COMMON_B, "ROUTINE_NAME": "GOLDEN.COUNT.SECTOR", "APP": "CUSTOMER",
                                  "FIELD": "EB.CUS.SECTOR", "SELECT_VALUE": "1001"}),
     "infobasic/local-table": ("infobasic-local-table", "Define a sample parameter table.",
-                              {**COMMON_B, "TABLE_NAME": "GOLDEN.PARAMETER", "TITLE": "Golden parameter", "PRODUCT": "EB",
+                              {**COMMON_LEGACY, "METHOD_NAME": "goldenParameter", "TABLE_NAME": "GOLDEN.PARAMETER", "TITLE": "Golden parameter", "PRODUCT": "EB",
                                "EQUATE_PREFIX": "GOLDEN.PRM", "ID_LENGTH": "20", "FIELD_NAME": "DESCRIPTION", "FIELD_LENGTH": "35"}),
     "jbc/id-routine": ("jbc-id-routine", "Reject a CUSTOMER id without the SMP prefix.",
                        {**COMMON_JBC, "ROUTINE_NAME": "GOLDEN.ID.RTN", "METHOD_NAME": "checkId", "APP": "CUSTOMER",
@@ -172,6 +170,9 @@ CASES_NOT_COMPILED = {
     "jbc/complex-get": ("jbc-complex-get", "Return the sector of a CUSTOMER as a typed object.",
                         {**COMMON_JBC, "ROUTINE_NAME": "GOLDEN.GET.TYPED", "METHOD_NAME": "getTyped", "COMPLEX_NAME": "GoldenApi",
                          "TYPE_NAME": "GoldenRecord", "APP": "CUSTOMER", "FIELD": "EB.CUS.SECTOR"}),
+    "jbc/local-table": ("jbc-local-table", "Define a sample parameter table.",
+                        {**COMMON_JBC, "METHOD_NAME": "goldenParameter", "TABLE_NAME": "GOLDEN.JBC.PARAMETER", "TITLE": "Golden parameter",
+                         "PRODUCT": "EB", "EQUATE_PREFIX": "GOLDEN.JPRM", "ID_LENGTH": "20", "FIELD_NAME": "DESCRIPTION", "FIELD_LENGTH": "35"}),
     "java/record-lifecycle-update-core": ("java-record-lifecycle-update-core", "Set the mnemonic before authorisation.",
                                           {**COMMON_JAVA, "CLASS_NAME": "GoldenUpdateCore", "APP": "CUSTOMER",
                                            "FIELD": "EB.CUS.MNEMONIC", "FIELD_VALUE": "SAMPLE"}),
@@ -197,7 +198,11 @@ CASES_NOT_COMPILED = {
     "java/aa-calculation-interest-rate": ("java-aa-calculation-interest-rate", "Custom rate of 5.25.",
                                           {**COMMON_JAVA, "CLASS_NAME": "GoldenInterestRate", "APP": "AA.ARRANGEMENT.ACTIVITY",
                                            "RATE": "5.25"}),
-}
+})
+
+# Cases rendered and field-checked but not yet compiled on a T24 install: they export with
+# "compiled": false until run_golden.py passes on R25 and they move into CASES.
+CASES_NOT_COMPILED = {}
 
 
 def main():

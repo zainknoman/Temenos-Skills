@@ -16,6 +16,5 @@
     "APP": "CUSTOMER",
     "FIELD": "EB.CUS.MNEMONIC",
     "FIELD_VALUE": "SAMPLE"
-  },
-  "compiled": false
+  }
 }

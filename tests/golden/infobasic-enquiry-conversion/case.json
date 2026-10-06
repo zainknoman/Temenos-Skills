@@ -20,6 +20,5 @@
     "ROUTINE_NAME": "E.GOLDEN.CONV",
     "APP": "CUSTOMER",
     "FIELD": "EB.CUS.SECTOR"
-  },
-  "compiled": false
+  }
 }

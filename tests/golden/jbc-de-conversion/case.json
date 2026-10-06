@@ -20,6 +20,5 @@
     "METHOD_NAME": "deCurrency",
     "APP": "ACCOUNT",
     "FIELD": "AC.CURRENCY"
-  },
-  "compiled": false
+  }
 }

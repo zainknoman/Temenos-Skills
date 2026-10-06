@@ -9,7 +9,7 @@ Bank — not invented field names, guessed API signatures, or guessed config.
 
 - **11 skills** for code generation (Infobasic, jBC, L3 Java, Delivery Engine) and for operations (admin, migration, integration, devsecops, architecture, component analysis).
 - **Two T24 releases**: a complete knowledge base for **R23** and for **R25** (fields, positions, types, componentised jBC names), plus a generated R23→R25 change report.
-- **25 artefact types, every one proven**: 5 Infobasic, 4 jBC and 16 L3 Java hook templates. Each template's example compiles against a real R25 install and has its fields verified on both releases.
+- **59 artefact types, every one proven**: 19 Infobasic, 16 jBC and 24 L3 Java hook templates. Each template's example compiles against a real R25 install and has its fields verified on both releases.
 - **An accuracy check for generated code**: `pipeline/verify_artefact.py` verifies every field and compiles the file against R25 before it's presented.
 - **Help page**: open [`Temenos-Skills-HelpText.html`](Temenos-Skills-HelpText.html) in a browser. It's a JavaDoc-style index of every skill, reference file, artefact template, golden case, pipeline tool and release, with search. Rebuild it with `python pipeline/build_help.py`.
 
@@ -163,7 +163,7 @@ python pipeline/verify_artefact.py --file out/V.CUS.CHECK.b --app CUSTOMER [--re
 
 ---
 
-## Artefact Templates (25 types)
+## Artefact Templates (59 types)
 
 `templates/<language>/<type>/` holds `template.json` (inputs) and source files with `{{PLACEHOLDER}}`s. A **field** input becomes the EQU name for Infobasic, the componentised name for jBC, or the getter suffix for Java, taken from the selected release.
 
@@ -171,9 +171,9 @@ A template is **proven** when rendering its golden case's inputs reproduces that
 
 | Language | Types |
 |---|---|
-| Infobasic (5) | VVR, VIR, VAR, NoFile enquiry, OFS routine. R25 requires `$PACKAGE` and a `.component` even for `$INSERT`-style routines, so both are generated. |
-| jBC (4) | Validation routine, GET method, WRITE method (OFS), NoFile enquiry |
-| Java L3 hooks (16) | RecordLifecycle `checkId`, `defaultFieldValues`, `defaultFieldValuesOnHotField`, `validateRecord`, `validateField` (deprecated in R25), `updateRecord`, `postUpdateRequest`, `isOverrideAutoApprove`; ServiceLifecycle; Enquiry `setIds` / `setFilterCriteria` / `setValue`; AA `ActivityLifecycle.validateRecord`; AA `Calculation.getChargeAmount`; `PaymentLifecycle.validatePaymentForClearing`; `PaymentOrderLifecycle.validatePaymentOrderRecord` |
+| Infobasic (19) | VVR, VIR, VAR, NoFile enquiry, OFS routine, ID routine, check-record, auto-field, before-auth, after-unauth, auth routine, enquiry conversion / build, multi-threaded COB service, DE conversion, AA calculation, AA getter, batch PROGRAM, local table (TAFJ Infobasic `I_Table` style). R25 requires `$PACKAGE` and a `.component` even for `$INSERT`-style routines, so both are generated. |
+| jBC (16) | Validation routine, GET method, WRITE method (OFS), NoFile enquiry, ID routine, input routine, check-record, before-auth, enquiry conversion / build, query method, DE conversion, multi-threaded COB service, package initialise, GET with a `.complex` DTO, local table (componentised `EB.Template`) |
+| Java L3 hooks (24) | RecordLifecycle `checkId`, `defaultFieldValues`, `defaultFieldValuesOnHotField`, `validateRecord`, `validateField` (deprecated in R25), `updateRecord`, `updateCoreRecord`, `postUpdateRequest`, `isOverrideAutoApprove`; ServiceLifecycle; Enquiry `setIds` / `setFilterCriteria` / `setValue`; AA `ActivityLifecycle` `validateRecord` / `defaultFieldValues` / `postCoreTableUpdate` / `updateLookupTable` / `generateSecondaryActivity`; AA `Calculation` `getChargeAmount` / `calculatePayment` / `getAdjustedChargeAmount` / `getInterestCustomRate`; `PaymentLifecycle.validatePaymentForClearing`; `PaymentOrderLifecycle.validatePaymentOrderRecord` |
 
 `python pipeline/release_t24tools.py --release R25` runs the golden cases. Only if they pass does it write the T24Tools export: `build/t24tools/<R>/` (fields, Temenos-derived, for personal use only) and `templates.json` (the templates themselves).
 

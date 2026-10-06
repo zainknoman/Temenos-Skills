@@ -1,0 +1,5 @@
+component {{PACKAGE}}
+metamodelVersion 1.6
+
+    private method {{METHOD_NAME}}() { jBC: {{TABLE_NAME}} }
+    private method {{METHOD_NAME}}Fields() { jBC: {{TABLE_NAME}}.FIELDS }

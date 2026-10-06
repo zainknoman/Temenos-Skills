@@ -1,0 +1,5 @@
+component GOLDEN.Legacy
+metamodelVersion 1.6
+
+    private method goldenParameter() { jBC: GOLDEN.PARAMETER }
+    private method goldenParameterFields() { jBC: GOLDEN.PARAMETER.FIELDS }

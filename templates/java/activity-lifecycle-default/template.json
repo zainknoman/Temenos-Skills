@@ -3,7 +3,7 @@
   "language": "java",
   "type": "activity-lifecycle-default",
   "label": "AA ActivityLifecycle.defaultFieldValues",
-  "description": "AA activity hook: defaults an empty field of the arrangement activity before it is shown. Not compiled on a T24 install yet: compile it before deploying.",
+  "description": "AA activity hook: defaults an empty field of the arrangement activity before it is shown.",
   "inputs": [
     {
       "id": "JAVA_PACKAGE",

@@ -3,7 +3,7 @@
   "language": "java",
   "type": "activity-lifecycle-lookup",
   "label": "AA ActivityLifecycle.updateLookupTable",
-  "description": "AA activity hook: adds the arrangement id to a concat (lookup) table under a key. Not compiled on a T24 install yet: compile it before deploying.",
+  "description": "AA activity hook: adds the arrangement id to a concat (lookup) table under a key.",
   "inputs": [
     {
       "id": "JAVA_PACKAGE",

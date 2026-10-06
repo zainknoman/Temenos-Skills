@@ -16,6 +16,5 @@
     "APP": "AA.ARRANGEMENT.ACTIVITY",
     "FIELD": "AA.ARR.ACT.ACTIVITY",
     "DEFAULT_VALUE": "SAMPLE"
-  },
-  "compiled": false
+  }
 }

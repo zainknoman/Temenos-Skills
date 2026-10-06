@@ -1,0 +1,75 @@
+{
+  "id": "jbc/local-table",
+  "language": "jbc",
+  "type": "local-table",
+  "label": "Local table definition (componentised, EB.Template)",
+  "description": "A new local application in componentised jBC style: the main routine sets the table properties (EB.Template.setTable*) and <TABLE>.FIELDS defines the id, one field, reserved fields and the audit fields (EB.Template.Table*). Generates both routines and their .component declarations.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package",
+      "kind": "package",
+      "example": "SAMPLE.Api"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleParameter"
+    },
+    {
+      "id": "TABLE_NAME",
+      "label": "Table name",
+      "kind": "text",
+      "example": "SAMPLE.PARAMETER"
+    },
+    {
+      "id": "TITLE",
+      "label": "Screen title",
+      "kind": "text",
+      "example": "Sample parameter"
+    },
+    {
+      "id": "PRODUCT",
+      "label": "Product (EB.PRODUCT)",
+      "kind": "text",
+      "example": "EB"
+    },
+    {
+      "id": "EQUATE_PREFIX",
+      "label": "Equate prefix",
+      "kind": "text",
+      "example": "SAMPLE.PRM"
+    },
+    {
+      "id": "ID_LENGTH",
+      "label": "Id length",
+      "kind": "number",
+      "example": "20"
+    },
+    {
+      "id": "FIELD_NAME",
+      "label": "First field name",
+      "kind": "text",
+      "example": "DESCRIPTION"
+    },
+    {
+      "id": "FIELD_LENGTH",
+      "label": "First field length",
+      "kind": "number",
+      "example": "35"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample parameter table"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    }
+  ]
+}

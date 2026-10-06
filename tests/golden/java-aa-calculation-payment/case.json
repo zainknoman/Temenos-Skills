@@ -15,6 +15,5 @@
     "CLASS_NAME": "GoldenPaymentCalc",
     "APP": "AA.ARRANGEMENT.ACTIVITY",
     "PAYMENT_AMOUNT": "100"
-  },
-  "compiled": false
+  }
 }

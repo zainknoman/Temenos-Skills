@@ -3,7 +3,7 @@
   "language": "java",
   "type": "aa-calculation-payment",
   "label": "AA Calculation.calculatePayment",
-  "description": "AA payment schedule hook: returns a fixed instalment amount. Not compiled on a T24 install yet: compile it before deploying.",
+  "description": "AA payment schedule hook: returns a fixed instalment amount.",
   "inputs": [
     {
       "id": "JAVA_PACKAGE",

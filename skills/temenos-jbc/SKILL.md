@@ -429,6 +429,8 @@ classes {
 [ ] Field names are camelCase
 ```
 
+The DTO lives **only** in the `.complex` file. Do not also declare it as a `table` inside the `.component`: R25 tCompile rejects that with `table definitions must be in their own files` (a local table's layout goes in its own `.table` file). The routine fills it with `outRecord<<Pkg>.<Class>.<field>>` (proven: `tests/golden/jbc-complex-get`, compiles on R25).
+
 ---
 
 ## Phase 3b — Generate .component File / Part (b) (DEVELOP mode)

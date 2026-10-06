@@ -21,6 +21,5 @@
     "TARGET_FIELD": "AC.CATEGORY",
     "TARGET_VALUE": "1001",
     "OFS_SOURCE": "TEST.OFS"
-  },
-  "compiled": false
+  }
 }

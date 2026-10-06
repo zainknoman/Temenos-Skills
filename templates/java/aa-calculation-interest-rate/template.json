@@ -3,7 +3,7 @@
   "language": "java",
   "type": "aa-calculation-interest-rate",
   "label": "AA Calculation.getInterestCustomRate",
-  "description": "AA interest hook: returns one custom rate, effective from the activity's effective date. Not compiled on a T24 install yet: compile it before deploying.",
+  "description": "AA interest hook: returns one custom rate, effective from the activity's effective date.",
   "inputs": [
     {
       "id": "JAVA_PACKAGE",

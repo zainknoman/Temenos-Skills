@@ -9,6 +9,7 @@
 * -----------|-----------------|--------------------------------------------
 * {{TODAY}} | {{AUTHOR}} | Initial version
 *-----------------------------------------------------------------------------
+$PACKAGE {{PACKAGE}}
     SUBROUTINE {{TABLE_NAME}}
     $INSERT I_COMMON
     $INSERT I_EQUATE
@@ -26,6 +27,6 @@
     Table.equatePrefix = '{{EQUATE_PREFIX}}'
     Table.idPrefix = ''
     Table.blockedFunctions = ''
-    Table.triggerField = ''
+    Table.trigger = ''
     RETURN
 END

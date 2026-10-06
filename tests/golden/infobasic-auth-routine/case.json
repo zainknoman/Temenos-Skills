@@ -21,6 +21,5 @@
     "APP": "CUSTOMER",
     "FIELD": "EB.CUS.SECTOR",
     "LOG_FILE": "SAMPLE.AUDIT.LOG"
-  },
-  "compiled": false
+  }
 }

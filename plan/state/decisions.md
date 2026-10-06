@@ -62,6 +62,8 @@ R23 → R25 (`pipeline/release_diff.py`, report in `build/releases/R23-to-R25.md
 
 ## Templates added without a compiler (2026-10-06)
 
+> Superseded: all of them now compile on R25 and the flags are gone -- see "R25 compile of the 2026-10-06 templates" below.
+
 33 artefact templates (14 Infobasic, 11 jBC, 8 Java) were added while `C:\R25` was not available. Each
 has a golden case marked `"compiled": false`: it renders byte for byte, its fields verify on R23 and
 R25, and the Java hooks compile against the R23 hook/record JARs in `jar/` with stub classes for the
@@ -101,4 +103,26 @@ cases compile on R23. Two fail on real compiler errors:
   `.component` into its own `.complex` file.
 
 The `"compiled": false` flags were **not** changed: T24Tools and the help page define "compiled" as
-"compiles on R25". Run `run_golden.py` on the R25 machine before dropping them.
+"compiles on R25". Run `run_golden.py` on the R25 machine before dropping them. (Done the same day:
+both failures fixed, 59/59 PASS on R25 -- next section.)
+
+## R25 compile of the 2026-10-06 templates (2026-10-06)
+
+`python pipeline/run_golden.py --release R25` on the R25 machine (`Compile install: C:\R25 (R25)`):
+56/58 PASS on the first run, the same two failures as on R23. Both fixed against authoritative R25
+sources (`C:\R25\bnk\T24_BP\TEMPLATE.b` / `TEMPLATE.FIELDS.b` and the TAFJ sample project
+`C:\R25\TAFJ\samples\basic\CBI`, which is identical to the CBI handover copy used as a second
+reference):
+- `infobasic-local-table`: kept the TAFJ Infobasic style (`I_Table`, `CALL Table.*`), added
+  `$PACKAGE` + a `.component` with a `private method` per routine (as R25's own `TEMPLATE.b` has
+  `$PACKAGE EB.Template`), and `Table.triggerField` -> `Table.trigger` (the name `TEMPLATE.b` uses).
+- New type `jbc/local-table`: the componentised style (`$USING EB.Template`,
+  `EB.Template.setTable*`, `EB.Template.TableDefineid/TableAddfielddefinition/TableAddfield/
+  TableSetauditposition()`). Both styles are valid; the developer chooses.
+- `jbc-complex-get`: the DTO is defined only in the `.complex` file; the `public table` block in
+  the `.component` was removed (`table definitions must be in their own files`).
+
+The `.FIELDS.b` routines (not the case's main file, so not compiled by `run_golden.py`) were compiled
+separately with `verify_artefact.py --release R25`: OK. Second run: **59/59 PASS on R25**. All 33
+`"compiled": false` flags removed (`make_goldens.py`: the cases moved into `CASES`;
+`CASES_NOT_COMPILED` is empty), so every exported type is proven on R25.

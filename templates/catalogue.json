@@ -36,7 +36,8 @@
       {"id": "de-conversion", "label": "Delivery Engine conversion routine"},
       {"id": "cob-service", "label": "Multi-threaded COB service (.LOAD / .SELECT / record)"},
       {"id": "package-initialise", "label": "Package initialise (standalone session)"},
-      {"id": "complex-get", "label": "GET method with .complex DTO"}
+      {"id": "complex-get", "label": "GET method with .complex DTO"},
+      {"id": "local-table", "label": "Local table definition (componentised, EB.Template)"}
     ]},
     {"id": "java", "label": "Java (L3 hooks)", "types": [
       {"id": "record-lifecycle-check-id", "label": "RecordLifecycle.checkId (ID routine)"},

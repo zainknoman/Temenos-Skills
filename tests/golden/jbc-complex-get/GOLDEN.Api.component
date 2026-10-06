@@ -1,12 +1,4 @@
 component GOLDEN.Api
 metamodelVersion 1.6
 
-    public table GoldenRecord {
-        t24: GOLDEN.Api.GoldenRecord
-        fields: {
-            recordId = 1
-            fieldValue = 2
-        }
-    }
-
     public method getTyped : GoldenApi:GoldenRecord (IN recordId string) { jBC: GOLDEN.GET.TYPED }

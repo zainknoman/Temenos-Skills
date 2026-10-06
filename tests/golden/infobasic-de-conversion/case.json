@@ -20,6 +20,5 @@
     "ROUTINE_NAME": "GOLDEN.DE.CONV",
     "APP": "ACCOUNT",
     "FIELD": "AC.CURRENCY"
-  },
-  "compiled": false
+  }
 }

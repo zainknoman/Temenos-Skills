@@ -16,6 +16,5 @@
     "APP": "AA.ARRANGEMENT.ACTIVITY",
     "LOOKUP_TABLE": "SAMPLE.ARRANGEMENT.LIST",
     "LOOKUP_KEY": "SAMPLE.KEY"
-  },
-  "compiled": false
+  }
 }

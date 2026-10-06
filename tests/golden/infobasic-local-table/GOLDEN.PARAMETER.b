@@ -9,6 +9,7 @@
 * -----------|-----------------|--------------------------------------------
 * 2026-10-02 | golden-case | Initial version
 *-----------------------------------------------------------------------------
+$PACKAGE GOLDEN.Legacy
     SUBROUTINE GOLDEN.PARAMETER
     $INSERT I_COMMON
     $INSERT I_EQUATE
@@ -26,6 +27,6 @@
     Table.equatePrefix = 'GOLDEN.PRM'
     Table.idPrefix = ''
     Table.blockedFunctions = ''
-    Table.triggerField = ''
+    Table.trigger = ''
     RETURN
 END

@@ -19,6 +19,5 @@
     "APP": "CUSTOMER",
     "ID_PREFIX": "SMP",
     "ERROR_TEXT": "ID MUST START WITH SMP"
-  },
-  "compiled": false
+  }
 }

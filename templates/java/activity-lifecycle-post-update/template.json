@@ -3,7 +3,7 @@
   "language": "java",
   "type": "activity-lifecycle-post-update",
   "label": "AA ActivityLifecycle.postCoreTableUpdate",
-  "description": "AA activity hook, after the activity is committed: when the activity is authorised, posts one OFS transaction that sets a field of another application's record. Not compiled on a T24 install yet: compile it before deploying.",
+  "description": "AA activity hook, after the activity is committed: when the activity is authorised, posts one OFS transaction that sets a field of another application's record.",
   "inputs": [
     {
       "id": "JAVA_PACKAGE",

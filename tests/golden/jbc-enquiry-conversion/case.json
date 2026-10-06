@@ -20,6 +20,5 @@
     "METHOD_NAME": "convSector",
     "APP": "CUSTOMER",
     "FIELD": "EB.CUS.SECTOR"
-  },
-  "compiled": false
+  }
 }

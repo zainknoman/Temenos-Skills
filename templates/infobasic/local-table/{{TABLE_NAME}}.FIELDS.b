@@ -9,6 +9,7 @@
 * -----------|-----------------|--------------------------------------------
 * {{TODAY}} | {{AUTHOR}} | Initial version
 *-----------------------------------------------------------------------------
+$PACKAGE {{PACKAGE}}
     SUBROUTINE {{TABLE_NAME}}.FIELDS
     $INSERT I_COMMON
     $INSERT I_EQUATE

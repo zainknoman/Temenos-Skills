@@ -333,3 +333,6 @@ package com.temenos.t24.custom.<module>;
   `tests/golden/`. Write-free tCompile setup and output format: `plan/state/decisions.md`.
 - [ ] **P8** Multi-release knowledge + T24Tools Artefact Generator — `plan/2026-10-02-releases-and-artefact-generator.md`.
   Part A (Temenos-Skills) done 2026-10-02: R25 DB, release diff, proven templates, templates.json. Part B (T24Tools) pending.
+  2026-10-06: 59 artefact types (19 Infobasic, 16 jBC, 24 Java), every golden case PASSes on R25 (`run_golden.py --release R25`);
+  no case is `"compiled": false`. Local tables come in two styles: `infobasic/local-table` (TAFJ `I_Table`) and
+  `jbc/local-table` (componentised `EB.Template`). Details: `plan/state/decisions.md`.

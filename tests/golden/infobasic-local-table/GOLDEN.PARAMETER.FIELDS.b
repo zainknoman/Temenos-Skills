@@ -9,6 +9,7 @@
 * -----------|-----------------|--------------------------------------------
 * 2026-10-02 | golden-case | Initial version
 *-----------------------------------------------------------------------------
+$PACKAGE GOLDEN.Legacy
     SUBROUTINE GOLDEN.PARAMETER.FIELDS
     $INSERT I_COMMON
     $INSERT I_EQUATE

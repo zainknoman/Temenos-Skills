@@ -3,7 +3,7 @@
   "language": "java",
   "type": "aa-calculation-adjusted-charge",
   "label": "AA Calculation.getAdjustedChargeAmount",
-  "description": "AA charge hook: waives a percentage of the calculated charge and returns the adjusted amount with a reason. Not compiled on a T24 install yet: compile it before deploying.",
+  "description": "AA charge hook: waives a percentage of the calculated charge and returns the adjusted amount with a reason.",
   "inputs": [
     {
       "id": "JAVA_PACKAGE",
