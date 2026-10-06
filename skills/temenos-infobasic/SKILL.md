@@ -11,7 +11,10 @@ description: >
   banking scenarios (FT, interest, dormancy, OFS, AA arrangements).
   Triggers: Infobasic, jBASE BASIC, T24 customization, VVR, VIR, VAR, NoFile enquiry,
   DE conversion, AA calculation, SUBROUTINE, GOSUB, $INSERT I_COMMON, $USING,
-  $PACKAGE, CALL OPF, CALL F.READ, STORE.END.ERROR, EB.SystemTables, AA.Framework.
+  $PACKAGE, CALL OPF, CALL F.READ, STORE.END.ERROR, EB.SystemTables, AA.Framework,
+  local table, template, .FIELDS, Table.addField, EB.DEV.HELPER, COB, multi-thread,
+  .LOAD, .SELECT, BATCH.BUILD.LIST, CONTROL.LIST, TSA.SERVICE, enquiry build routine,
+  conversion routine, O.DATA, ENQ.SELECTION, EB.ACCOUNTING, F.READU, legacy to $USING.
 ---
 
 # Infobasic (jBASE BASIC) for Temenos T24/Transact
@@ -26,8 +29,11 @@ Load the appropriate reference file(s) for the task at hand:
 | [references/routine-types.md](references/routine-types.md) | Complete templates for every routine type with real code patterns |
 | [references/apis.md](references/apis.md) | Full API reference: AA.Framework, AA.Interest, AC.Fees, EB.*, legacy CALL APIs |
 | [references/standards.md](references/standards.md) | Naming conventions, file header, modification history, comment style, review checklist |
+| [references/local-templates.md](references/local-templates.md) | New local application/table: `Table.*` main routine, `.FIELDS` (`Table.addField`, `XX<`/`XX>` groups, `I_DataTypes`), `.ID`/`.RECORD`/`.VALIDATE`/`.OVERRIDE` methods, stereotypes H/U/L/T/W |
+| [references/cob-services-and-extracts.md](references/cob-services-and-extracts.md) | COB / TSA service jobs: `.LOAD` / `.SELECT` / record / `.POST`, `BATCH.BUILD.LIST`, `CONTROL.LIST` stages, batch rules, DFE hooks |
 
-**For writing new code**: load routine-types.md + apis.md  
+**For writing new code**: load routine-types.md + apis.md (+ local-templates.md for a new table, cob-services-and-extracts.md for a batch job)  
+**Converting legacy `CALL` code to `$USING`**: apis.md → "Legacy CALL → componentised $USING (verified)" — never guess a componentised name  
 **For reviewing existing code**: load standards.md + routine-types.md  
 **For debugging**: load language.md + apis.md  
 **For a quick question**: answer inline without loading files if the answer is clear

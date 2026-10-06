@@ -771,31 +771,50 @@ $PACKAGE <YOUR.PACKAGE.NAME>
 *
 * Implementation of <PACKAGE>.<ComponentName>.<methodAlias>
 *
-SUBROUTINE <PKG.APP.PARAM>
+SUBROUTINE <APP.NAME>
 
     $USING EB.Template
 *-----------------------------------------------------------------------------
-    EB.Template.setTableId('<YOUR.CUSTOM.APP.NAME>')
-    EB.Template.setTableDescription('<Human readable description of this application>')
-    EB.Template.setTableSysId('<SYS.ID.CODE>')
-
-    EB.Template.setTableField(1, '<FIELD.NAME>',  '<Description>', '<TYPE>', '<SIZE>', '<MAND.FLAG>')
-    EB.Template.setTableField(2, '<FIELD.NAME>',  '<Description>', '<TYPE>', '<SIZE>', '<MAND.FLAG>')
-    EB.Template.setTableField(3, '<FIELD.NAME>',  '<Description>', '<TYPE>', '<SIZE>', '<MAND.FLAG>')
-
+    EB.Template.setTableName('<APP.NAME>')
+    EB.Template.setTableTitle('<Screen title>')
+    EB.Template.setTableStereotype('H')          ;* H, U, L, T or W
+    EB.Template.setTableProduct('<PRODUCT>')     ;* must exist on EB.PRODUCT
+    EB.Template.setTableSubproduct('')
+    EB.Template.setTableClassification('INT')    ;* INT, FIN or CUS
+    EB.Template.setTableSystemclearfile('Y')
+    EB.Template.setTableRelatedfiles('')
+    EB.Template.setTableIspostclosingfile('')
+    EB.Template.setTableEquateprefix('<PFX>')    ;* prefix of the generated field EQUs
+    EB.Template.setTableIdprefix('')
+    EB.Template.setTableBlockedfunctions('')
 RETURN
+END
 ```
 
-**setTableField parameter guide:**
+Fields are **not** defined here. They go in a separate `<APP.NAME>.FIELDS` subroutine:
 
-| Parameter | Values / Notes |
-|-----------|---------------|
-| position | 1-based integer |
-| FIELD.NAME | T24 field name in UPPER.CASE |
-| Description | Human-readable label |
-| TYPE | `A`=Alpha, `N`=Numeric, `D`=Date, `AM`=Amount |
-| SIZE | Max character length, e.g., `'35'` |
-| MAND.FLAG | `'Y'`=mandatory, `'N'`=optional |
+```jBC
+SUBROUTINE <APP.NAME>.FIELDS
+    $USING EB.SystemTables
+    $USING EB.Template
+    EB.SystemTables.setIdF('@ID')
+    EB.SystemTables.setIdN('20')
+    EB.SystemTables.setIdT('A')
+    EB.Template.TableAddfielddefinition('<FIELD.NAME>', '35', 'A', '')   ;* (name, length, type, neighbour)
+    EB.Template.FieldSetcheckfile('<CHECK.APP>')                          ;* optional, applies to the field above
+    EB.Template.TableAddreservedfield('RESERVED.2')
+    EB.Template.TableAddreservedfield('RESERVED.1')
+    EB.Template.TableAddlocalreferencefield('')
+    EB.Template.TableAddoverridefield()
+    EB.Template.TableSetauditposition()                                   ;* always last
+RETURN
+END
+```
+
+All setter/method names above were verified in the R23 `component_EB_Template` class.
+`setTableId`, `setTableDescription`, `setTableSysId` and `setTableField` **do not exist**. For the
+full field API, the MV/SV naming (`XX<` / `XX-` / `XX>`), data types and method routines (`.ID`,
+`.RECORD`, `.VALIDATE`, `.OVERRIDE`), see `temenos-infobasic/references/local-templates.md`.
 
 ---
 

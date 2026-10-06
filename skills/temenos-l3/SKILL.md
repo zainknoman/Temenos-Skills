@@ -261,6 +261,19 @@ public class MyBatch extends ServiceLifecycle {
 }
 ```
 
+**Selection alternatives** (all on `ServiceLifecycle` in `EB_ServiceHook.jar`; see `java-api.md`):
+
+| Need | Override | Infobasic equivalent |
+|------|----------|----------------------|
+| Build the id list in code | `getIds(ServiceData, List<String> controlList)` | `.SELECT` + `BATCH.BUILD.LIST` |
+| Process every id of one file | `getTableName(ServiceData, List<String> controlList)` → return e.g. `"F.AA.AAL.MORT.MULTI.AC.LINK"` | `.SELECT` of the whole file |
+| Update via OFS (framework posts the transaction) | `updateRecord(...)` + `SynchronousTransactionData` | record routine + OFS |
+| Write directly to your own table | `process(String id, ServiceData, String controlItem)` with a generated `*Table.write` | record routine + `F.WRITE` |
+
+The `getTableName` + `process` pair is the pattern in Temenos's *Service Routines in Java* guide
+(§5.3). Register each overridden method as its own `EB.API` record: append `.SELECT` to the id for
+the select method and `.LOAD` for the load method (§5.5).
+
 ---
 
 ## Superclass 3: Enquiry
@@ -906,6 +919,90 @@ tbl.delete("RECORD_ID");
 tbl.release("RECORD_ID");
 ```
 
+### Local (EB) Template Tables in Java — `com.temenos.t24.api.tables`
+
+**Sources:** Temenos *Service Routines in Java – Customer How-to Guide 1.0* (pp. 9–19) and
+*Java Extensibility* (p. 81).
+
+Classes for a **local** application (one you defined with `.FIELDS`, see
+`temenos-infobasic/references/local-templates.md`) are not in the shipped JARs. You generate them:
+
+1. Design Studio: create a *Model Project* + a `*-server` project (web-service connection).
+2. *File > Import > Design Studio – Import T24 Applications*, pick the local application(s), and toggle the `*-models` project to TAFJ nature.
+3. Right-click the `*-models` project > *Design Studio > Generate T24 API* and choose the jar location.
+4. Put the generated jar (and `T24_API-Tables.jar`, `TAFJClient.jar`) on the Java project's build path.
+
+Generated names: application `AAL.MORTGAGE.LINK` → package
+`com.temenos.t24.api.tables.aalmortgagelink`, classes `AalMortgageLinkRecord` and
+`AalMortgageLinkTable`. Local tables live under **`api.tables`**, core applications under
+**`api.records`**. Don't mix the two packages for the same application.
+
+```java
+DataAccess da = new DataAccess(this);
+AalMortgageLinkTable mortgageTable = new AalMortgageLinkTable(this);
+AalMortgageLinkRecord mortgageRecord =
+        new AalMortgageLinkRecord(da.getRecord("AA.AAL.MORTGAGE.LINK", loanId));
+mortgageRecord.setLoanBalance(balance);
+try {
+    mortgageTable.write(loanId, mortgageRecord);
+} catch (T24IOException e) {
+    // write failed: log it, do not swallow silently
+}
+```
+
+Deploying a Java service (guide §5.4–5.5): export the jar, add it to the JBoss
+`modules/.../module.xml`, and restart. Create a `PGM.FILE` for the job and one `EB.API` record per
+overridden method. Append `.SELECT` to the `EB.API` id for the select method and `.LOAD` for the
+load method.
+
+### AA Source Balance Calculation — `Calculation.calculateSourceBalance(s)`
+
+`com.temenos.t24.api.hook.arrangement.Calculation` (`AA_CalculationHook.jar`), attached through
+the `CALC.ROUTINE` field of `AA.SOURCE.CALC.TYPE` and invoked from `AA.GET.BASE.BALANCE`.
+If the hook throws, an error is raised and the transaction is not committed (R25 JavaDoc).
+
+| Release | Method | Output parameters |
+|---------|--------|-------------------|
+| R23 | `calculateSourceBalance(...)` — the only variant | `TNumber sourceBalance`, `TDate startDate` |
+| R25 | `calculateSourceBalances(...)` — **use this** | `List<TNumber> sourceBalance`, `List<TDate> startDate` |
+| R25 | `calculateSourceBalance(...)` | `@Deprecated` — "use calculateSourceBalances() instead" |
+
+Full parameter list (same order in both): `String arrangementId, String propertyId,
+String currency, AaArrangementRecord arrangementRecord, String activityId,
+TDate activityEffectiveDate, <sourceBalance>, <startDate>, AaAccountDetailsRecord
+accountDetailRecord, AaArrangementActivityRecord arrangementActivityRecord,
+ArrangementContext arrangementContext, TStructure productPropertyRecord,
+AaProductCatalogRecord productRecord, TStructure record,
+AaArrangementActivityRecord masterActivityRecord`.
+
+```java
+// R23
+@Override
+public void calculateSourceBalance(String arrangementId, String propertyId, String currency,
+        AaArrangementRecord arrangementRecord, String activityId, TDate activityEffectiveDate,
+        TNumber sourceBalance, TDate startDate, AaAccountDetailsRecord accountDetailRecord,
+        AaArrangementActivityRecord arrangementActivityRecord, ArrangementContext arrangementContext,
+        TStructure productPropertyRecord, AaProductCatalogRecord productRecord, TStructure record,
+        AaArrangementActivityRecord masterActivityRecord) {
+    sourceBalance.set(computedAmount);   // computed from the arrangement — never a literal
+    startDate.set(requiredStartDate);
+}
+```
+
+Confirm which release the code targets before choosing the method. The other `Calculation`
+methods (`calculatePayment`, `calculateCharge`, `calculateAdjustedCharge`,
+`getInterestCustomRate`, …) are in `temenos-dev/references/apis/java-api.md`. The proven golden
+cases are `tests/golden/java-aa-calculation-*`.
+
+### Outbound calls (SMTP / HTTP) from a hook
+
+Nothing in the shipped L3 API provides email/HTTP. Sending from a hook means plain Java
+(`javax.mail`, `java.net.HttpURLConnection`) running inside the app server. Rules:
+
+- **Never** hard-code hosts, users, passwords or tokens in the class. Read them from a parameter table or the server's secured configuration. A credential in source ends up in the jar, in the repository, and in every copy of both.
+- Do the call in a `ServiceLifecycle` (queue-and-send) or after commit (`postUpdateRequest`), not in `validateRecord`/`updateRecord`. A slow or failing endpoint must not block or roll back the banking transaction.
+- Record the send status on your own table (e.g. a `STATUS` field written back with `Table.write`) so a failed send can be retried by the service.
+
 ---
 
 ## Session Utilities
@@ -1540,17 +1637,19 @@ public TValidationResponse validateField(String application, String currentRecor
 
 ### updateCoreRecord — Before Auth Routine
 ```java
+// Signature verified: R23 RecordLifecycle (javap, EB_TemplateHook) and R25 JavaDoc — void, 10 parameters.
 @Override
-public TValidationResponse updateCoreRecord(String application, String currentRecordId,
-        TStructure currentRecord, TStructure liveRecord,
+public void updateCoreRecord(String application, String currentRecordId,
+        TStructure currentRecord, TStructure unauthorisedRecord, TStructure liveRecord,
+        List<String> versionNames, TBoolean isZeroAuth,
+        List<String> currentRecordIds, List<TStructure> currentRecords,
         TransactionContext transactionContext) {
 
     SomeRecord rec = new SomeRecord(currentRecord);
     // Can update core fields:
     rec.setSomeCoreField("value");
     // CANNOT update local reference fields here
-    currentRecord.set(rec.toStructure());
-    return rec.getValidationResponse();
+    currentRecord.set(rec.toStructure());   // no return value — write changes back into currentRecord
 }
 ```
 

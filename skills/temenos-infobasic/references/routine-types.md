@@ -14,6 +14,10 @@
 | `*.ARR.TC.*`, `*.PRD.CAT.TC.*` | Property Template | AA property definition |
 | `*.S.*` | Service Routine | Background service / batch |
 | `PROGRAM` | Batch Program | Standalone jBASE batch |
+| `E.*.BUILD` (ENQUIRY `BUILD.ROUTINE`) | Enquiry build routine | Before selection — adds/changes selection criteria (§13) |
+| `E.*.CONV` (ENQUIRY `CONVERSION` `@routine`) | Enquiry conversion | Per field value — transforms `O.DATA` (§14) |
+| `<JOB>.LOAD` / `.SELECT` / `<JOB>` / `.POST` | Multi-threaded COB job | See `references/cob-services-and-extracts.md` |
+| `<APP>` + `<APP>.FIELDS` (+ `.ID`, `.VALIDATE` …) | Local template table | See `references/local-templates.md` |
 
 ---
 
@@ -563,6 +567,62 @@ RETURN
 *-----------------------------------------------------------------------------
 END
 ```
+
+---
+
+## 13. Enquiry Build Routine (`BUILD.ROUTINE` on ENQUIRY)
+
+Proven skeleton: `tests/golden/infobasic-enquiry-build/`. The routine receives the enquiry
+selection array. Positions `<2>`, `<3>` and `<4>` are the parallel VM-lists of selection field
+names, operands and values (the Java hook docs call these "fields<2 … 4> from ENQ.SELECTION",
+CB3PREFJ Lesson 7). Append to all three together:
+
+```basic
+    SUBROUTINE E.MY.BUILD(ENQ.DATA)
+    $INSERT I_COMMON
+    $INSERT I_EQUATE
+    $INSERT I_ENQUIRY.COMMON
+
+    ENQ.DATA<2,-1> = 'SECTOR'          ;* selection field (STANDARD.SELECTION name)
+    ENQ.DATA<3,-1> = 'EQ'              ;* operand
+    ENQ.DATA<4,-1> = '1001'            ;* value
+    RETURN
+END
+```
+
+To read what the user typed, `LOCATE 'FIELD' IN ENQ.DATA<2,1> SETTING POS` and take
+`ENQ.DATA<3,POS>` / `ENQ.DATA<4,POS>`. Java equivalent: `Enquiry.setFilterCriteria`
+(`temenos-l3`).
+
+## 14. Enquiry Conversion Routine (`CONVERSION` = `@ROUTINE`)
+
+Proven skeleton: `tests/golden/infobasic-enquiry-conversion/`. Commons from
+`I_ENQUIRY.COMMON`: `O.DATA` holds the current value **in and out**, `ID` the current
+record id, `R.RECORD` the current record, `VM.COUNT` the number of multi-values to display
+(Temenos *Subroutine Guide*, `E.GET.LOCAL.AMT` / `E.GET.STMT.NARRATIVE`).
+
+```basic
+    SUBROUTINE E.MY.CONV
+    $INSERT I_COMMON
+    $INSERT I_EQUATE
+    $INSERT I_ENQUIRY.COMMON
+    $INSERT I_F.CUSTOMER
+
+    Y.ID = O.DATA
+    IF Y.ID EQ '' THEN RETURN
+    FN.CUS = 'F.CUSTOMER' ; F.CUS = ''
+    CALL OPF(FN.CUS, F.CUS)
+    R.CUS = '' ; Y.ERR = ''
+    CALL F.READ(FN.CUS, Y.ID, R.CUS, F.CUS, Y.ERR)
+    IF Y.ERR EQ '' THEN O.DATA = R.CUS<EB.CUS.SECTOR> ELSE O.DATA = ''
+    RETURN
+END
+```
+
+Componentised: `EB.Reports.getOData()` / `EB.Reports.setOData(v)`, `EB.Reports.getRRecord()`,
+`EB.Reports.getId()`. A conversion that returns several lines sets `R.RECORD<n>` to a VM-list and
+`VM.COUNT` to its count. A conversion runs once per row, so never `SELECT` inside it. Java
+equivalent: `Enquiry.setValue` (`temenos-l3`).
 
 ---
 

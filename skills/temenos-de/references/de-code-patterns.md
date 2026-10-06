@@ -390,7 +390,7 @@ SUBROUTINE <PKG>.DE.EVENT.MAPPING
     EB.Template.setTableEquateprefix('<PKG>.H')
     EB.Template.setTableIdprefix('')
     EB.Template.setTableBlockedfunctions('')
-    Table.trigger = ''
+    EB.Template.setTableTriggerfield('')
 
 RETURN
 END

@@ -9,7 +9,9 @@ description: >
   project', 'payment scheme', 'OFS integration', 'ofsml', 'IBM MQ', 'JMS', 'CALLJEE',
   'T24Email', 'T24Sms', 'integration flow', 'inflow service', 'OFSConnector',
   'entitlement service', 'catalog service', 'automation service', 'DFMapping',
-  'inbound security', 'integration landscape', 'PPBACS', 'PPBECS', 'RTGS'.
+  'inbound security', 'integration landscape', 'PPBACS', 'PPBECS', 'RTGS',
+  'IRIS', 'Interaction Framework', 'provider API', 'publisher API', 'PZ.API',
+  'inventory.json', 'irf-service-archetype', 'swagger', 'Camel route', 'direct-vm'.
 ---
 
 # Integration Expert Skill
@@ -32,6 +34,7 @@ beyond what's verified inside its own `ESB_SOURCE/` folder.
 |------|-------------|
 | [esb-packages.md](references/esb-packages.md) | Full list of ESB/non-ESB payment-integration packages found on this environment |
 | [service-extensions-and-messaging.md](references/service-extensions-and-messaging.md) | `bnk/Extensions` service modules, T24Email/T24Sms, ofsml, MQ/JMS, CALLJEE |
+| [iris-provider-api.md](references/iris-provider-api.md) | IRIS / Interaction Framework REST APIs: `PZ.API.*` enquiries, `*.API.*` versions, inventory, `irf-service(-container)-archetype`, Workbench, swagger, Camel routes, published→provider `direct-vm` (source: IRIS R18 User Guide) |
 
 For deeper procedural detail (MQ install/SSL config, CALLJEE usage,
 Componentisation-RESTful specifics):

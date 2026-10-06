@@ -420,3 +420,149 @@ AA.ProductManagement.ProductDesigner.TierSourceType    ;* tier source types
 | `COMI` (modify) | String | Assign to change the field value being written |
 | `MESSAGE` | String | "ERROR" for VAR error |
 | `R.DATES` | DynArray | System DATES record (Julian date, etc.) |
+
+---
+
+## Legacy `CALL` → componentised `$USING` (verified)
+
+Every row below was checked against the component classes in the **R23 JARs** (each
+`component_<Mod>_<Name>_*_cl.class` lists each method next to the legacy routine it wraps).
+The componentised method keeps the legacy routine's arguments. Never derive a name by CamelCasing
+a legacy routine: many are irregular (`EB.ACCOUNTING` → `AC.API.EbAccounting`,
+`MULTI.GET.LOC.REF` → `EB.Updates.MultiGetLocRef`, `EB.FORMAT.ID` →
+`EB.TransactionControl.FormatId`).
+
+| Legacy | `$USING` form | Legacy | `$USING` form |
+|--------|---------------|--------|---------------|
+| `OPF` | `EB.DataAccess.Opf` | `STORE.END.ERROR` | `EB.ErrorProcessing.StoreEndError` |
+| `F.READ` | `EB.DataAccess.FRead` | `ERR` | `EB.ErrorProcessing.Err` |
+| `F.READU` | `EB.DataAccess.FReadu` | `FATAL.ERROR` | `EB.ErrorProcessing.FatalError` |
+| `F.READV` | `EB.DataAccess.FReadv` | `EXCEPTION.LOG` | `EB.ErrorProcessing.ExceptionLog` |
+| `F.WRITE` | `EB.DataAccess.FWrite` | `STORE.OVERRIDE` | `EB.OverrideProcessing.StoreOverride` |
+| `F.DELETE` | `EB.DataAccess.FDelete` | `GET.LOC.REF` | `EB.LocalReferences.GetLocRef` |
+| `F.RELEASE` | `EB.DataAccess.FRelease` | `MULTI.GET.LOC.REF` | `EB.Updates.MultiGetLocRef` |
+| `F.READ.HISTORY` | `EB.DataAccess.FReadHistory` | `JOURNAL.UPDATE` | `EB.TransactionControl.JournalUpdate` |
+| `EB.READ.HISTORY.REC` | `EB.DataAccess.ReadHistoryRec` | `TRANSACTION.ABORT` | `EB.TransactionControl.TransactionAbort` |
+| `EB.READLIST` | `EB.DataAccess.Readlist` | `CONCAT.FILE.UPDATE` | `EB.TransactionControl.ConcatFileUpdate` |
+| `DAS` | `EB.DataAccess.Das` | `EB.FORMAT.ID` | `EB.TransactionControl.FormatId` |
+| `CACHE.READ` | `EB.DataAccess.CacheRead` | `OFS.POST.MESSAGE` | `EB.Interface.OfsPostMessage` |
+| `DBR` | `EB.DataAccess.Dbr` | `OFS.CALL.BULK.MANAGER` | `EB.Interface.OfsCallBulkManager` |
+| `BATCH.BUILD.LIST` | `EB.Service.BatchBuildList` | `OFS.GLOBUS.MANAGER` | `EB.Interface.OfsGlobusManager` |
+| `EB.CLEAR.FILE` | `EB.Service.ClearFile` | `OFS.BUILD.RECORD` | `EB.Foundation.OfsBuildRecord` |
+| `LOAD.COMPANY` | `ST.CompanyCreation.LoadCompany` | `EB.MAP.LOCAL.FIELDS` | `EB.Foundation.MapLocalFields` |
+| `EB.READ.PARAMETER` | `ST.CompanyCreation.EbReadParameter` | `EB.CURR.CONV` | `EB.Foundation.CurrConv` |
+| `EB.ACCOUNTING` | `AC.API.EbAccounting` | `SC.FORMAT.CCY.AMT` | `EB.Foundation.ScFormatCcyAmt` |
+| `EB.GET.ACCT.BALANCE` | `AC.API.EbGetAcctBalance` | `EB.ROUND.AMOUNT` | `EB.API.RoundAmount` |
+| `EXCHRATE` | `ST.ExchangeRate.Exchrate` | `CDT` / `CDD` | `EB.API.Cdt` / `EB.API.Cdd` |
+| `MIDDLE.RATE.CONV.CHECK` | `ST.ExchangeRate.MiddleRateConvCheck` | `JULDATE` | `EB.API.Juldate` |
+| `TERMRATE` | `ST.ExchangeRate.Termrate` | `EB.SET.NEW.TASK` | `EB.API.SetNewTask` |
+| `DIETER.DATE` | `ST.Config.DieterDate` | `GET.STANDARD.SELECTION.DETS` | `EB.API.GetStandardSelectionDets` |
+| `CALENDAR.DAY` | `EB.Utility.CalendarDay` | `FIELD.NAMES.TO.NUMBERS` | `EB.API.FieldNamesToNumbers` |
+| `EB.NO.OF.MONTHS` | `EB.Utility.NoOfMonths` | `EB.GET.APPL.FIELD` | `EB.API.GetApplField` |
+| `REFRESH.FIELD` | `EB.Display.RefreshField` | `ALLOCATE.UNIQUE.TIME` | `EB.API.AllocateUniqueTime` |
+| `REBUILD.SCREEN` | `EB.Display.RebuildScreen` | `CHECK.ROUTINE.EXIST` | `EB.API.CheckRoutineExist` |
+| `CALCULATE.CHARGE` | `CG.ChargeConfig.CalculateCharge` | `Product.isInCompany` | `EB.API.ProductIsInCompany` |
+
+AA methods present in R23 (argument lists not documented in the sources here, so confirm
+them before use): `AA.Framework.GetArrangementConditions`, `AA.Framework.GetPeriodBalances`,
+`AA.Framework.GetEcbBalanceAmount`, `AA.Framework.GetArrangementAccountId`,
+`AA.Framework.GetArrangement`, `AA.ProductFramework.GetPropertyRecord`,
+`AC.CashFlow.AccountserviceGetworkingbalance`.
+
+## Common-variable accessors (componentised code)
+
+With `$USING`, the `I_COMMON` / `I_ENQUIRY.COMMON` variables are read and written through
+accessors (all verified in R23 `component_EB_SystemTables` / `component_EB_Reports`):
+
+| Variable | `EB.SystemTables.` read | write |
+|----------|------------------------|-------|
+| `R.NEW(f)` / `R.OLD(f)` / `R.NEW.LAST(f)` | `getRNew(f)` / `getROld(f)` / `getRNewLast(f)` | `setRNew(f, v)` |
+| `COMI` / `COMI.ENRI` | `getComi()` / `getComiEnri()` | `setComi` / `setComiEnri` |
+| `ETEXT` / `E` / `TEXT` | `getEtext()` / `getE()` / `getText()` | `setEtext` / `setE` / `setText` |
+| `AF` / `AV` / `AS` | `getAf()` / `getAv()` / `getAs()` | `setAf` / `setAv` / `setAs` |
+| `ID.NEW` / `ID.COMPANY` | `getIdNew()` / `getIdCompany()` | `setIdNew` |
+| `V$FUNCTION` / `MESSAGE` | `getVFunction()` / `getMessage()` | `setVFunction` / `setMessage` |
+| `TODAY` / `LCCY` / `LNGG` / `OPERATOR` | `getToday()` / `getLccy()` / `getLngg()` / `getOperator()` | — |
+| `APPLICATION` / `PGM.VERSION` | `getApplication()` / `getPgmVersion()` | — |
+| `R.COMPANY` / `R.USER` / `R.DATES` | `getRCompany()` / `getRUser()` / `getRDates()` | — |
+| `T` / `N` / `F` / `ID.F` / `ID.N` / `ID.T` | `getT()` | `setT` / `setN` / `setF` / `setIdF` / `setIdN` / `setIdT` |
+
+`EB.Reports.`: `getOData`/`setOData`, `getRRecord`/`setRRecord`, `getId`/`setId`,
+`getEnqSelection`/`setEnqSelection`, `getDFields`, `getDRangeAndValue`, `getDLogicalOperands`,
+`getEnqError`/`setEnqError`, `getVmCount`/`setVmCount`, `setSmCount`, `getVc`, `getS`,
+`getREnq`, `getEnqKeys`/`setEnqKeys`.
+
+## Documented call contracts (Temenos PDFs in `docs/`)
+
+**`F.READU` — read with lock** (T2BTT R06 *Infobasic Programming for Developers* pp. 76–77)
+
+```basic
+CALL F.READU(FN.FILE, Y.ID, R.REC, F.FILE, Y.ERR, RETRY)
+;* RETRY: 'P msg' prompt to retry | 'R nn xx' retry xx times, nn s apart | 'I' ignore the lock
+;*        'E' return immediately with an error | '' retry continuously
+;* The lock is released by F.WRITE of the record, an explicit release, or routine end.
+CALL F.RELEASE(FN.FILE, Y.ID, F.FILE)
+```
+
+**`CACHE.READ`** (same deck pp. 81–84): `CACHE.READ(FileName, ID, Record, Error)`. FileName
+has no mnemonic (`'F.CURRENCY'`) and no `OPF` is needed. Use it for rarely-updated parameter
+records. Entries older than `SPF>CACHE.EXPIRY` seconds are re-read. `ID` may also be
+`'SelectIDs'`, `'SSelectIDs'` or `'SSelectARs'` to return an id list.
+
+**`EB.READ.HISTORY.REC` — latest `$HIS` copy** (CSD Programming Standards item 23). Prefer it
+to hand-building `ID:';n'` keys:
+
+```basic
+CALL EB.READ.HISTORY.REC(F.FUNDS.TRANSFER$HIS, Y.FT.ID, R.FT.HIS, Y.HIS.ERR)
+```
+
+**`MULTI.GET.LOC.REF`** (CSD / TAM Coding Standards p. 25) — preferred over repeated
+`GET.LOC.REF`:
+
+```basic
+APPL = 'CUSTOMER'
+FLD  = 'CUST.ID':VM:'MFO.CODE'
+POS  = ''
+CALL MULTI.GET.LOC.REF(APPL, FLD, POS)
+CUST.ID.POS = POS<1,1> ; MFO.CODE.POS = POS<1,2>
+```
+
+**`EB.GET.ACCT.BALANCE`** (TAM Coding Standards p. 51):
+`CALL EB.GET.ACCT.BALANCE(ACCT.ID, ACCT.REC, BALANCE.TYPE, BALANCE.DATE, SYSTEM.DATE, BALANCE, CREDIT.MVMT, DEBIT.MVMT, ERR.MSG)`
+
+**`EB.ACCOUNTING`** (TAM Coding Standards pp. 42–43):
+
+```basic
+CALL EB.ACCOUNTING(SYSTEM.ID, TYPE, ENTRY.ARRAY, ACCOUNTING.TYPE)
+CALL EB.ACCOUNTING('CLR', 'DEL', '', 0)      ;* delete entries when V$FUNCTION is 'D'
+CALL EB.ACCOUNTING('CLR', 'REV', '', '')     ;* reverse on 'R' / RECORD.STATUS 'REVE'
+```
+
+`ENTRY.ARRAY` holds the entries, each laid out as a `STMT.ENTRY`/`CATEG.ENTRY` record. Build
+them with the `I_F.STMT.ENTRY` equates and verify every field with
+`validate_fields.py --app STMT.ENTRY`. Validate the company and category first, and stop with
+`FATAL.ERROR` on a setup error. An application that raises entries must have a `STMT.NOS` field
+(template guide p. 72). The legal `TYPE` values for raising entries are not listed in the
+sources here — ask.
+
+**`STORE.OVERRIDE` with values** (template guide pp. 90–92): `TEXT` holds an `OVERRIDE` id
+whose message contains `&` placeholders. The values follow after `FM`, separated by `VM`, in
+placeholder order:
+
+```basic
+TEXT = 'ACCT.UNAUTH.OD':FM:Y.CCY:VM:Y.AMT:VM:Y.ACCT
+CALL STORE.OVERRIDE(CURR.NO)
+```
+
+**OFS from a routine** (CSD Programming Standards items 25–26): use `OFS.CALL.BULK.MANAGER`,
+not `OFS.BULK.MANAGER`. For bulk OFS transactions use the public API `ofs.addLocalRequest`
+(`EB.Interface.OfsAddlocalrequest`). `OFS.POST.MESSAGE` writes to `F.OFS.MESSAGE.QUEUE`, which
+`OFS.MESSAGE.SERVICE` processes. The `OFS.SOURCE` id is passed as a parameter (DEL6 *Delivery
+Carriers* R11).
+
+**General standards** (CSD Programming Standards; Programming Standards p. 33):
+- Use `$INSERT`, not `$INCLUDE`.
+- No `OPF` on `STANDARD.SELECTION`; use `GET.STANDARD.SELECTION.DETS`.
+- No `DBR` to fetch single fields; read the record once.
+- Never re-read a parameter record inside a loop.
+- Errors and overrides are `EB.ERROR` / `OVERRIDE` ids, not literal text.
