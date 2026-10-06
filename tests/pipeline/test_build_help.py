@@ -39,6 +39,7 @@ def test_written_page_embeds_the_index_once(tmp_path):
     out = tmp_path / "help.html"
     write_help(out)
     html = out.read_text(encoding="utf-8")
-    assert "/*__HELP_INDEX__*/" not in html
-    assert len(re.findall(r"</script>", html)) == 1
+    assert "/*__HELP_INDEX__*/" not in html and "/*__MARKED_JS__*/" not in html
+    assert len(re.findall(r"</script>", html)) == 2          # inlined marked + the viewer
+    assert "marked v" in html and 'class="markdown-body"' in html
     assert "<title>Temenos-Skills Help</title>" in html

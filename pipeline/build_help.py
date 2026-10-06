@@ -17,7 +17,9 @@ the repo), then render a viewer over it. The index holds:
   schemas    application -> field count (and jBC-name count) per release
 
 The HTML embeds the index as JSON and needs no network: open the file in a
-browser. Rebuild after changing skills, templates or pipeline tools.
+browser. Markdown is parsed with marked (inlined from pipeline/vendor/) and
+shown as an MDFV-style document sheet (github.com/zainknoman/MDFV); only its
+web fonts come from the network, with system-font fallbacks offline. Rebuild after changing skills, templates or pipeline tools.
 
   python pipeline/build_help.py [--out Temenos-Skills-HelpText.html]
 """
@@ -37,6 +39,8 @@ ROOT = Path(".")
 TEXT_SUFFIXES = {".md", ".b", ".component", ".py", ".json", ".txt", ".java", ".yml", ".yaml"}
 SKIP_DIRS = {"table-schema", "__pycache__"}
 HELP_TEMPLATE = Path(__file__).resolve().parent / "help_template.html"
+# marked (MIT), the Markdown parser MDFV uses -- vendored and inlined so the page still needs no network.
+MARKED_JS = Path(__file__).resolve().parent / "vendor" / "marked.min.js"
 
 
 def frontmatter(text):
@@ -111,12 +115,14 @@ def readme_sections():
 def template_index():
     templates = {t["id"]: t for t in load_templates()}
     exported = ROOT / "build" / "t24tools" / "templates.json"
-    proven, golden_out = {}, {}
+    proven, compiled, golden_out = {}, {}, {}
     if exported.exists():
         doc = json.loads(exported.read_text(encoding="utf-8"))
         for lang in doc["languages"]:
             for typ in lang["types"]:
                 proven[f"{lang['id']}/{typ['id']}"] = typ["proven"]
+                # proven but "compiled": false = renders and field-checks, never compiled on T24 yet
+                compiled[f"{lang['id']}/{typ['id']}"] = typ.get("compiled", typ["proven"])
         golden_out = {tid: t.get("golden", {}) for tid, t in doc["templates"].items()}
     catalogue = json.loads((ROOT / "templates" / "catalogue.json").read_text(encoding="utf-8"))
     langs = []
@@ -128,7 +134,7 @@ def template_index():
             types.append({
                 "id": tid, "label": typ["label"], "description": t.get("description", ""),
                 "inputs": t.get("inputs", []), "files": t.get("files", {}),
-                "proven": proven.get(tid), "golden": golden_out.get(tid, {}),
+                "proven": proven.get(tid), "compiled": compiled.get(tid), "golden": golden_out.get(tid, {}),
             })
         langs.append({"id": lang["id"], "label": lang["label"], "types": types})
     return langs
@@ -203,7 +209,12 @@ def script_safe_json(obj):
 
 def write_help(out):
     index = build_index()
-    html = HELP_TEMPLATE.read_text(encoding="utf-8").replace("/*__HELP_INDEX__*/null", script_safe_json(index))
+    marked = MARKED_JS.read_text(encoding="utf-8")
+    if "</script" in marked.lower():
+        raise ValueError(f"{MARKED_JS} contains '</script' and cannot be inlined")
+    html = (HELP_TEMPLATE.read_text(encoding="utf-8")
+            .replace("/*__MARKED_JS__*/", marked)
+            .replace("/*__HELP_INDEX__*/null", script_safe_json(index)))
     Path(out).write_text(html, encoding="utf-8")
     return index, len(html.encode("utf-8"))
 

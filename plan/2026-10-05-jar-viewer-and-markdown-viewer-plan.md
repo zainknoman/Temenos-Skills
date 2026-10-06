@@ -47,7 +47,7 @@
 **Interfaces:**
 - Produces: `load_cache(cache_dir) -> [(jar_name, [class dicts])]`, `build_class_index(jar_classes, release, now) -> dict`, `write_class_index(jar_classes, out_dir, release, now=None) -> dict` (the manifest entry), `METHOD_TYPES`, CLI `py pipeline/class_export.py --release R23 [--out DIR]` (Task 2 adds R25). `release(golden_cmd, export_cmd, templates_cmd=None, class_cmd=None)`.
 
-- [ ] **Step 1: Write the failing tests** — `tests/pipeline/test_class_export.py`
+- [x] **Step 1: Write the failing tests** — `tests/pipeline/test_class_export.py`
 
 ```python
 import json
@@ -140,12 +140,12 @@ def test_write_adds_classes_json_to_existing_manifest(tmp_path):
     assert manifest["classes"] == 4 and manifest["jars"] == 3
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `py -m pytest tests/pipeline/test_class_export.py -q`
 Expected: FAIL — `ModuleNotFoundError: No module named 'class_export'`
 
-- [ ] **Step 3: Implement `pipeline/class_export.py`**
+- [x] **Step 3: Implement `pipeline/class_export.py`**
 
 ```python
 #!/usr/bin/env python3
@@ -241,12 +241,12 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `py -m pytest tests/pipeline/test_class_export.py -q`
 Expected: 7 passed
 
-- [ ] **Step 5: Wire into `release_t24tools.py` — failing test first.** Append to `tests/pipeline/test_release_t24tools.py`:
+- [x] **Step 5: Wire into `release_t24tools.py` — failing test first.** Append to `tests/pipeline/test_release_t24tools.py`:
 
 ```python
 def test_classes_are_exported_after_the_fields_and_not_when_golden_fails(tmp_path):
@@ -260,7 +260,7 @@ def test_classes_are_exported_after_the_fields_and_not_when_golden_fails(tmp_pat
 
 Run: `py -m pytest tests/pipeline/test_release_t24tools.py -q` → FAIL (`unexpected keyword argument 'class_cmd'`).
 
-- [ ] **Step 6: Implement.** In `pipeline/release_t24tools.py` replace `release()` and the `release(...)` call in `main()`:
+- [x] **Step 6: Implement.** In `pipeline/release_t24tools.py` replace `release()` and the `release(...)` call in `main()`:
 
 ```python
 def release(golden_cmd, export_cmd, templates_cmd=None, class_cmd=None):
@@ -287,12 +287,12 @@ def release(golden_cmd, export_cmd, templates_cmd=None, class_cmd=None):
 
 Also extend the module docstring's first sentence: "...write that release's T24Tools knowledge export (build/t24tools/<release>/: fields.json, descriptions.json, classes.json)".
 
-- [ ] **Step 7: Run all pipeline tests**
+- [x] **Step 7: Run all pipeline tests**
 
 Run: `py -m pytest tests/pipeline -q`
 Expected: all pass (88 before + 8 new)
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add pipeline/class_export.py pipeline/release_t24tools.py tests/pipeline/test_class_export.py tests/pipeline/test_release_t24tools.py
@@ -313,9 +313,9 @@ R25 has no class data in Temenos-Skills, and no R25 JAR is byte-identical to its
 - Consumes: Task 1 `build_class_index`, `write_class_index(jar_classes, out_dir, release, now=None)`, `load_cache`, `METHOD_TYPES`.
 - Produces: `jar_types.classify_component(jar_name) -> str`; `jar_classes.read_class_header(data: bytes) -> (access_flags, qualified, superclass, [interfaces]) | None`; `jar_classes.parse_signature(text) -> [name, returnType, [paramTypes]] | None`; `jar_classes.javadoc_methods(javadoc_root, qualified) -> list`; `jar_classes.load_jars(jars_dir, javadoc_root=None) -> [(jar_name, [class dicts])]` in the extract.py cache shape.
 
-- [ ] **Step 1: Move the component rules.** Create `pipeline/jar_types.py` containing, verbatim, the `_COMPONENT_RULES` list and `classify_component()` from `pipeline/extract.py:138-177` under the docstring `"""Component type of a T24 JAR from its file name (shared by extract.py and jar_classes.py; no javatools needed)."""`. In `extract.py` delete those lines and add `from jar_types import classify_component` next to the other imports (above the `javatools` try-block). Run `py -m pytest tests/pipeline -q` → still all pass.
+- [x] **Step 1: Move the component rules.** Create `pipeline/jar_types.py` containing, verbatim, the `_COMPONENT_RULES` list and `classify_component()` from `pipeline/extract.py:138-177` under the docstring `"""Component type of a T24 JAR from its file name (shared by extract.py and jar_classes.py; no javatools needed)."""`. In `extract.py` delete those lines and add `from jar_types import classify_component` next to the other imports (above the `javatools` try-block). Run `py -m pytest tests/pipeline -q` → still all pass.
 
-- [ ] **Step 2: Write the failing tests** — `tests/pipeline/test_jar_classes.py`
+- [x] **Step 2: Write the failing tests** — `tests/pipeline/test_jar_classes.py`
 
 ```python
 import struct
@@ -404,12 +404,12 @@ def test_javadoc_methods_and_load_jars(tmp_path):
     assert iface["is_interface"] and iface["is_abstract"] and iface["methods"] == []
 ```
 
-- [ ] **Step 3: Run to verify it fails**
+- [x] **Step 3: Run to verify it fails**
 
 Run: `py -m pytest tests/pipeline/test_jar_classes.py -q`
 Expected: FAIL — `ModuleNotFoundError: No module named 'jar_classes'`
 
-- [ ] **Step 4: Implement `pipeline/jar_classes.py`**
+- [x] **Step 4: Implement `pipeline/jar_classes.py`**
 
 ```python
 #!/usr/bin/env python3
@@ -531,12 +531,12 @@ def load_jars(jars_dir, javadoc_root=None):
 
 In `pipeline/class_export.py` import `METHOD_TYPES` from `jar_classes` instead of defining it (one definition), keep it re-exported for the Task 1 test.
 
-- [ ] **Step 5: Run to verify it passes**
+- [x] **Step 5: Run to verify it passes**
 
 Run: `py -m pytest tests/pipeline/test_jar_classes.py tests/pipeline/test_class_export.py -q`
 Expected: all pass
 
-- [ ] **Step 6: Source switch in `class_export.py`.** Delete the local `METHOD_TYPES` and `CLASS_CACHE`, and replace `main()` (the Task 1 version accepts only R23):
+- [x] **Step 6: Source switch in `class_export.py`.** Delete the local `METHOD_TYPES` and `CLASS_CACHE`, and replace `main()` (the Task 1 version accepts only R23):
 
 ```python
 CLASS_SOURCE = {
@@ -565,7 +565,7 @@ def main():
 ```
 with `from jar_classes import METHOD_TYPES, load_jars` at the top. Update the module docstring's usage line for R25 to `python pipeline/class_export.py --release R25   # reads C:\R25 JARs + build/releases/R25 JavaDoc`.
 
-- [ ] **Step 7: Full suite and commit**
+- [x] **Step 7: Full suite and commit**
 
 Run: `py -m pytest tests/pipeline -q` → all pass.
 
@@ -580,12 +580,12 @@ git commit -m "feat(export): R25 class index from JAR headers + JavaDoc, no java
 - Modify: `CLAUDE.md`
 - Output (git-ignored): `build/t24tools/R23/classes.json`, `build/t24tools/R25/classes.json`
 
-- [ ] **Step 1: Export both releases**
+- [x] **Step 1: Export both releases**
 
 Run: `py pipeline/release_t24tools.py --release R23` then `py pipeline/release_t24tools.py --release R25`
 Expected: golden suite passes each time, then `Wrote build\t24tools\<R>\classes.json (… MB)`.
 
-- [ ] **Step 2: Spot-check RecordLifecycle in both**
+- [x] **Step 2: Spot-check RecordLifecycle in both**
 
 ```bash
 py -c "import json
@@ -596,7 +596,7 @@ for r in ('R23','R25'):
 ```
 Expected: both list `('EB_TemplateHook.jar', 'com.temenos.t24.api.hook.system', 'com.temenos.tafj.api.client.impl.T24Context', <method count>)`; R23 ≈ 92,912 classes / 2,050 JARs, R25 ≈ 2,135 JARs. If R25's method count is 0, the JavaDoc path is wrong — stop and report.
 
-- [ ] **Step 3: CLAUDE.md.** Replace the line
+- [x] **Step 3: CLAUDE.md.** Replace the line
 `# Temenos-derived data: personal use only, never commit it to the public T24Tools repo.` with
 `# Published with T24Tools (docs/t24tools/<R>/: fields.json, classes.json, manifest.json), loadable in-tool; no download link in the T24Tools header.`
 and add under the T24Tools export lines:
@@ -606,7 +606,7 @@ and add under the T24Tools export lines:
 python pipeline/class_export.py --release R23
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add CLAUDE.md
@@ -620,15 +620,15 @@ git commit -m "docs: classes.json export and T24Tools publishing rule"
 **Files:**
 - Modify: `src/navigation.js`, `src/navigation.test.js`, `src/App.jsx`, `src/features/jsonViewer/JsonViewer.jsx:566` (eyebrow), `README.md`, `tests/e2e/builder.spec.js:9-17`, `tests/e2e/json.spec.js` (describe name only)
 
-- [ ] **Step 1: Failing unit test.** In `src/navigation.test.js` change the expected last entry to `['json', 'Application Viewer']` and the title to `'has exactly the six T24 tools, in header order'` (unchanged count).
+- [x] **Step 1: Failing unit test.** In `src/navigation.test.js` change the expected last entry to `['json', 'Application Viewer']` and the title to `'has exactly the six T24 tools, in header order'` (unchanged count).
 
 Run: `npm test -- src/navigation.test.js` → FAIL (`'JSON Viewer'` vs `'Application Viewer'`).
 
-- [ ] **Step 2: Implement.** `src/navigation.js`: `['json', 'Application Viewer'],`. `JsonViewer.jsx` eyebrow: `<span className="eyebrow">Application Viewer</span>`.
+- [x] **Step 2: Implement.** `src/navigation.js`: `['json', 'Application Viewer'],`. `JsonViewer.jsx` eyebrow: `<span className="eyebrow">Application Viewer</span>`.
 
-- [ ] **Step 3: Remove header links.** In `src/App.jsx` delete the whole `<span className="knowledge-links">…</span>` block and the now-unused imports `siteKnowledgeUrl` and `SITE_RELEASES`. Delete `.knowledge-links` rules from `src/styles.css` if present (`grep -n knowledge-links src/styles.css`).
+- [x] **Step 3: Remove header links.** In `src/App.jsx` delete the whole `<span className="knowledge-links">…</span>` block and the now-unused imports `siteKnowledgeUrl` and `SITE_RELEASES`. Delete `.knowledge-links` rules from `src/styles.css` if present (`grep -n knowledge-links src/styles.css`).
 
-- [ ] **Step 4: E2E.** Replace the test at `tests/e2e/builder.spec.js:10` with:
+- [x] **Step 4: E2E.** Replace the test at `tests/e2e/builder.spec.js:10` with:
 
 ```js
   test('the header has no knowledge download links', async ({ page }) => {
@@ -639,9 +639,9 @@ Run: `npm test -- src/navigation.test.js` → FAIL (`'JSON Viewer'` vs `'Applica
 ```
 In `tests/e2e/json.spec.js` rename `test.describe('JSON Viewer'` to `test.describe('Application Viewer'`.
 
-- [ ] **Step 5: README.** Tool table: rename the row to `**Application Viewer**` (same text). Knowledge files bullet becomes: "**Knowledge files**: **Load R23 / R25 from this site** (Routine Builder, Artefact Generator, Application Viewer, JAR Viewer) loads a published release; you can also open your own file." Replace the disclaimer's "T24Tools contains no Temenos data: field data is loaded by each user from their own knowledge file and never leaves their browser." with "The only Temenos-derived data T24Tools uses is application field names (`fields.json`) and Java class and JAR names (`classes.json`), generated from T24 product JARs. Files you open stay in your browser."
+- [x] **Step 5: README.** Tool table: rename the row to `**Application Viewer**` (same text). Knowledge files bullet becomes: "**Knowledge files**: **Load R23 / R25 from this site** (Routine Builder, Artefact Generator, Application Viewer, JAR Viewer) loads a published release; you can also open your own file." Replace the disclaimer's "T24Tools contains no Temenos data: field data is loaded by each user from their own knowledge file and never leaves their browser." with "The only Temenos-derived data T24Tools uses is application field names (`fields.json`) and Java class and JAR names (`classes.json`), generated from T24 product JARs. Files you open stay in your browser."
 
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 Run: `npm run check` → format, lint, tests, build all pass. Run: `npm run test:e2e -- tests/e2e/builder.spec.js tests/e2e/json.spec.js` → pass.
 
@@ -666,7 +666,7 @@ git commit -m "feat: rename JSON Viewer to Application Viewer, drop header downl
   - `compareReleases(a, b) -> Map<qualified, { status: 'same'|'moved'|'onlyA'|'onlyB', a: string[], b: string[] }>`
   - `DEFAULT_HIDDEN_TYPES = ['internal', 'test']`
 
-- [ ] **Step 1: Write the failing tests** — `src/features/jarViewer/classIndex.test.js`
+- [x] **Step 1: Write the failing tests** — `src/features/jarViewer/classIndex.test.js`
 
 ```js
 import { describe, expect, it } from 'vitest';
@@ -803,12 +803,12 @@ describe('compareReleases', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `npm test -- src/features/jarViewer/classIndex.test.js`
 Expected: FAIL — cannot resolve `./classIndex`
 
-- [ ] **Step 3: Implement `src/features/jarViewer/classIndex.js`**
+- [x] **Step 3: Implement `src/features/jarViewer/classIndex.js`**
 
 ```js
 // Reading of a classes.json class index (exported by Temenos-Skills pipeline/class_export.py):
@@ -918,12 +918,12 @@ export function compareReleases(a, b) {
 }
 ```
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `npm test -- src/features/jarViewer/classIndex.test.js`
 Expected: PASS (all tests)
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/features/jarViewer
@@ -936,7 +936,7 @@ git commit -m "feat(jar): class index decoding, ranked search, JAR listing, rele
 - Modify: `src/build/knowledgeFiles.js:11-17`, `src/build/knowledgeFiles.test.js`
 - Add: `docs/t24tools/R23/classes.json`, `docs/t24tools/R25/classes.json`; update both `manifest.json`
 
-- [ ] **Step 1: Failing test.** In `src/build/knowledgeFiles.test.js`, change the first test's expectation to:
+- [x] **Step 1: Failing test.** In `src/build/knowledgeFiles.test.js`, change the first test's expectation to:
 
 ```js
     expect(files.map((f) => f.target)).toEqual(
@@ -965,11 +965,11 @@ and turn the checksum test into one over both files:
 
 Run: `npm test -- src/build/knowledgeFiles.test.js` → FAIL.
 
-- [ ] **Step 2: Implement.** In `knowledgeFiles()` change `['fields.json', 'manifest.json']` to `['fields.json', 'classes.json', 'manifest.json']`; update the header comment to "publish the R23 / R25 knowledge files (fields.json, classes.json) kept in docs/t24tools/".
+- [x] **Step 2: Implement.** In `knowledgeFiles()` change `['fields.json', 'manifest.json']` to `['fields.json', 'classes.json', 'manifest.json']`; update the header comment to "publish the R23 / R25 knowledge files (fields.json, classes.json) kept in docs/t24tools/".
 
-- [ ] **Step 3: Copy the export.** For R23 and R25 copy `classes.json` and `manifest.json` from `D:\Personal\Projects\Temenos-Skills\build\t24tools\<R>\` into `docs/t24tools/<R>/` (overwrite the manifest — its `fields.json` entry is unchanged because Task 3 re-exported fields from the same DB; verify with `git diff docs/t24tools/R23/manifest.json` that only `generated`, `classes`, `jars` and `files.classes.json` changed. If the `fields.json` sha256 changed, copy that `fields.json` too.)
+- [x] **Step 3: Copy the export.** For R23 and R25 copy `classes.json` and `manifest.json` from `D:\Personal\Projects\Temenos-Skills\build\t24tools\<R>\` into `docs/t24tools/<R>/` (overwrite the manifest — its `fields.json` entry is unchanged because Task 3 re-exported fields from the same DB; verify with `git diff docs/t24tools/R23/manifest.json` that only `generated`, `classes`, `jars` and `files.classes.json` changed. If the `fields.json` sha256 changed, copy that `fields.json` too.)
 
-- [ ] **Step 4: Verify and commit**
+- [x] **Step 4: Verify and commit**
 
 Run: `npm test -- src/build/knowledgeFiles.test.js` → PASS.
 
@@ -989,9 +989,9 @@ git commit -m "feat(knowledge): publish R23/R25 classes.json with the site"
 - Consumes: Task 5 `decodeClassIndex`, `searchClasses`, `classesInJar`, `isJarQuery`, `compareReleases`, `DEFAULT_HIDDEN_TYPES`; `siteKnowledgeUrl(release, file)` from `src/lib/knowledge.js`; `SITE_RELEASES` from `src/lib/siteKnowledge.js`; `formatBytes` from `src/features/jsonViewer/jsonTree.js`; `toast` from `src/lib/toast.js` (check its export name with `grep -n export src/lib/toast.js` and use it for the Copy confirmation).
 - Produces: `export function JarViewer()`.
 
-- [ ] **Step 1: Navigation test first.** In `src/navigation.test.js` expect seven tabs, the new last entry `['jar', 'JAR Viewer']`, rename the title to `'has exactly the seven T24 tools, in header order'`, and add `expect(initialTab('?tool=jar')).toBe('jar');`. Run `npm test -- src/navigation.test.js` → FAIL. Add `['jar', 'JAR Viewer'],` after `json` in `NAV_TABS` → PASS.
+- [x] **Step 1: Navigation test first.** In `src/navigation.test.js` expect seven tabs, the new last entry `['jar', 'JAR Viewer']`, rename the title to `'has exactly the seven T24 tools, in header order'`, and add `expect(initialTab('?tool=jar')).toBe('jar');`. Run `npm test -- src/navigation.test.js` → FAIL. Add `['jar', 'JAR Viewer'],` after `json` in `NAV_TABS` → PASS.
 
-- [ ] **Step 2: E2E fixture** — `tests/e2e/fixtures/classes-RTEST.json` (synthetic, no Temenos data):
+- [x] **Step 2: E2E fixture** — `tests/e2e/fixtures/classes-RTEST.json` (synthetic, no Temenos data):
 
 ```json
 {"kind":"t24-classes","schemaVersion":1,"release":"RTEST","generated":"2026-10-05T00:00:00Z",
@@ -1001,7 +1001,7 @@ git commit -m "feat(knowledge): publish R23/R25 classes.json with the site"
   ["SampleLifecycle",1,0,0,0,"com.sample.core.BaseContext",[],[["checkId","java.lang.String",["java.lang.String"]]]]]}
 ```
 
-- [ ] **Step 3: Failing E2E** — `tests/e2e/jar.spec.js`
+- [x] **Step 3: Failing E2E** — `tests/e2e/jar.spec.js`
 
 ```js
 import { readFileSync } from 'node:fs';
@@ -1059,7 +1059,7 @@ test.describe('JAR Viewer', () => {
 
 Run: `npm run test:e2e -- tests/e2e/jar.spec.js` → FAIL (no tab content).
 
-- [ ] **Step 4: Implement `src/features/jarViewer/JarViewer.jsx`**
+- [x] **Step 4: Implement `src/features/jarViewer/JarViewer.jsx`**
 
 ```jsx
 import { useMemo, useRef, useState } from 'react';
@@ -1356,7 +1356,7 @@ export function JarViewer() {
 
 Remove the unused `d` parameter from `BADGE.same` if lint flags it (`same: () => 'same JAR in both'`). Run `npx prettier --write src/features/jarViewer` before linting.
 
-- [ ] **Step 5: Wire up.** `src/App.jsx`: add
+- [x] **Step 5: Wire up.** `src/App.jsx`: add
 `const JarViewer = named(() => import('./features/jarViewer/JarViewer'), 'JarViewer');` and `{tab === 'jar' && <JarViewer />}` after the `json` line.
 `src/styles.css` (append):
 
@@ -1384,7 +1384,7 @@ Before appending, check `src/styles.css` for the variable names actually used fo
 
 README: add a tool-table row — `| **JAR Viewer** | Finds the JAR and package of any T24 Java class (R23/R25): load a published class index or your own classes.json, search a class, package or JAR, follow superclasses, see public methods of hook and API classes, and which classes moved JAR between releases. |` and add `?tool=jar` to the deep-link list.
 
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 Run: `npm run check` → pass. Run: `npm run test:e2e -- tests/e2e/jar.spec.js` → 4 passed.
 
@@ -1403,11 +1403,11 @@ git commit -m "feat(jar): JAR Viewer tab — class -> JAR search for R23/R25"
 - Produces: `renderMarkdown(value: string) -> string` (sanitised HTML), `renderMermaidBlocks(root: Element) -> Promise<void>`, `export function MarkdownViewer()`.
 - Consumes: `escapeHtml` — T24Tools' `src/lib/text.js` has no `escapeHtml`; add it there (copy from RepoMind, below).
 
-- [ ] **Step 1: Dependencies**
+- [x] **Step 1: Dependencies**
 
 Run: `npm install --save-exact marked@18.0.14 dompurify@3.4.15 mermaid@12.0.0 && npm install --save-exact --save-dev jsdom@30.1.1`
 
-- [ ] **Step 2: Failing tests** — `src/lib/markdown.test.js`
+- [x] **Step 2: Failing tests** — `src/lib/markdown.test.js`
 
 ```js
 // @vitest-environment jsdom
@@ -1436,7 +1436,7 @@ describe('renderMarkdown', () => {
 
 Run: `npm test -- src/lib/markdown.test.js` → FAIL (cannot resolve `./markdown`).
 
-- [ ] **Step 3: Implement.** Append to `src/lib/text.js`:
+- [x] **Step 3: Implement.** Append to `src/lib/text.js`:
 
 ```js
 export function escapeHtml(value) {
@@ -1518,9 +1518,9 @@ export async function renderMermaidBlocks(root) {
 
 Run: `npm test -- src/lib/markdown.test.js` → PASS.
 
-- [ ] **Step 4: Navigation.** `src/navigation.test.js`: eight tabs, last `['md', 'Markdown Viewer']`, title `'has exactly the eight T24 tools, in header order'`, add `expect(initialTab('?tool=md')).toBe('md');`. Run → FAIL; add `['md', 'Markdown Viewer'],` to `NAV_TABS` → PASS.
+- [x] **Step 4: Navigation.** `src/navigation.test.js`: eight tabs, last `['md', 'Markdown Viewer']`, title `'has exactly the eight T24 tools, in header order'`, add `expect(initialTab('?tool=md')).toBe('md');`. Run → FAIL; add `['md', 'Markdown Viewer'],` to `NAV_TABS` → PASS.
 
-- [ ] **Step 5: Failing E2E** — `tests/e2e/markdown.spec.js`
+- [x] **Step 5: Failing E2E** — `tests/e2e/markdown.spec.js`
 
 ```js
 import { expect, test } from '@playwright/test';
@@ -1562,7 +1562,7 @@ test.describe('Markdown Viewer', () => {
 
 Run: `npm run test:e2e -- tests/e2e/markdown.spec.js` → FAIL.
 
-- [ ] **Step 6: Implement `src/features/markdownViewer/MarkdownViewer.jsx`**
+- [x] **Step 6: Implement `src/features/markdownViewer/MarkdownViewer.jsx`**
 
 ```jsx
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -1719,7 +1719,7 @@ export function MarkdownViewer() {
 }
 ```
 
-- [ ] **Step 7: Wire up and style.** `src/App.jsx`: `const MarkdownViewer = named(() => import('./features/markdownViewer/MarkdownViewer'), 'MarkdownViewer');` and `{tab === 'md' && <MarkdownViewer />}`. Append to `src/styles.css` (MDFV sheet; local font stacks — the CSP blocks Google Fonts):
+- [x] **Step 7: Wire up and style.** `src/App.jsx`: `const MarkdownViewer = named(() => import('./features/markdownViewer/MarkdownViewer'), 'MarkdownViewer');` and `{tab === 'md' && <MarkdownViewer />}`. Append to `src/styles.css` (MDFV sheet; local font stacks — the CSP blocks Google Fonts):
 
 ```css
 :root { --md-paper: #faf7f0; --md-canvas: #fff; --md-ink: #23211d; --md-soft: #5b5648;
@@ -1764,7 +1764,7 @@ export function MarkdownViewer() {
 
 README: tool-table row `| **Markdown Viewer** | Paste Markdown or open .md files and read them rendered: tables, code, nested lists and Mermaid diagrams. Scripts in the Markdown never run, and files stay in this browser. |`, and `?tool=md` in the deep-link list.
 
-- [ ] **Step 8: Verify and commit**
+- [x] **Step 8: Verify and commit**
 
 Run: `npm run check` → pass. Run: `npm run test:e2e` (full suite) → all pass. Check the build output for a separate mermaid chunk: `ls dist/assets | grep -i mermaid` shows it is not in the main `index-*.js`.
 

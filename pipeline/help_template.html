@@ -5,11 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Temenos-Skills Help</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%231f5f8b%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2216%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3ET%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f7f7f5; --panel: #ffffff; --side: #f0efeb; --ink: #1d1d1b; --muted: #6b6a66;
   --line: #dddcd6; --accent: #1f5f8b; --accent-soft: #e3eef6; --code: #f2f1ed;
   --ok: #2e7d4f; --ok-soft: #e2f2e8; --warn: #9a6400; --warn-soft: #fbf0d9;
+  --paper: #faf7f0; --canvas: #ffffff; --md-ink: #23211d; --md-soft: #5b5648; --spine: #445f5a;
+  --spine-dark: #324644; --md-line: #dedacd; --rust: #a6462e; --tab-ink: #faf7f0;
   --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -18,12 +23,16 @@
     --bg: #161716; --panel: #1d1e1d; --side: #191a19; --ink: #e8e7e3; --muted: #9b9a94;
     --line: #333431; --accent: #79b6e0; --accent-soft: #1f3341; --code: #242523;
     --ok: #6fcf97; --ok-soft: #1c3326; --warn: #f2c063; --warn-soft: #3a2f17;
+    --paper: #1f1e1b; --canvas: #262521; --md-ink: #ece8de; --md-soft: #b5ae9e; --spine: #7fa59d;
+    --spine-dark: #a9cbc3; --md-line: #3a3832; --rust: #d9805f; --tab-ink: #161716;
   }
 }
 :root[data-theme="dark"] {
   --bg: #161716; --panel: #1d1e1d; --side: #191a19; --ink: #e8e7e3; --muted: #9b9a94;
   --line: #333431; --accent: #79b6e0; --accent-soft: #1f3341; --code: #242523;
   --ok: #6fcf97; --ok-soft: #1c3326; --warn: #f2c063; --warn-soft: #3a2f17;
+  --paper: #1f1e1b; --canvas: #262521; --md-ink: #ece8de; --md-soft: #b5ae9e; --spine: #7fa59d;
+  --spine-dark: #a9cbc3; --md-line: #3a3832; --rust: #d9805f; --tab-ink: #161716;
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
@@ -86,6 +95,37 @@ blockquote { margin: 10px 0; padding: 4px 14px; border-left: 3px solid var(--acc
 mark { background: var(--warn-soft); color: inherit; }
 .filter { padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font: inherit; }
 .muted { color: var(--muted); }
+/* ---------- Markdown documents: MDFV (github.com/zainknoman/MDFV) manuscript sheet ---------- */
+.doc-frame { position: relative; margin-top: 24px; max-width: 980px; }
+.doc-tab { position: absolute; top: -15px; left: 28px; background: var(--spine); color: var(--tab-ink);
+  font-family: 'IBM Plex Mono', var(--mono); font-size: 11px; letter-spacing: .06em; padding: 5px 12px;
+  border-radius: 2px 2px 0 0; z-index: 2; max-width: calc(100% - 56px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.markdown-body { background: var(--canvas); border: 1px solid var(--md-line); border-top: 3px solid var(--spine);
+  border-radius: 2px; padding: 40px 48px; font-family: 'Fraunces', Georgia, serif; font-size: 17px; line-height: 1.7;
+  color: var(--md-ink); box-shadow: 0 2px 0 var(--md-line), 0 14px 30px -18px rgba(35,33,29,.25); overflow-wrap: break-word; }
+.markdown-body > :first-child { margin-top: 0; }
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600; letter-spacing: -.01em; line-height: 1.3; scroll-margin-top: 12px; }
+.markdown-body h1 { font-size: 30px; border-bottom: 2px solid var(--md-ink); padding-bottom: 10px; }
+.markdown-body h2 { font-size: 23px; margin-top: 2em; }
+.markdown-body h3 { font-size: 19px; margin-top: 1.6em; } .markdown-body h4 { font-size: 17px; }
+.markdown-body a { color: var(--spine-dark); }
+.markdown-body .deadlink { color: var(--md-soft); border-bottom: 1px dotted var(--md-soft); }
+.markdown-body code { font-family: 'IBM Plex Mono', var(--mono); font-size: .82em; background: var(--paper);
+  border: 1px solid var(--md-line); border-radius: 2px; padding: 1px 5px; color: var(--md-ink); }
+.markdown-body pre { background: var(--paper); border: 1px solid var(--md-line); border-left: 3px solid var(--spine);
+  border-radius: 2px; padding: 16px 18px; overflow-x: auto; line-height: 1.5; }
+.markdown-body pre code { border: none; padding: 0; background: none; font-size: 13px; }
+.markdown-body blockquote { margin: 1.4em 0; padding: 4px 20px; border-left: 3px solid var(--rust); color: var(--md-soft); font-style: italic; }
+.markdown-body table { border-collapse: collapse; display: block; overflow-x: auto; max-width: 100%;
+  font-family: 'Inter', var(--sans); font-size: 14px; line-height: 1.5; }
+.markdown-body th, .markdown-body td { border: 1px solid var(--md-line); padding: 8px 12px; }
+.markdown-body th { background: var(--paper); font-family: 'IBM Plex Mono', var(--mono); font-size: 11px;
+  letter-spacing: .05em; text-transform: uppercase; }
+.markdown-body img { max-width: 100%; }
+.markdown-body hr { border: none; border-top: 1px solid var(--md-line); margin: 2.2em 0; }
+.markdown-body li + li { margin-top: .25em; }
+.markdown-body input[type=checkbox] { margin-right: 6px; }
 @media (max-width: 800px) {
   .layout { grid-template-columns: minmax(0, 1fr); }
   header { gap: 8px; padding: 10px 12px; }
@@ -94,6 +134,8 @@ mark { background: var(--warn-soft); color: inherit; }
   #menu { display: inline-block; }
   main { padding: 16px; }
   header h1 span { display: none; }
+  .markdown-body { padding: 28px 18px; font-size: 16px; }
+  .doc-tab { left: 14px; max-width: calc(100% - 28px); }
 }
 </style>
 </head>
@@ -108,66 +150,52 @@ mark { background: var(--warn-soft); color: inherit; }
   <nav id="nav"></nav>
   <main id="main"></main>
 </div>
+<script>/*__MARKED_JS__*/</script>
 <script>
 const INDEX = /*__HELP_INDEX__*/null;
 
-// ---------- tiny Markdown renderer (headings, fences, tables, lists, quotes, inline) ----------
+// ---------- Markdown: parsed with marked, shown as an MDFV manuscript sheet (github.com/zainknoman/MDFV) ----------
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-function inline(s) {
-  const codes = [];
-  s = s.replace(/`([^`]+)`/g, (_, c) => { codes.push(c); return `\u0000${codes.length - 1}\u0000`; });
-  s = esc(s)
-    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-    .replace(/(^|[\s(])\*([^*\s][^*]*)\*/g, "$1<em>$2</em>")
-    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, t, u) => /^https?:/.test(u)
-      ? `<a href="${u}" target="_blank" rel="noopener">${t}</a>` : `<span class="muted">${t}</span>`);
-  return s.replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${esc(codes[i])}</code>`);
-}
-const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-function md(src) {
-  const lines = src.replace(/\r\n/g, "\n").replace(/^---\n[\s\S]*?\n---\n/, "").split("\n");
-  let out = "", i = 0;
-  while (i < lines.length) {
-    const line = lines[i];
-    const fence = line.match(/^\s*(```|~~~)/);
-    if (fence) {
-      const buf = []; i++;
-      while (i < lines.length && !lines[i].trim().startsWith(fence[1])) buf.push(lines[i++]);
-      i++; out += `<pre><code>${esc(buf.join("\n"))}</code></pre>`; continue;
-    }
-    const h = line.match(/^(#{1,6})\s+(.*)$/);
-    if (h) { out += `<h${h[1].length} id="h-${slug(h[2])}">${inline(h[2])}</h${h[1].length}>`; i++; continue; }
-    if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i + 1])) {
-      const cells = (l) => l.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
-      let t = "<table><thead><tr>" + cells(line).map((c) => `<th>${inline(c)}</th>`).join("") + "</tr></thead><tbody>";
-      i += 2;
-      while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) {
-        t += "<tr>" + cells(lines[i]).map((c) => `<td>${inline(c)}</td>`).join("") + "</tr>"; i++;
-      }
-      out += t + "</tbody></table>"; continue;
-    }
-    if (/^\s*([-*+]|\d+\.)\s+/.test(line)) {
-      const ordered = /^\s*\d+\./.test(line); const items = [];
-      while (i < lines.length && /^\s*([-*+]|\d+\.)\s+/.test(lines[i])) {
-        let item = lines[i].replace(/^\s*([-*+]|\d+\.)\s+/, ""); i++;
-        while (i < lines.length && /^\s{2,}\S/.test(lines[i]) && !/^\s*([-*+]|\d+\.)\s+/.test(lines[i])) item += " " + lines[i++].trim();
-        items.push(`<li>${inline(item.replace(/^\[( |x)\]\s*/, (m, x) => x === "x" ? "☑ " : "☐ "))}</li>`);
-      }
-      out += ordered ? `<ol>${items.join("")}</ol>` : `<ul>${items.join("")}</ul>`; continue;
-    }
-    if (/^\s*>/.test(line)) {
-      const buf = [];
-      while (i < lines.length && /^\s*>/.test(lines[i])) buf.push(lines[i++].replace(/^\s*>\s?/, ""));
-      out += `<blockquote>${md(buf.join("\n"))}</blockquote>`; continue;
-    }
-    if (/^\s*(-{3,}|\*{3,})\s*$/.test(line)) { out += "<hr>"; i++; continue; }
-    if (!line.trim()) { i++; continue; }
-    const buf = [];
-    while (i < lines.length && lines[i].trim() && !/^(#{1,6}\s|\s*```|\s*~~~|\s*>|\s*([-*+]|\d+\.)\s+)/.test(lines[i])
-           && !/^\s*\|.*\|\s*$/.test(lines[i])) buf.push(lines[i++]);
-    if (buf.length) out += `<p>${inline(buf.join(" "))}</p>`; else i++;
+const slug = (t) => t.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s/g, "-");   // GitHub heading anchors
+marked.use({ gfm: true });
+const md = (src) => marked.parse(String(src).replace(/\r\n/g, "\n").replace(/^---\n[\s\S]*?\n---\n/, ""));
+
+// Resolve a relative link against the repo path of the document it sits in ("skills/temenos-dev/SKILL.md").
+function resolvePath(base, href) {
+  const parts = base.split("/").slice(0, -1);
+  for (const seg of href.split("/")) {
+    if (seg === "..") parts.pop(); else if (seg && seg !== ".") parts.push(seg);
   }
-  return out;
+  return parts.join("/");
+}
+// mdDoc(markdown, tabLabel, repoPath): the rendered sheet, with in-page anchors and links to other indexed files wired up.
+function mdDoc(src, name, repoPath) {
+  const frame = document.createElement("div"); frame.className = "doc-frame";
+  frame.innerHTML = `<span class="doc-tab" title="${esc(name)}">${esc(name)}</span><div class="markdown-body">${md(src)}</div>`;
+  const body = frame.lastElementChild, seen = {};
+  body.querySelectorAll("h1,h2,h3,h4,h5,h6").forEach((h) => {
+    let id = slug(h.textContent); if (seen[id] !== undefined) id += "-" + ++seen[id]; else seen[id] = 0;
+    h.dataset.anchor = id;
+  });
+  body.querySelectorAll("a[href]").forEach((a) => {
+    const href = a.getAttribute("href");
+    if (/^(https?:|mailto:)/i.test(href)) { a.target = "_blank"; a.rel = "noopener"; return; }
+    if (href.startsWith("#")) {
+      a.onclick = (ev) => { ev.preventDefault();
+        const t = body.querySelector(`[data-anchor="${CSS.escape(decodeURIComponent(href.slice(1)).toLowerCase())}"]`);
+        if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); };
+      return;
+    }
+    const [path, frag] = href.split("#");
+    const target = resolvePath(repoPath || "", decodeURIComponent(path));
+    const m = target.match(/^skills\/([^/]+)\/?(.*)$/);
+    const hash = m && (m[2] ? `#skill/${m[1]}/${m[2]}` : `#skill/${m[1]}`);
+    if (hash && routes.has(hash)) { a.setAttribute("href", hash); return; }
+    const span = document.createElement("span");   // file outside the help index: show it, don't break navigation
+    span.className = "deadlink"; span.title = `${target}${frag ? "#" + frag : ""} (not in this help page)`;
+    span.innerHTML = a.innerHTML; a.replaceWith(span);
+  });
+  return frame;
 }
 
 // ---------- routing ----------
@@ -203,7 +231,7 @@ const outlineHtml = (items) => items.length
 // ---------- build routes from the index ----------
 function buildRoutes() {
   INDEX.overview.forEach((s, k) => route(`#overview/${k}`, { group: "Overview", label: s.title,
-    render: () => page("Overview", esc(s.title), "", docDiv(md(s.content))) }));
+    render: () => page("Overview", esc(s.title), "", mdDoc(s.content, `README.md › ${s.title}`, "README.md")) }));
 
   INDEX.skills.forEach((skill) => {
     route(`#skill/${skill.id}`, { group: "Skills", sub: skill.id, label: "About this skill",
@@ -215,7 +243,7 @@ function buildRoutes() {
   });
 
   INDEX.templates.forEach((lang) => lang.types.forEach((t) =>
-    route(`#template/${t.id}`, { group: "Artefact templates", sub: lang.label, label: t.label, proven: t.proven,
+    route(`#template/${t.id}`, { group: "Artefact templates", sub: lang.label, label: t.label, proven: t.proven, compiled: t.compiled,
       render: () => renderTemplate(lang, t) })));
 
   INDEX.golden.forEach((c) => route(`#golden/${c.name}`, { group: "Golden cases", label: c.name,
@@ -229,10 +257,11 @@ function buildRoutes() {
 function renderHome() {
   const files = INDEX.skills.reduce((n, s) => n + s.files.length, 0);
   const types = INDEX.templates.reduce((n, l) => n + l.types.length, 0);
-  const proven = INDEX.templates.reduce((n, l) => n + l.types.filter((t) => t.proven).length, 0);
+  const proven = INDEX.templates.reduce((n, l) => n + l.types.filter((t) => t.proven && t.compiled !== false).length, 0);
+  const pending = INDEX.templates.reduce((n, l) => n + l.types.filter((t) => t.proven && t.compiled === false).length, 0);
   const cards = `<div class="cards">
     <div class="card"><b>${INDEX.skills.length}</b><span>skills · ${files} reference files</span></div>
-    <div class="card"><b>${proven}/${types}</b><span>artefact types proven (compile on R25)</span></div>
+    <div class="card"><b>${proven}/${types}</b><span>artefact types proven (compile on R25)${pending ? ` · ${pending} not compiled yet` : ""}</span></div>
     <div class="card"><b>${INDEX.golden.length}</b><span>golden cases</span></div>
     <div class="card"><b>${INDEX.releases.filter((r) => r.built).map((r) => r.release).join(" + ") || "—"}</b><span>releases with a knowledge DB</span></div>
     <div class="card"><b>${INDEX.pipeline.length}</b><span>pipeline tools</span></div></div>`;
@@ -251,21 +280,22 @@ function renderSkill(skill) {
       ["Overview", () => docDiv(`${skill.version ? `<p><span class="badge plain">version ${esc(skill.version)}</span></p>` : ""}
         <h2>Files</h2><table><thead><tr><th>File</th><th>Type</th><th>Lines</th><th>Size</th></tr></thead><tbody>${rows}</tbody></table>
         ${skill.hasTableSchema ? `<p>Plus <a href="#schemas">references/table-schema/</a> — one file per T24 application (not embedded; browse the directory).</p>` : ""}`)],
-      ["SKILL.md", () => docDiv(main ? md(main.content) : "<p class='muted'>No SKILL.md.</p>")],
+      ["SKILL.md", () => main ? mdDoc(main.content, `${skill.id}/SKILL.md`, `skills/${skill.id}/SKILL.md`) : docDiv("<p class='muted'>No SKILL.md.</p>")],
       ["Outline", () => outlineHtml(main ? main.outline : [])],
     ]));
 }
 
 function renderFile(skill, f) {
   const defs = [];
-  if (f.kind === "md") defs.push(["Rendered", () => docDiv(md(f.content))]);
+  if (f.kind === "md") defs.push(["Rendered", () => mdDoc(f.content, `${skill.id}/${f.path}`, `skills/${skill.id}/${f.path}`)]);
   defs.push(["Source", () => docDiv(`<pre><code>${esc(f.content)}</code></pre>`)]);
   if (f.kind === "md") defs.push(["Outline", () => outlineHtml(f.outline)]);
   page(`Skills › <a href="#skill/${skill.id}">${esc(skill.id)}</a>`, esc(f.path), `${f.lines} lines · ${fmtBytes(f.bytes)}`, tabs(defs));
 }
 
 function renderTemplate(lang, t) {
-  const status = t.proven === true ? `<span class="badge ok">proven — golden case compiles on R25, fields verified on R23 + R25</span>`
+  const status = t.proven === true && t.compiled !== false ? `<span class="badge ok">proven — golden case compiles on R25, fields verified on R23 + R25</span>`
+    : t.proven === true ? `<span class="badge warn">not compiled yet — golden case renders and fields verify on R23 + R25; awaiting the R25 compile (run_golden.py on a machine with C:\\R25)</span>`
     : t.proven === false ? `<span class="badge warn">not proven yet</span>` : `<span class="badge plain">status unknown — run release_t24tools.py</span>`;
   const inputs = t.inputs.length ? `<table><thead><tr><th>Placeholder</th><th>Label</th><th>Kind</th><th>Example / fixed</th></tr></thead><tbody>${
     t.inputs.map((i) => `<tr><td><code>{{${esc(i.id)}}}</code></td><td>${esc(i.label || "")}</td><td>${esc(i.kind)}${i.of ? ` of <code>${esc(i.of)}</code>` : ""}</td><td>${esc(i.fixed || i.example || "")}</td></tr>`).join("")
@@ -362,7 +392,7 @@ function drawNav(filter) {
     const total = [...subs.values()].reduce((n, l) => n + l.length, 0);
     det.innerHTML = `<summary>${esc(group)} <span class="count">${total}</span></summary>`;
     for (const [sub, items] of subs) {
-      const link = ([hash, e]) => `<a href="${hash}" title="${esc(e.label)}">${e.proven === true ? "✓ " : e.proven === false ? "· " : ""}${esc(e.label)}</a>`;
+      const link = ([hash, e]) => `<a href="${hash}" title="${esc(e.label)}">${e.proven === true && e.compiled === false ? "◦ " : e.proven === true ? "✓ " : e.proven === false ? "· " : ""}${esc(e.label)}</a>`;
       if (!sub) { const top = document.createElement("div"); top.className = "top"; top.innerHTML = items.map(link).join(""); det.append(top); continue; }
       const sd = document.createElement("details"); sd.className = "sub"; sd.open = !!f;
       sd.innerHTML = `<summary>${esc(sub)} <span class="count">${items.length}</span></summary>${items.map(link).join("")}`;
