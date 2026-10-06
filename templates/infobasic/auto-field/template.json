@@ -1,0 +1,67 @@
+{
+  "id": "infobasic/auto-field",
+  "language": "infobasic",
+  "type": "auto-field",
+  "label": "Auto field routine (AUTO.NEW.CONTENT)",
+  "description": "VERSION AUTO.NEW.CONTENT: reads the record whose id is in one field and copies a value from it into another field before display (attach with AUTOM.FIELD.NO). R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleRoutine"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field holding the linked record id",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "LINK_APP",
+      "label": "Linked application",
+      "kind": "app"
+    },
+    {
+      "id": "LINK_FIELD",
+      "label": "Field to copy from the linked record",
+      "kind": "field",
+      "of": "LINK_APP"
+    },
+    {
+      "id": "TARGET_FIELD",
+      "label": "Field to fill",
+      "kind": "field",
+      "of": "APP"
+    }
+  ]
+}

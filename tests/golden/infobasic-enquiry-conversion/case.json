@@ -1,0 +1,25 @@
+{
+  "name": "infobasic-enquiry-conversion",
+  "artefact": "Enquiry conversion routine (O.DATA)",
+  "skill": "temenos-infobasic",
+  "requirement": "Show the sector of a CUSTOMER id.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "E.GOLDEN.CONV.b",
+  "expected_fields": [
+    "EB.CUS.SECTOR"
+  ],
+  "template": "infobasic/enquiry-conversion",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "eGoldenConv",
+    "ROUTINE_NAME": "E.GOLDEN.CONV",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR"
+  },
+  "compiled": false
+}

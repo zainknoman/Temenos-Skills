@@ -1,0 +1,26 @@
+{
+  "name": "infobasic-auth-routine",
+  "artefact": "Auth routine (AUTH.ROUTINE)",
+  "skill": "temenos-infobasic",
+  "requirement": "Log the CUSTOMER sector after authorisation.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "V.GOLDEN.AUTH.RTN.b",
+  "expected_fields": [
+    "EB.CUS.SECTOR"
+  ],
+  "template": "infobasic/auth-routine",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "vGoldenAuthRtn",
+    "ROUTINE_NAME": "V.GOLDEN.AUTH.RTN",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR",
+    "LOG_FILE": "SAMPLE.AUDIT.LOG"
+  },
+  "compiled": false
+}

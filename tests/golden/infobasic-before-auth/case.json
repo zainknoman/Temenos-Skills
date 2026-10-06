@@ -1,0 +1,26 @@
+{
+  "name": "infobasic-before-auth",
+  "artefact": "Before auth routine (BEFORE.AUTH.RTN)",
+  "skill": "temenos-infobasic",
+  "requirement": "Set the CUSTOMER mnemonic before authorisation.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "V.GOLDEN.BEFORE.AUTH.b",
+  "expected_fields": [
+    "EB.CUS.MNEMONIC"
+  ],
+  "template": "infobasic/before-auth",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "vGoldenBeforeAuth",
+    "ROUTINE_NAME": "V.GOLDEN.BEFORE.AUTH",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.MNEMONIC",
+    "FIELD_VALUE": "SAMPLE"
+  },
+  "compiled": false
+}

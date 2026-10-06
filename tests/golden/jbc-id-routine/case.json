@@ -1,0 +1,24 @@
+{
+  "name": "jbc-id-routine",
+  "artefact": "ID routine (ID.RTN)",
+  "skill": "temenos-jbc",
+  "requirement": "Reject a CUSTOMER id without the SMP prefix.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GOLDEN.ID.RTN.b",
+  "expected_fields": [],
+  "template": "jbc/id-routine",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Api",
+    "ROUTINE_NAME": "GOLDEN.ID.RTN",
+    "METHOD_NAME": "checkId",
+    "APP": "CUSTOMER",
+    "ID_PREFIX": "SMP",
+    "ERROR_TEXT": "ID MUST START WITH SMP"
+  },
+  "compiled": false
+}

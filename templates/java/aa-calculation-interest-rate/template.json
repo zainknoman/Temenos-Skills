@@ -1,0 +1,33 @@
+{
+  "id": "java/aa-calculation-interest-rate",
+  "language": "java",
+  "type": "aa-calculation-interest-rate",
+  "label": "AA Calculation.getInterestCustomRate",
+  "description": "AA interest hook: returns one custom rate, effective from the activity's effective date. Not compiled on a T24 install yet: compile it before deploying.",
+  "inputs": [
+    {
+      "id": "JAVA_PACKAGE",
+      "label": "Java package",
+      "kind": "javaPackage",
+      "example": "com.samplebank.t24.hook"
+    },
+    {
+      "id": "CLASS_NAME",
+      "label": "Class name",
+      "kind": "className",
+      "example": "SampleHook"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app",
+      "fixed": "AA.ARRANGEMENT.ACTIVITY"
+    },
+    {
+      "id": "RATE",
+      "label": "Interest rate",
+      "kind": "number",
+      "example": "5.25"
+    }
+  ]
+}

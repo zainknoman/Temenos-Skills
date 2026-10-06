@@ -1,0 +1,20 @@
+{
+  "name": "java-aa-calculation-payment",
+  "artefact": "AA Calculation.calculatePayment",
+  "skill": "temenos-l3",
+  "requirement": "Fixed instalment of 100.",
+  "apps": [
+    "AA.ARRANGEMENT.ACTIVITY"
+  ],
+  "file": "GoldenPaymentCalc.java",
+  "expected_fields": [],
+  "template": "java/aa-calculation-payment",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenPaymentCalc",
+    "APP": "AA.ARRANGEMENT.ACTIVITY",
+    "PAYMENT_AMOUNT": "100"
+  },
+  "compiled": false
+}

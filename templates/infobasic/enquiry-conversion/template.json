@@ -1,0 +1,50 @@
+{
+  "id": "infobasic/enquiry-conversion",
+  "language": "infobasic",
+  "type": "enquiry-conversion",
+  "label": "Enquiry conversion routine (O.DATA)",
+  "description": "ENQUIRY CONVERSION routine: the column holds a record id (O.DATA); shows one field of that record instead. R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleRoutine"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field to show",
+      "kind": "field",
+      "of": "APP"
+    }
+  ]
+}

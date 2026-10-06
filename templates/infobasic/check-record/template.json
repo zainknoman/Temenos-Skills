@@ -1,0 +1,56 @@
+{
+  "id": "infobasic/check-record",
+  "language": "infobasic",
+  "type": "check-record",
+  "label": "Check record routine (CHECK.REC.RTN)",
+  "description": "VERSION CHECK.REC.RTN: runs after the record is read and before it is shown; defaults an empty field. R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleRoutine"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field to default",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "DEFAULT_VALUE",
+      "label": "Default value",
+      "kind": "text",
+      "example": "1001"
+    }
+  ]
+}

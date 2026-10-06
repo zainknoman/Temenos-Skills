@@ -1,0 +1,26 @@
+{
+  "name": "jbc-before-auth",
+  "artefact": "Before auth routine (BEFORE.AUTH.RTN)",
+  "skill": "temenos-jbc",
+  "requirement": "Set the CUSTOMER mnemonic before authorisation.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GOLDEN.BEFORE.AUTH.b",
+  "expected_fields": [
+    "ST.Customer.Customer.EbCusMnemonic"
+  ],
+  "template": "jbc/before-auth",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Api",
+    "ROUTINE_NAME": "GOLDEN.BEFORE.AUTH",
+    "METHOD_NAME": "beforeAuth",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.MNEMONIC",
+    "FIELD_VALUE": "SAMPLE"
+  },
+  "compiled": false
+}

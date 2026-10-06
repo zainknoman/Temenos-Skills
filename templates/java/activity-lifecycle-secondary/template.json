@@ -1,0 +1,33 @@
+{
+  "id": "java/activity-lifecycle-secondary",
+  "language": "java",
+  "type": "activity-lifecycle-secondary",
+  "label": "AA ActivityLifecycle.generateSecondaryActivity",
+  "description": "AA activity hook: triggers a secondary activity on the same arrangement. Not compiled on a T24 install yet: compile it before deploying.",
+  "inputs": [
+    {
+      "id": "JAVA_PACKAGE",
+      "label": "Java package",
+      "kind": "javaPackage",
+      "example": "com.samplebank.t24.hook"
+    },
+    {
+      "id": "CLASS_NAME",
+      "label": "Class name",
+      "kind": "className",
+      "example": "SampleHook"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app",
+      "fixed": "AA.ARRANGEMENT.ACTIVITY"
+    },
+    {
+      "id": "SECONDARY_ACTIVITY",
+      "label": "Activity to trigger",
+      "kind": "text",
+      "example": "ACCOUNTS-UPDATE-ARRANGEMENT"
+    }
+  ]
+}

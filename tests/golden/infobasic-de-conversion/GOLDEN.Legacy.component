@@ -1,0 +1,4 @@
+component GOLDEN.Legacy
+metamodelVersion 1.6
+
+    public method deGoldenConv(IN inValue string, IN headerRec string, IN mvNo string, OUT outValue string, OUT errorMsg string) { jBC: GOLDEN.DE.CONV }

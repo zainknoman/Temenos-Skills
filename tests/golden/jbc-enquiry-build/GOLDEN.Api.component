@@ -1,0 +1,4 @@
+component GOLDEN.Api
+metamodelVersion 1.6
+
+    public method buildSector(INOUT enqData string) { jBC: GOLDEN.E.BUILD }

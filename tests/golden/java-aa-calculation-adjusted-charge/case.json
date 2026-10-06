@@ -1,0 +1,21 @@
+{
+  "name": "java-aa-calculation-adjusted-charge",
+  "artefact": "AA Calculation.getAdjustedChargeAmount",
+  "skill": "temenos-l3",
+  "requirement": "Waive half the charge.",
+  "apps": [
+    "AA.ARRANGEMENT.ACTIVITY"
+  ],
+  "file": "GoldenChargeWaiver.java",
+  "expected_fields": [],
+  "template": "java/aa-calculation-adjusted-charge",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenChargeWaiver",
+    "APP": "AA.ARRANGEMENT.ACTIVITY",
+    "WAIVE_PERCENT": "50",
+    "REASON": "SAMPLE WAIVER"
+  },
+  "compiled": false
+}

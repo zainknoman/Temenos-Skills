@@ -1,0 +1,20 @@
+{
+  "name": "java-activity-lifecycle-secondary",
+  "artefact": "AA ActivityLifecycle.generateSecondaryActivity",
+  "skill": "temenos-l3",
+  "requirement": "Trigger a secondary activity.",
+  "apps": [
+    "AA.ARRANGEMENT.ACTIVITY"
+  ],
+  "file": "GoldenSecondary.java",
+  "expected_fields": [],
+  "template": "java/activity-lifecycle-secondary",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenSecondary",
+    "APP": "AA.ARRANGEMENT.ACTIVITY",
+    "SECONDARY_ACTIVITY": "ACCOUNTS-UPDATE-ARRANGEMENT"
+  },
+  "compiled": false
+}

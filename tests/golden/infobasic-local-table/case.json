@@ -1,0 +1,23 @@
+{
+  "name": "infobasic-local-table",
+  "artefact": "Local table definition (TEMPLATE + .FIELDS)",
+  "skill": "temenos-infobasic",
+  "requirement": "Define a sample parameter table.",
+  "apps": [],
+  "file": "GOLDEN.PARAMETER.b",
+  "expected_fields": [],
+  "template": "infobasic/local-table",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "TABLE_NAME": "GOLDEN.PARAMETER",
+    "TITLE": "Golden parameter",
+    "PRODUCT": "EB",
+    "EQUATE_PREFIX": "GOLDEN.PRM",
+    "ID_LENGTH": "20",
+    "FIELD_NAME": "DESCRIPTION",
+    "FIELD_LENGTH": "35"
+  },
+  "compiled": false
+}

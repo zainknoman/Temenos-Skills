@@ -1,0 +1,21 @@
+{
+  "name": "java-activity-lifecycle-lookup",
+  "artefact": "AA ActivityLifecycle.updateLookupTable",
+  "skill": "temenos-l3",
+  "requirement": "Index arrangements under a key.",
+  "apps": [
+    "AA.ARRANGEMENT.ACTIVITY"
+  ],
+  "file": "GoldenActivityLookup.java",
+  "expected_fields": [],
+  "template": "java/activity-lifecycle-lookup",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenActivityLookup",
+    "APP": "AA.ARRANGEMENT.ACTIVITY",
+    "LOOKUP_TABLE": "SAMPLE.ARRANGEMENT.LIST",
+    "LOOKUP_KEY": "SAMPLE.KEY"
+  },
+  "compiled": false
+}

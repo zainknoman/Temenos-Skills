@@ -1,0 +1,26 @@
+{
+  "name": "infobasic-cob-service",
+  "artefact": "Multi-threaded COB service (.LOAD / .SELECT / record)",
+  "skill": "temenos-infobasic",
+  "requirement": "Process CUSTOMERs of sector 1001 in a COB job.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "B.GOLDEN.SERVICE.b",
+  "expected_fields": [
+    "EB.CUS.SECTOR"
+  ],
+  "template": "infobasic/cob-service",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "bGoldenService",
+    "ROUTINE_NAME": "B.GOLDEN.SERVICE",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR",
+    "SELECT_VALUE": "1001"
+  },
+  "compiled": false
+}

@@ -1,0 +1,26 @@
+{
+  "name": "infobasic-after-unau",
+  "artefact": "After unauth routine (AFTER.UNAU.RTN)",
+  "skill": "temenos-infobasic",
+  "requirement": "Log the CUSTOMER sector after input.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "V.GOLDEN.AFTER.UNAU.b",
+  "expected_fields": [
+    "EB.CUS.SECTOR"
+  ],
+  "template": "infobasic/after-unau",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "vGoldenAfterUnau",
+    "ROUTINE_NAME": "V.GOLDEN.AFTER.UNAU",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR",
+    "LOG_FILE": "SAMPLE.AUDIT.LOG"
+  },
+  "compiled": false
+}

@@ -1,0 +1,24 @@
+{
+  "name": "infobasic-batch-program",
+  "artefact": "Batch PROGRAM",
+  "skill": "temenos-infobasic",
+  "requirement": "Count CUSTOMERs of sector 1001.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GOLDEN.COUNT.SECTOR.b",
+  "expected_fields": [
+    "EB.CUS.SECTOR"
+  ],
+  "template": "infobasic/batch-program",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "ROUTINE_NAME": "GOLDEN.COUNT.SECTOR",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR",
+    "SELECT_VALUE": "1001"
+  },
+  "compiled": false
+}

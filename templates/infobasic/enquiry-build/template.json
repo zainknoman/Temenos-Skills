@@ -1,0 +1,56 @@
+{
+  "id": "infobasic/enquiry-build",
+  "language": "infobasic",
+  "type": "enquiry-build",
+  "label": "Enquiry build routine (ENQ.DATA)",
+  "description": "ENQUIRY BUILD.ROUTINE: adds a fixed selection (field EQ value) to the enquiry before it runs. R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleRoutine"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Selection field",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "FILTER_VALUE",
+      "label": "Value",
+      "kind": "text",
+      "example": "1001"
+    }
+  ]
+}

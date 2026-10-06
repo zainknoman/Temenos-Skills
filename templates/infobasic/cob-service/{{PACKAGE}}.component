@@ -1,0 +1,6 @@
+component {{PACKAGE}}
+metamodelVersion 1.6
+
+    public method {{METHOD_NAME}}Load() { jBC: {{ROUTINE_NAME}}.LOAD }
+    public method {{METHOD_NAME}}Select() { jBC: {{ROUTINE_NAME}}.SELECT }
+    public method {{METHOD_NAME}}(IN recordId string) { jBC: {{ROUTINE_NAME}} }

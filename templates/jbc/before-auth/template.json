@@ -1,0 +1,56 @@
+{
+  "id": "jbc/before-auth",
+  "language": "jbc",
+  "type": "before-auth",
+  "label": "Before auth routine (BEFORE.AUTH.RTN)",
+  "description": "VERSION BEFORE.AUTH.RTN: sets a field before the authorised record is written to the live file. Generates the .b routine and its .component declaration.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package",
+      "kind": "package",
+      "example": "SAMPLE.Api"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "SAMPLE.ROUTINE"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleMethod"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample component method"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field to set",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "FIELD_VALUE",
+      "label": "Value",
+      "kind": "text",
+      "example": "Y"
+    }
+  ]
+}

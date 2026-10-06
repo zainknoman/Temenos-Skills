@@ -1,0 +1,12 @@
+component {{PACKAGE}}
+metamodelVersion 1.6
+
+    public table {{TYPE_NAME}} {
+        t24: {{PACKAGE}}.{{TYPE_NAME}}
+        fields: {
+            recordId = 1
+            fieldValue = 2
+        }
+    }
+
+    public method {{METHOD_NAME}} : {{COMPLEX_NAME}}:{{TYPE_NAME}} (IN recordId string) { jBC: {{ROUTINE_NAME}} }

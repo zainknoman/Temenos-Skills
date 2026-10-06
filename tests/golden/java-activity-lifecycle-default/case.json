@@ -1,0 +1,21 @@
+{
+  "name": "java-activity-lifecycle-default",
+  "artefact": "AA ActivityLifecycle.defaultFieldValues",
+  "skill": "temenos-l3",
+  "requirement": "Default the AA activity name.",
+  "apps": [
+    "AA.ARRANGEMENT.ACTIVITY"
+  ],
+  "file": "GoldenActivityDefault.java",
+  "expected_fields": [],
+  "template": "java/activity-lifecycle-default",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenActivityDefault",
+    "APP": "AA.ARRANGEMENT.ACTIVITY",
+    "FIELD": "AA.ARR.ACT.ACTIVITY",
+    "DEFAULT_VALUE": "SAMPLE"
+  },
+  "compiled": false
+}

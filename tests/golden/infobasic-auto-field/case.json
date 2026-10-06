@@ -1,0 +1,31 @@
+{
+  "name": "infobasic-auto-field",
+  "artefact": "Auto field routine (AUTO.NEW.CONTENT)",
+  "skill": "temenos-infobasic",
+  "requirement": "Fill the FT debit currency from the debit account.",
+  "apps": [
+    "FUNDS.TRANSFER",
+    "ACCOUNT"
+  ],
+  "file": "V.GOLDEN.AUTO.FIELD.b",
+  "expected_fields": [
+    "FT.DEBIT.ACCT.NO",
+    "AC.CURRENCY",
+    "FT.DEBIT.CURRENCY"
+  ],
+  "template": "infobasic/auto-field",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "vGoldenAutoField",
+    "ROUTINE_NAME": "V.GOLDEN.AUTO.FIELD",
+    "APP": "FUNDS.TRANSFER",
+    "FIELD": "FT.DEBIT.ACCT.NO",
+    "LINK_APP": "ACCOUNT",
+    "LINK_FIELD": "AC.CURRENCY",
+    "TARGET_FIELD": "FT.DEBIT.CURRENCY"
+  },
+  "compiled": false
+}

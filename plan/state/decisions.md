@@ -59,3 +59,46 @@ Built by `pipeline/build_release.py --release R25` into `releases/R25/temenos_kn
 | Fields with a jBC name | 62,238 | 69,119 |
 
 R23 → R25 (`pipeline/release_diff.py`, report in `build/releases/R23-to-R25.md`): 245 apps added, 3 removed, 557 changed; 2,580 fields added, 651 removed, 177 moved; **1,740 jBC names changed** -- R25 keeps the app prefix in many local/country modules where R23 dropped it (`ARACCT...Reserved7` -> `...AracctSweepReserved7`) and spells numbers as digits (`AchXrefReservedOneTwo` -> `AchXrefReserved12`). jBC written with R23 names for those fields will not compile on R25.
+
+## Templates added without a compiler (2026-10-06)
+
+33 artefact templates (14 Infobasic, 11 jBC, 8 Java) were added while `C:\R25` was not available. Each
+has a golden case marked `"compiled": false`: it renders byte for byte, its fields verify on R23 and
+R25, and the Java hooks compile against the R23 hook/record JARs in `jar/` with stub classes for the
+TAFJ runtime (`com.temenos.api.*`, `T24Context`), which checks every `@Override`, getter and import
+against the real classes. `export_templates` exports them as `proven: true, compiled: false`;
+T24Tools badges them "not compiled yet". `run_golden.py` reports such a case as `PEND` (not `FAIL`)
+when the compile is `SKIPPED`, and as `PASS ... now compiles` once R25 compiles it -- then drop the
+flag. The templates are generic (SAMPLE/GOLDEN names). Every API they call is verified against
+authoritative sources: the R23 JARs (inserts, `component_*_cl` classes, `javap`), the R25 JavaDoc
+in `build/releases/R25/javadoc`, and the Temenos PDFs in `docs/`. Public third-party T24 code
+(personal GitHub repos) was used only to find candidate topics. It is **not** a source of truth,
+and nothing was copied from it.
+
+- R23 `RecordLifecycle.updateCoreRecord` returns `void` and takes 10 parameters (javap; R25
+  JavaDoc agrees). Corrected in `skills/temenos-l3/SKILL.md` on 2026-10-06, which previously showed a
+  5-parameter `TValidationResponse` version.
+- VCRR has no VERSION hook field; it was not added. `AUTH.ROUTINE` covers that stage.
+
+## Compile install is selectable; R23 compile on E:\Temenos (2026-10-06)
+
+`compile_check.find_install()` picks the T24 install: `--install PATH` (on `run_golden.py`,
+`verify_artefact.py`, `release_t24tools.py`) > `$T24_INSTALL` > the first of `C:\R25`, `E:\Temenos`
+that exists. `C:\R25` stays first, so an R25 machine behaves exactly as before (same paths, inherits
+`JAVA_HOME`). For other installs: `bnk` may live under `T24\bnk` (TAFJ-installer layout); the release
+is read from a `t24lib` JAR manifest and printed (`Compile install: E:\Temenos (R23)`); tCompile gets
+the install's bundled `3rdParty\JDK` (R23 `.bat` files break on `JAVA_HOME=C:\Program Files\...`;
+`$T24_JAVA_HOME` overrides); and a moved install's stale `tafj.home`/`t24.home` are repointed in the
+**scratch** properties copy only. The write guard covers whichever install is used and skips
+unreadable entries (a broken JBoss module link in `E:\Temenos`).
+
+First R23 run (`python pipeline/run_golden.py`, auto-selected `E:\Temenos`, R23 SP6): 56/58 PASS,
+no write-guard hits. All 25 previously proven cases compile on R23; 31 of the 33 `"compiled": false`
+cases compile on R23. Two fail on real compiler errors:
+- `infobasic-local-table`: `No component defined. $PACKAGE is mandatory` -- needs `$PACKAGE` + a
+  `.component` like the other legacy cases.
+- `jbc-complex-get`: `table definitions must be in their own files` -- the DTO must move out of the
+  `.component` into its own `.complex` file.
+
+The `"compiled": false` flags were **not** changed: T24Tools and the help page define "compiled" as
+"compiles on R25". Run `run_golden.py` on the R25 machine before dropping them.

@@ -1,0 +1,57 @@
+{
+  "id": "infobasic/aa-calculation",
+  "language": "infobasic",
+  "type": "aa-calculation",
+  "label": "AA calculation subroutine",
+  "description": "AA calculation routine: returns a percentage of the base amount, never less than a minimum. The parameter list must match the AA hook it is attached to; adjust it if yours differs. R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleRoutine"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app",
+      "fixed": "AA.ARRANGEMENT"
+    },
+    {
+      "id": "RATE_PERCENT",
+      "label": "Rate (percent of base amount)",
+      "kind": "number",
+      "example": "1.5"
+    },
+    {
+      "id": "MIN_AMOUNT",
+      "label": "Minimum amount",
+      "kind": "number",
+      "example": "10"
+    }
+  ]
+}

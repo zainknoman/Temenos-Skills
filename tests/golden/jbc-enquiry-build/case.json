@@ -1,0 +1,24 @@
+{
+  "name": "jbc-enquiry-build",
+  "artefact": "Enquiry build routine (ENQ.DATA)",
+  "skill": "temenos-jbc",
+  "requirement": "Restrict an enquiry to sector 1001.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GOLDEN.E.BUILD.b",
+  "expected_fields": [],
+  "template": "jbc/enquiry-build",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Api",
+    "ROUTINE_NAME": "GOLDEN.E.BUILD",
+    "METHOD_NAME": "buildSector",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR",
+    "FILTER_VALUE": "1001"
+  },
+  "compiled": false
+}

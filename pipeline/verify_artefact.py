@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 from artefact_fields import UnknownApp, check_fields
-from compile_check import compile_java, compile_jbc
+from compile_check import add_install_args, compile_java, compile_jbc, use_install
 from releases import add_release_args, connect
 
 DEFAULT_OUT = Path("build/verify")
@@ -22,12 +22,13 @@ def _default_compiler(path):
     return compile_java if path.suffix == ".java" else compile_jbc
 
 
-def verify(path, apps, conn, out_dir, compile_fn=None, skip_compile=False):
+def verify(path, apps, conn, out_dir, compile_fn=None, skip_compile=False, no_app_ok=False):
+    """no_app_ok: the artefact reads no T24 application (a new local table), so there are no fields to check."""
     path = Path(path)
     source = path.read_text(encoding="utf-8", errors="replace")
     fields, ok = [], True
     if path.suffix != ".java":  # javac is the field gate for Java
-        if not apps:
+        if not apps and not no_app_ok:
             fields.append({"app": None, "error": "no --app given: fields in a jBC/Infobasic file cannot be checked",
                            "verified": [], "missing": []})
             ok = False
@@ -59,7 +60,9 @@ def main():
     ap.add_argument("--out", default=str(DEFAULT_OUT))
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--no-compile", action="store_true", help="field gate only (development use)")
+    add_install_args(ap)
     args = ap.parse_args()
+    install_line = use_install(args)
 
     conn = connect(args)
     report = verify(Path(args.file), [a.upper() for a in args.app], conn, args.out,
@@ -78,6 +81,8 @@ def main():
                 print(f"VERIFIED in {f['app']}: {', '.join(f['verified'])}")
             if f.get("compiler_checked"):
                 print(f"COMPONENTISED (checked by compiler) in {f['app']}: {', '.join(f['compiler_checked'])}")
+        if not args.no_compile:
+            print(install_line)
         print(f"COMPILE: {report['compile']['status']}")
         if report["compile"]["status"] not in ("OK", "NOT_RUN"):
             print(report["compile"]["output"][-3000:])

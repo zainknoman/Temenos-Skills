@@ -1,0 +1,56 @@
+{
+  "id": "infobasic/after-unau",
+  "language": "infobasic",
+  "type": "after-unau",
+  "label": "After unauth routine (AFTER.UNAU.RTN)",
+  "description": "VERSION AFTER.UNAU.RTN: after the record is written to $NAU, writes one field, the date and the operator to a local log file. Changes to R.NEW are not saved here. R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package (R25 requires $PACKAGE for every routine)",
+      "kind": "package",
+      "example": "SAMPLE.Legacy"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleRoutine"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field to record",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "LOG_FILE",
+      "label": "Local log file (without F.)",
+      "kind": "text",
+      "example": "SAMPLE.AUDIT.LOG"
+    }
+  ]
+}

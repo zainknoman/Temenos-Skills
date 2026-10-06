@@ -10,6 +10,7 @@ import json
 import sys
 from pathlib import Path
 
+from compile_check import add_install_args, find_install, install_release, use_install
 from verify_artefact import verify
 from releases import add_release_args, connect
 
@@ -25,25 +26,42 @@ def load_cases(root=GOLDEN):
     return cases
 
 
+def outcome(case, report, lost):
+    """PASS / FAIL, or PEND for a case marked "compiled": false whose compile could not run (no R25
+    install): its fields passed, but it is still waiting for its first compile."""
+    if report["passed"] and not lost:
+        return "PASS"
+    fields_ok = all(not f.get("error") and not f["missing"] for f in report["fields"])
+    if case.get("compiled", True) is False and report["compile"]["status"] == "SKIPPED" and fields_ok and not lost:
+        return "PEND"
+    return "FAIL"
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--case")
     add_release_args(ap)
+    add_install_args(ap)
     args = ap.parse_args()
+    print(use_install(args))
+    compiled_on = install_release(find_install()) or "this install"
 
     conn = connect(args)
     failures = 0
     for case in load_cases():
         if args.case and case["name"] != args.case:
             continue
-        report = verify(case["dir"] / case["file"], case["apps"], conn, Path("build/verify/golden"))
+        report = verify(case["dir"] / case["file"], case["apps"], conn, Path("build/verify/golden"),
+                        no_app_ok=not case["apps"])
         expected = set(case.get("expected_fields", []))
         seen = {f for r in report["fields"] for f in r["verified"] + r.get("compiler_checked", [])}
         lost = expected - seen if not case["file"].endswith(".java") else set()
-        ok = report["passed"] and not lost
-        failures += not ok
+        result = outcome(case, report, lost)
+        failures += result == "FAIL"
         detail = report["compile"]["status"] + (f" expected-fields-not-seen={sorted(lost)}" if lost else "")
-        print(f"{'PASS' if ok else 'FAIL'}  {case['name']:<40} {detail}")
+        if result == "PASS" and case.get("compiled", True) is False:
+            detail += f' -- now compiles on {compiled_on}: remove "compiled": false from its case.json'
+        print(f"{result}  {case['name']:<40} {detail}")
         if not report["passed"] and report["compile"]["status"] != "OK":
             print(report["compile"]["output"][-2000:])
     conn.close()

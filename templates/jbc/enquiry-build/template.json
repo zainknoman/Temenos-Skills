@@ -1,0 +1,56 @@
+{
+  "id": "jbc/enquiry-build",
+  "language": "jbc",
+  "type": "enquiry-build",
+  "label": "Enquiry build routine (ENQ.DATA)",
+  "description": "ENQUIRY BUILD.ROUTINE: adds a fixed selection (field EQ value) before the enquiry runs. Generates the .b routine and its .component declaration.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package",
+      "kind": "package",
+      "example": "SAMPLE.Api"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "SAMPLE.ROUTINE"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleMethod"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample component method"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Selection field",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "FILTER_VALUE",
+      "label": "Value",
+      "kind": "text",
+      "example": "1001"
+    }
+  ]
+}

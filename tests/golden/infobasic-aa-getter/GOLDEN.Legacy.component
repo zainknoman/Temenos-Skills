@@ -1,0 +1,4 @@
+component GOLDEN.Legacy
+metamodelVersion 1.6
+
+    public method aaGoldenGetStatus(IN arrangementId string, OUT retValue string, OUT retErr string) { jBC: GOLDEN.AA.GET.STATUS }

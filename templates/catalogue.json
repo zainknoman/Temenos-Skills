@@ -5,13 +5,38 @@
       {"id": "vir", "label": "Input routine (VIR)"},
       {"id": "var", "label": "Authorisation routine (VAR)"},
       {"id": "nofile", "label": "NoFile enquiry"},
-      {"id": "ofs-routine", "label": "OFS routine (OFS.POST.MESSAGE)"}
+      {"id": "ofs-routine", "label": "OFS routine (OFS.POST.MESSAGE)"},
+      {"id": "id-routine", "label": "ID routine (ID.RTN)"},
+      {"id": "check-record", "label": "Check record routine (CHECK.REC.RTN)"},
+      {"id": "auto-field", "label": "Auto field routine (AUTO.NEW.CONTENT)"},
+      {"id": "before-auth", "label": "Before auth routine (BEFORE.AUTH.RTN)"},
+      {"id": "after-unau", "label": "After unauth routine (AFTER.UNAU.RTN)"},
+      {"id": "auth-routine", "label": "Auth routine (AUTH.ROUTINE)"},
+      {"id": "enquiry-conversion", "label": "Enquiry conversion routine (O.DATA)"},
+      {"id": "enquiry-build", "label": "Enquiry build routine (ENQ.DATA)"},
+      {"id": "cob-service", "label": "Multi-threaded COB service (.LOAD / .SELECT / record)"},
+      {"id": "de-conversion", "label": "Delivery Engine conversion routine"},
+      {"id": "aa-calculation", "label": "AA calculation subroutine"},
+      {"id": "aa-getter", "label": "AA getter subroutine"},
+      {"id": "batch-program", "label": "Batch PROGRAM"},
+      {"id": "local-table", "label": "Local table definition (TEMPLATE + .FIELDS)"}
     ]},
     {"id": "jbc", "label": "jBC (componentised)", "types": [
       {"id": "validation", "label": "Validation routine (VVR)"},
       {"id": "get-api", "label": "GET method"},
       {"id": "write-api", "label": "WRITE method (OFS)"},
-      {"id": "nofile", "label": "NoFile enquiry"}
+      {"id": "nofile", "label": "NoFile enquiry"},
+      {"id": "id-routine", "label": "ID routine (ID.RTN)"},
+      {"id": "input-routine", "label": "Input routine (INPUT.ROUTINE)"},
+      {"id": "check-record", "label": "Check record routine (CHECK.REC.RTN)"},
+      {"id": "before-auth", "label": "Before auth routine (BEFORE.AUTH.RTN)"},
+      {"id": "enquiry-conversion", "label": "Enquiry conversion routine (O.DATA)"},
+      {"id": "enquiry-build", "label": "Enquiry build routine (ENQ.DATA)"},
+      {"id": "query-api", "label": "Query method (SELECT + read)"},
+      {"id": "de-conversion", "label": "Delivery Engine conversion routine"},
+      {"id": "cob-service", "label": "Multi-threaded COB service (.LOAD / .SELECT / record)"},
+      {"id": "package-initialise", "label": "Package initialise (standalone session)"},
+      {"id": "complex-get", "label": "GET method with .complex DTO"}
     ]},
     {"id": "java", "label": "Java (L3 hooks)", "types": [
       {"id": "record-lifecycle-check-id", "label": "RecordLifecycle.checkId (ID routine)"},
@@ -29,7 +54,15 @@
       {"id": "activity-lifecycle-validate", "label": "AA ActivityLifecycle.validateRecord"},
       {"id": "aa-calculation-charge", "label": "AA Calculation.getChargeAmount"},
       {"id": "payment-lifecycle-validate-clearing", "label": "PaymentLifecycle.validatePaymentForClearing"},
-      {"id": "payment-order-validate", "label": "PaymentOrderLifecycle.validatePaymentOrderRecord"}
+      {"id": "payment-order-validate", "label": "PaymentOrderLifecycle.validatePaymentOrderRecord"},
+      {"id": "record-lifecycle-update-core", "label": "RecordLifecycle.updateCoreRecord (before-auth)"},
+      {"id": "activity-lifecycle-default", "label": "AA ActivityLifecycle.defaultFieldValues"},
+      {"id": "activity-lifecycle-post-update", "label": "AA ActivityLifecycle.postCoreTableUpdate"},
+      {"id": "activity-lifecycle-lookup", "label": "AA ActivityLifecycle.updateLookupTable"},
+      {"id": "activity-lifecycle-secondary", "label": "AA ActivityLifecycle.generateSecondaryActivity"},
+      {"id": "aa-calculation-payment", "label": "AA Calculation.calculatePayment"},
+      {"id": "aa-calculation-adjusted-charge", "label": "AA Calculation.getAdjustedChargeAmount"},
+      {"id": "aa-calculation-interest-rate", "label": "AA Calculation.getInterestCustomRate"}
     ]}
   ]
 }

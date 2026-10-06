@@ -1,0 +1,4 @@
+component GOLDEN.Legacy
+metamodelVersion 1.6
+
+    public method aaGoldenCalc(IN arrangementId string, IN propertyId string, IN baseAmount string, OUT calcAmount string, OUT retErr string) { jBC: GOLDEN.AA.CALC }

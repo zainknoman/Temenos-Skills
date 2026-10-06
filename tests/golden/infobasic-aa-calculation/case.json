@@ -1,0 +1,24 @@
+{
+  "name": "infobasic-aa-calculation",
+  "artefact": "AA calculation subroutine",
+  "skill": "temenos-infobasic",
+  "requirement": "1.5% of the base amount, minimum 10.",
+  "apps": [
+    "AA.ARRANGEMENT"
+  ],
+  "file": "GOLDEN.AA.CALC.b",
+  "expected_fields": [],
+  "template": "infobasic/aa-calculation",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "aaGoldenCalc",
+    "ROUTINE_NAME": "GOLDEN.AA.CALC",
+    "APP": "AA.ARRANGEMENT",
+    "RATE_PERCENT": "1.5",
+    "MIN_AMOUNT": "10"
+  },
+  "compiled": false
+}

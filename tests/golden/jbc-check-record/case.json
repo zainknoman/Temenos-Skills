@@ -1,0 +1,26 @@
+{
+  "name": "jbc-check-record",
+  "artefact": "Check record routine (CHECK.REC.RTN)",
+  "skill": "temenos-jbc",
+  "requirement": "Default an empty CUSTOMER sector to 1001.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GOLDEN.CHECK.REC.b",
+  "expected_fields": [
+    "ST.Customer.Customer.EbCusSector"
+  ],
+  "template": "jbc/check-record",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Api",
+    "ROUTINE_NAME": "GOLDEN.CHECK.REC",
+    "METHOD_NAME": "checkRecord",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR",
+    "DEFAULT_VALUE": "1001"
+  },
+  "compiled": false
+}

@@ -1,0 +1,4 @@
+component {{PACKAGE}}
+metamodelVersion 1.6
+
+    public method {{METHOD_NAME}}(IN arrangementId string, OUT retValue string, OUT retErr string) { jBC: {{ROUTINE_NAME}} }

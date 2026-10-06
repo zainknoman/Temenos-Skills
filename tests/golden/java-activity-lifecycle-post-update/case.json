@@ -1,0 +1,26 @@
+{
+  "name": "java-activity-lifecycle-post-update",
+  "artefact": "AA ActivityLifecycle.postCoreTableUpdate",
+  "skill": "temenos-l3",
+  "requirement": "After an authorised activity, update an ACCOUNT.",
+  "apps": [
+    "AA.ARRANGEMENT.ACTIVITY",
+    "ACCOUNT"
+  ],
+  "file": "GoldenActivityPost.java",
+  "expected_fields": [],
+  "template": "java/activity-lifecycle-post-update",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenActivityPost",
+    "APP": "AA.ARRANGEMENT.ACTIVITY",
+    "TARGET_APP": "ACCOUNT",
+    "TARGET_VERSION": "GOLDEN.UPDATE",
+    "TARGET_ID": "SAMPLE.ID",
+    "TARGET_FIELD": "AC.CATEGORY",
+    "TARGET_VALUE": "1001",
+    "OFS_SOURCE": "TEST.OFS"
+  },
+  "compiled": false
+}

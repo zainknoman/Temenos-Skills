@@ -1,0 +1,21 @@
+{
+  "name": "jbc-package-initialise",
+  "artefact": "Package initialise (standalone session)",
+  "skill": "temenos-jbc",
+  "requirement": "Initialise a standalone T24 session.",
+  "apps": [],
+  "file": "GOLDEN.INITIALISE.b",
+  "expected_fields": [],
+  "template": "jbc/package-initialise",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Api",
+    "ROUTINE_NAME": "GOLDEN.INITIALISE",
+    "METHOD_NAME": "initialise",
+    "OFS_SOURCE": "TEST.OFS",
+    "COMPANY_ID": "GB0010001"
+  },
+  "compiled": false
+}

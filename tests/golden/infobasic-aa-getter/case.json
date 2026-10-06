@@ -1,0 +1,25 @@
+{
+  "name": "infobasic-aa-getter",
+  "artefact": "AA getter subroutine",
+  "skill": "temenos-infobasic",
+  "requirement": "Return the status of an arrangement.",
+  "apps": [
+    "AA.ARRANGEMENT"
+  ],
+  "file": "GOLDEN.AA.GET.STATUS.b",
+  "expected_fields": [
+    "AA.ARR.ARR.STATUS"
+  ],
+  "template": "infobasic/aa-getter",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "aaGoldenGetStatus",
+    "ROUTINE_NAME": "GOLDEN.AA.GET.STATUS",
+    "APP": "AA.ARRANGEMENT",
+    "FIELD": "AA.ARR.ARR.STATUS"
+  },
+  "compiled": false
+}

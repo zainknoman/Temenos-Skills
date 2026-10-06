@@ -1,0 +1,6 @@
+component GOLDEN.Legacy
+metamodelVersion 1.6
+
+    public method bGoldenServiceLoad() { jBC: B.GOLDEN.SERVICE.LOAD }
+    public method bGoldenServiceSelect() { jBC: B.GOLDEN.SERVICE.SELECT }
+    public method bGoldenService(IN recordId string) { jBC: B.GOLDEN.SERVICE }

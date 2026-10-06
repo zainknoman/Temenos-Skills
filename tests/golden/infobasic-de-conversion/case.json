@@ -1,0 +1,25 @@
+{
+  "name": "infobasic-de-conversion",
+  "artefact": "Delivery Engine conversion routine",
+  "skill": "temenos-infobasic",
+  "requirement": "Print an account currency on an advice.",
+  "apps": [
+    "ACCOUNT"
+  ],
+  "file": "GOLDEN.DE.CONV.b",
+  "expected_fields": [
+    "AC.CURRENCY"
+  ],
+  "template": "infobasic/de-conversion",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "deGoldenConv",
+    "ROUTINE_NAME": "GOLDEN.DE.CONV",
+    "APP": "ACCOUNT",
+    "FIELD": "AC.CURRENCY"
+  },
+  "compiled": false
+}

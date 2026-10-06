@@ -1,0 +1,12 @@
+complex GoldenApi
+
+@Containment byValue
+classes {
+
+    GoldenRecord
+    {
+        recordId   : string
+        fieldValue : string
+    }
+
+}

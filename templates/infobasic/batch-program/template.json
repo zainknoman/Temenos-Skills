@@ -1,0 +1,44 @@
+{
+  "id": "infobasic/batch-program",
+  "language": "infobasic",
+  "type": "batch-program",
+  "label": "Batch PROGRAM",
+  "description": "Standalone PROGRAM: counts the records whose field equals a value and prints the total. A PROGRAM has no $PACKAGE or .component; run it with tRun. Not compiled on a T24 install yet: compile it before deploying.",
+  "inputs": [
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "V.SAMPLE.CHECK"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample routine"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Selection field",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "SELECT_VALUE",
+      "label": "Value",
+      "kind": "text",
+      "example": "1001"
+    }
+  ]
+}

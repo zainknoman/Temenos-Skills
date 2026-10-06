@@ -1,0 +1,39 @@
+{
+  "id": "java/aa-calculation-adjusted-charge",
+  "language": "java",
+  "type": "aa-calculation-adjusted-charge",
+  "label": "AA Calculation.getAdjustedChargeAmount",
+  "description": "AA charge hook: waives a percentage of the calculated charge and returns the adjusted amount with a reason. Not compiled on a T24 install yet: compile it before deploying.",
+  "inputs": [
+    {
+      "id": "JAVA_PACKAGE",
+      "label": "Java package",
+      "kind": "javaPackage",
+      "example": "com.samplebank.t24.hook"
+    },
+    {
+      "id": "CLASS_NAME",
+      "label": "Class name",
+      "kind": "className",
+      "example": "SampleHook"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app",
+      "fixed": "AA.ARRANGEMENT.ACTIVITY"
+    },
+    {
+      "id": "WAIVE_PERCENT",
+      "label": "Percent to waive",
+      "kind": "number",
+      "example": "50"
+    },
+    {
+      "id": "REASON",
+      "label": "Reason",
+      "kind": "text",
+      "example": "SAMPLE WAIVER"
+    }
+  ]
+}

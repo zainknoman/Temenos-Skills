@@ -200,7 +200,9 @@ def export_templates(out, catalogue=CATALOGUE, root=TEMPLATES, conns=None, golde
                                    "resolved": resolved,
                                    "output": render(template, next(iter(resolved.values())))},
                     }
-                    entry.update(proven=True, template=tid)
+                    # compiled: the golden case passed the R25 compile gate. A proven template whose case says
+                    # "compiled": false renders and field-checks, but has never been compiled on T24.
+                    entry.update(proven=True, template=tid, compiled=case.get("compiled", True))
             types.append(entry)
         languages.append({"id": lang["id"], "label": lang["label"], "types": types})
     doc = {"schemaVersion": TEMPLATES_SCHEMA_VERSION, "languages": languages, "templates": exported}

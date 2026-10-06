@@ -1,0 +1,62 @@
+{
+  "id": "jbc/complex-get",
+  "language": "jbc",
+  "type": "complex-get",
+  "label": "GET method with .complex DTO",
+  "description": "Component method that returns a typed object: the .complex file defines the DTO, the .component declares the typed return, and the routine reads the record and fills the DTO. Generates the .b routine and its .component declaration and the .complex DTO.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package",
+      "kind": "package",
+      "example": "SAMPLE.Api"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "SAMPLE.ROUTINE"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleMethod"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample component method"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "COMPLEX_NAME",
+      "label": "Complex namespace",
+      "kind": "text",
+      "example": "SampleApi"
+    },
+    {
+      "id": "TYPE_NAME",
+      "label": "DTO class name",
+      "kind": "text",
+      "example": "SampleRecord"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field to return",
+      "kind": "field",
+      "of": "APP"
+    }
+  ]
+}

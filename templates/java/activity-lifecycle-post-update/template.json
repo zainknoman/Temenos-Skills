@@ -1,0 +1,62 @@
+{
+  "id": "java/activity-lifecycle-post-update",
+  "language": "java",
+  "type": "activity-lifecycle-post-update",
+  "label": "AA ActivityLifecycle.postCoreTableUpdate",
+  "description": "AA activity hook, after the activity is committed: when the activity is authorised, posts one OFS transaction that sets a field of another application's record. Not compiled on a T24 install yet: compile it before deploying.",
+  "inputs": [
+    {
+      "id": "JAVA_PACKAGE",
+      "label": "Java package",
+      "kind": "javaPackage",
+      "example": "com.samplebank.t24.hook"
+    },
+    {
+      "id": "CLASS_NAME",
+      "label": "Class name",
+      "kind": "className",
+      "example": "SampleHook"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app",
+      "fixed": "AA.ARRANGEMENT.ACTIVITY"
+    },
+    {
+      "id": "TARGET_APP",
+      "label": "Application to update",
+      "kind": "app"
+    },
+    {
+      "id": "TARGET_VERSION",
+      "label": "Version name (after the comma)",
+      "kind": "text",
+      "example": "SAMPLE.UPDATE"
+    },
+    {
+      "id": "TARGET_ID",
+      "label": "Record id to update",
+      "kind": "text",
+      "example": "SAMPLE.ID"
+    },
+    {
+      "id": "TARGET_FIELD",
+      "label": "Field to set",
+      "kind": "field",
+      "of": "TARGET_APP"
+    },
+    {
+      "id": "TARGET_VALUE",
+      "label": "Value",
+      "kind": "text",
+      "example": "Y"
+    },
+    {
+      "id": "OFS_SOURCE",
+      "label": "OFS.SOURCE id",
+      "kind": "text",
+      "example": "TEST.OFS"
+    }
+  ]
+}

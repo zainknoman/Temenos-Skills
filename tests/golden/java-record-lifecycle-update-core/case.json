@@ -1,0 +1,21 @@
+{
+  "name": "java-record-lifecycle-update-core",
+  "artefact": "RecordLifecycle.updateCoreRecord (before-auth)",
+  "skill": "temenos-l3",
+  "requirement": "Set the mnemonic before authorisation.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GoldenUpdateCore.java",
+  "expected_fields": [],
+  "template": "java/record-lifecycle-update-core",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenUpdateCore",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.MNEMONIC",
+    "FIELD_VALUE": "SAMPLE"
+  },
+  "compiled": false
+}

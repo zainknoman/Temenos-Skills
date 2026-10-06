@@ -1,0 +1,25 @@
+{
+  "name": "jbc-de-conversion",
+  "artefact": "Delivery Engine conversion routine",
+  "skill": "temenos-jbc",
+  "requirement": "Print an account currency on an advice.",
+  "apps": [
+    "ACCOUNT"
+  ],
+  "file": "GOLDEN.DE.CONV.JBC.b",
+  "expected_fields": [
+    "AC.AccountOpening.Account.Currency"
+  ],
+  "template": "jbc/de-conversion",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Api",
+    "ROUTINE_NAME": "GOLDEN.DE.CONV.JBC",
+    "METHOD_NAME": "deCurrency",
+    "APP": "ACCOUNT",
+    "FIELD": "AC.CURRENCY"
+  },
+  "compiled": false
+}

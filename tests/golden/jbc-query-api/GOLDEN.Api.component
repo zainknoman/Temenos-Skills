@@ -1,0 +1,4 @@
+component GOLDEN.Api
+metamodelVersion 1.6
+
+    public method querySector(IN selValue string, OUT rows string) { jBC: GOLDEN.QUERY.SECTOR }

@@ -1,0 +1,26 @@
+{
+  "name": "infobasic-check-record",
+  "artefact": "Check record routine (CHECK.REC.RTN)",
+  "skill": "temenos-infobasic",
+  "requirement": "Default an empty CUSTOMER sector to 1001.",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "V.GOLDEN.CHECK.REC.b",
+  "expected_fields": [
+    "EB.CUS.SECTOR"
+  ],
+  "template": "infobasic/check-record",
+  "today": "2026-10-02",
+  "userInputs": {
+    "DESCRIPTION": "Golden case",
+    "AUTHOR": "golden-case",
+    "PACKAGE": "GOLDEN.Legacy",
+    "METHOD_NAME": "vGoldenCheckRec",
+    "ROUTINE_NAME": "V.GOLDEN.CHECK.REC",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.SECTOR",
+    "DEFAULT_VALUE": "1001"
+  },
+  "compiled": false
+}

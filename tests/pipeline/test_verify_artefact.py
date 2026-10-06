@@ -73,3 +73,11 @@ def test_each_run_starts_from_an_empty_build_dir(db, tmp_path):
 
     verify(f, ["ACCOUNT"], db, tmp_path / "out", compile_fn=spy)
     assert seen["stale_present"] is False
+
+
+def test_artefact_that_reads_no_application_skips_the_field_check(db, tmp_path):
+    f = tmp_path / "SAMPLE.PARAMETER.b"
+    f.write_text("    Table.name = 'SAMPLE.PARAMETER'\n")
+    report = verify(f, [], db, tmp_path / "out", compile_fn=OK, no_app_ok=True)
+    assert report["passed"] is True
+    assert report["fields"] == []

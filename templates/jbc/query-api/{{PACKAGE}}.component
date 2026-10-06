@@ -1,0 +1,4 @@
+component {{PACKAGE}}
+metamodelVersion 1.6
+
+    public method {{METHOD_NAME}}(IN selValue string, OUT rows string) { jBC: {{ROUTINE_NAME}} }

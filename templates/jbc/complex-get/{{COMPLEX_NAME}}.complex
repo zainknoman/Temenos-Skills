@@ -1,0 +1,12 @@
+complex {{COMPLEX_NAME}}
+
+@Containment byValue
+classes {
+
+    {{TYPE_NAME}}
+    {
+        recordId   : string
+        fieldValue : string
+    }
+
+}

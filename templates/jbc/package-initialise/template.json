@@ -1,0 +1,51 @@
+{
+  "id": "jbc/package-initialise",
+  "language": "jbc",
+  "type": "package-initialise",
+  "label": "Package initialise (standalone session)",
+  "description": "Sets up a T24 session for code that runs outside a T24 transaction (a standalone program or a service entry point): connects with an OFS source and loads the company. Generates the .b routine and its .component declaration.",
+  "inputs": [
+    {
+      "id": "PACKAGE",
+      "label": "Package",
+      "kind": "package",
+      "example": "SAMPLE.Api"
+    },
+    {
+      "id": "ROUTINE_NAME",
+      "label": "Routine name",
+      "kind": "routineName",
+      "example": "SAMPLE.ROUTINE"
+    },
+    {
+      "id": "METHOD_NAME",
+      "label": "Component method",
+      "kind": "identifier",
+      "example": "sampleMethod"
+    },
+    {
+      "id": "DESCRIPTION",
+      "label": "Description",
+      "kind": "text",
+      "example": "Sample component method"
+    },
+    {
+      "id": "AUTHOR",
+      "label": "Author",
+      "kind": "text",
+      "example": "developer"
+    },
+    {
+      "id": "OFS_SOURCE",
+      "label": "OFS.SOURCE id",
+      "kind": "text",
+      "example": "TEST.OFS"
+    },
+    {
+      "id": "COMPANY_ID",
+      "label": "Company id",
+      "kind": "text",
+      "example": "GB0010001"
+    }
+  ]
+}

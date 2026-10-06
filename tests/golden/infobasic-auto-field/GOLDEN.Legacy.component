@@ -1,0 +1,4 @@
+component GOLDEN.Legacy
+metamodelVersion 1.6
+
+    public method vGoldenAutoField() { jBC: V.GOLDEN.AUTO.FIELD }

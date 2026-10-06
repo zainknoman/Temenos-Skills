@@ -1,0 +1,38 @@
+{
+  "id": "java/record-lifecycle-update-core",
+  "language": "java",
+  "type": "record-lifecycle-update-core",
+  "label": "RecordLifecycle.updateCoreRecord (before-auth)",
+  "description": "BEFORE.AUTH routine: sets a field on the record before it is written to the live file. Signature from the EB_TemplateHook.jar RecordLifecycle class. Not compiled on a T24 install yet: compile it before deploying.",
+  "inputs": [
+    {
+      "id": "JAVA_PACKAGE",
+      "label": "Java package",
+      "kind": "javaPackage",
+      "example": "com.samplebank.t24.hook"
+    },
+    {
+      "id": "CLASS_NAME",
+      "label": "Class name",
+      "kind": "className",
+      "example": "SampleHook"
+    },
+    {
+      "id": "APP",
+      "label": "Application",
+      "kind": "app"
+    },
+    {
+      "id": "FIELD",
+      "label": "Field to set",
+      "kind": "field",
+      "of": "APP"
+    },
+    {
+      "id": "FIELD_VALUE",
+      "label": "Value",
+      "kind": "text",
+      "example": "Y"
+    }
+  ]
+}

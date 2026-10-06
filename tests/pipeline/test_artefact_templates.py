@@ -132,3 +132,24 @@ def test_java_accepts_single_value_and_infobasic_accepts_multi_value(db_with_kin
     assert resolve(JAVA, {"APP": "CUSTOMER", "FIELD": "EB.CUS.MNEMONIC"}, db_with_kinds, today="x")["FIELD"] == "Mnemonic"
     basic = {**JAVA, "language": "infobasic"}
     assert resolve(basic, {"APP": "CUSTOMER", "FIELD": "EB.CUS.SHORT.NAME"}, db_with_kinds, today="x")["FIELD"] == "EB.CUS.SHORT.NAME"
+
+
+def test_export_flags_a_proven_template_that_was_never_compiled(db_with_components, tmp_path):
+    import json
+    import shutil
+    from artefact_templates import export_templates
+    shutil.copytree("tests/golden", tmp_path / "golden")
+    case = tmp_path / "golden" / "jbc-customer-mnemonic-vvr" / "case.json"
+    case.write_text(json.dumps({**json.loads(case.read_text(encoding="utf-8")), "compiled": False}), encoding="utf-8")
+    cat = _catalogue(tmp_path, [{"id": "validation", "label": "VVR"}])
+    doc = export_templates(tmp_path / "t.json", catalogue=cat, conns={"R23": db_with_components},
+                           golden_root=tmp_path / "golden")
+    entry = doc["languages"][0]["types"][0]
+    assert entry["proven"] is True and entry["compiled"] is False
+
+
+def test_compiled_golden_cases_export_as_compiled(db_with_components, tmp_path):
+    from artefact_templates import export_templates
+    cat = _catalogue(tmp_path, [{"id": "validation", "label": "VVR"}])
+    doc = export_templates(tmp_path / "t.json", catalogue=cat, conns={"R23": db_with_components})
+    assert doc["languages"][0]["types"][0]["compiled"] is True
