@@ -6,7 +6,7 @@
 Proven skeleton in this repo: `tests/golden/infobasic-local-table/` (template
 `templates/infobasic/local-table`).
 
-**R25:** both routines need `$PACKAGE <Pkg>` and a `private method` entry in `<Pkg>.component`, or tCompile fails with `No component defined. $PACKAGE is mandatory` (R25's own `T24_BP/TEMPLATE.b` has `$PACKAGE EB.Template` before `SUBROUTINE`). The trigger property is `Table.trigger` (as in `TEMPLATE.b`). Two styles compile on R25 and are both valid:
+**R25:** both routines need `$PACKAGE <Pkg>` and a `private method` entry in `<Pkg>.component`, or tCompile fails with `No component defined. $PACKAGE is mandatory` (R25's own `T24_BP/TEMPLATE.b` has `$PACKAGE EB.Template` before `SUBROUTINE`). R25's shipped `TEMPLATE.b` writes `Table.trigger = ''`, and the golden case follows it. That line is harmless because it sets nothing. `I_Table` declares the common as `Table.triggerField` in both R23 and R25 (R25 checked 2026-10-07; see the note under §1), so to **actually set** a trigger field use `Table.triggerField` / `EB.Template.setTableTriggerfield`. Two styles compile on R25 and are both valid:
 - **TAFJ Infobasic** (`$INSERT I_Table`, `Table.* = ...`, `CALL Table.defineId/addFieldDefinition/...`) - `tests/golden/infobasic-local-table/`.
 - **Componentised jBC** (`$USING EB.Template`: `EB.Template.setTableName(...)` etc., then `EB.Template.TableDefineid/TableAddfielddefinition/TableAddfield/TableSetauditposition()` as in R25 `T24_BP/TEMPLATE.FIELDS.b`) - `tests/golden/jbc-local-table/` (template `templates/jbc/local-table`).
 
@@ -67,7 +67,7 @@ Every property is a variable in `COMMON /OBJECT.TEMPLATE/` (`I_Table`):
 END
 ```
 
-> The R19 guide's sample writes `Table.trigger = ''`. `I_Table` declares **`Table.triggerField`**,
+> The R19 guide's sample and R25's shipped `TEMPLATE.b` write `Table.trigger = ''`. `I_Table` (R23 and R25) declares **`Table.triggerField`**,
 > not `Table.trigger`. The two compile the same way, but `Table.trigger` is just a local variable
 > that has no effect. Use `Table.triggerField` when you need a trigger field.
 
