@@ -1,0 +1,26 @@
+{
+  "name": "java-record-lifecycle-post-update-mv-group",
+  "artefact": "RecordLifecycle.postUpdateRequest (authorisation routine)",
+  "skill": "temenos-l3",
+  "requirement": "After authorisation, set the first relation code of a CUSTOMER via OFS (group's first field).",
+  "apps": [
+    "FUNDS.TRANSFER",
+    "CUSTOMER"
+  ],
+  "file": "GoldenPostUpdateGroup.java",
+  "expected_fields": [],
+  "template": "java/record-lifecycle-post-update",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenPostUpdateGroup",
+    "APP": "FUNDS.TRANSFER",
+    "FIELD": "FT.DEBIT.ACCT.NO",
+    "TARGET_APP": "CUSTOMER",
+    "TARGET_VERSION": "GOLDEN.UPDATE",
+    "TARGET_FIELD": "EB.CUS.RELATION.CODE",
+    "TARGET_VALUE": "1",
+    "OFS_SOURCE": "TEST.OFS"
+  },
+  "compiled": false
+}

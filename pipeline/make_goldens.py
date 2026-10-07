@@ -205,6 +205,25 @@ CASES.update({
 CASES_NOT_COMPILED = {}
 
 
+# Multi-value Java fields (record_parse.py group_getter): the template's first value, reached as
+# rec.get<F>(0) for a list of TField and through the record's group accessor for a group member.
+# Extra cases for templates that already have a single-value golden case -- the proof of the
+# template stays on that one (golden_case() takes the first case directory). Not compiled yet.
+CASES_MULTI_VALUE = [
+    ("java/record-lifecycle-default", "java-record-lifecycle-default-mv", "Default an empty ACCOUNT short title (MV).",
+     {**COMMON_JAVA, "CLASS_NAME": "GoldenDefaultMv", "APP": "ACCOUNT", "FIELD": "AC.SHORT.TITLE",
+      "DEFAULT_VALUE": "SAMPLE"}),
+    ("java/record-lifecycle-validate", "java-record-lifecycle-validate-mv-group",
+     "Reject a CUSTOMER whose first relation has no related customer (MV-GROUP member).",
+     {**COMMON_JAVA, "CLASS_NAME": "GoldenValidateGroup", "APP": "CUSTOMER", "FIELD": "EB.CUS.REL.CUSTOMER",
+      "ERROR_TEXT": "RELATED CUSTOMER IS MANDATORY"}),
+    ("java/record-lifecycle-post-update", "java-record-lifecycle-post-update-mv-group",
+     "After authorisation, set the first relation code of a CUSTOMER via OFS (group's first field).",
+     {**COMMON_JAVA, "CLASS_NAME": "GoldenPostUpdateGroup", "APP": "FUNDS.TRANSFER", "FIELD": "FT.DEBIT.ACCT.NO",
+      "TARGET_APP": "CUSTOMER", "TARGET_VERSION": "GOLDEN.UPDATE", "TARGET_FIELD": "EB.CUS.RELATION.CODE",
+      "TARGET_VALUE": "1", "OFS_SOURCE": "TEST.OFS"}),
+]
+
 def main():
     ap = argparse.ArgumentParser()
     add_release_args(ap)
@@ -213,7 +232,9 @@ def main():
     args = ap.parse_args()
     conn = connect(args)
     templates = {t["id"]: t for t in load_templates()}
-    for tid, (name, requirement, inputs) in {**CASES, **CASES_NOT_COMPILED}.items():
+    all_cases = [(tid, *case, tid in CASES_NOT_COMPILED) for tid, case in {**CASES, **CASES_NOT_COMPILED}.items()]
+    all_cases += [(*case, True) for case in CASES_MULTI_VALUE]
+    for tid, name, requirement, inputs, not_compiled in all_cases:
         out = Path(args.golden) / name
         if out.exists() and not args.force:
             print(f"skip   {name} (exists)")
@@ -234,7 +255,7 @@ def main():
         case = {"name": name, "artefact": template["label"], "skill": SKILL[language], "requirement": requirement,
                 "apps": apps, "file": main_file, "expected_fields": expected,
                 "template": tid, "today": TODAY, "userInputs": inputs}
-        if tid in CASES_NOT_COMPILED:
+        if not_compiled:
             case["compiled"] = False
         (out / "case.json").write_text(json.dumps(case, indent=2) + "\n", encoding="utf-8")
         print(f"wrote  {name}: {', '.join(files)}")

@@ -1,0 +1,21 @@
+{
+  "name": "java-record-lifecycle-validate-mv-group",
+  "artefact": "RecordLifecycle.validateRecord",
+  "skill": "temenos-l3",
+  "requirement": "Reject a CUSTOMER whose first relation has no related customer (MV-GROUP member).",
+  "apps": [
+    "CUSTOMER"
+  ],
+  "file": "GoldenValidateGroup.java",
+  "expected_fields": [],
+  "template": "java/record-lifecycle-validate",
+  "today": "2026-10-02",
+  "userInputs": {
+    "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+    "CLASS_NAME": "GoldenValidateGroup",
+    "APP": "CUSTOMER",
+    "FIELD": "EB.CUS.REL.CUSTOMER",
+    "ERROR_TEXT": "RELATED CUSTOMER IS MANDATORY"
+  },
+  "compiled": false
+}

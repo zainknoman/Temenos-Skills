@@ -126,3 +126,24 @@ The `.FIELDS.b` routines (not the case's main file, so not compiled by `run_gold
 separately with `verify_artefact.py --release R25`: OK. Second run: **59/59 PASS on R25**. All 33
 `"compiled": false` flags removed (`make_goldens.py`: the cases moved into `CASES`;
 `CASES_NOT_COMPILED` is empty), so every exported type is proven on R25.
+
+## Java access to multi-value fields (2026-10-07)
+
+`record_parse.py` now stores `field_kinds.group_getter`: how Java reaches a multi-value field's
+first value, read from the record class's methods (an accessor name is never derived from a class
+name: `AltIdTypeClass` comes from `getAltAcctType`). `''` = a list of TField (`get<F>(int)` returns
+TField and `set<F>(CharSequence, int)` exists); `<G>` = the record's `get<G>(int)` returns the field's
+group class and `set<G>(<Group>Class, int)` exists (this includes a group's first field, whose record
+list holds the group class, not TField); NULL = not reachable in one indexed step (nested groups,
+sub-values, `List<String>` audit fields). javap of the R25 classes: `get<F>(int)` is `List.get(i)`
+(throws on an empty list), `set<F>(v, i)` / `set<G>(g, i)` go through `prepareArrayForSet` (grow the
+list) -- hence guarded reads, indexed writes, and a group written back on the record.
+
+Rebuilt for R23 (`jar/`) and R25 from `E:\DesignStudioR25\R25-tafj-t24lib\t24lib` (R25_AMR.0,
+2,153 JARs; no TAFJ runtime there). R25: 7,523 MV and 21,257 MV-GROUP fields reachable; 6,392 /
+6,689 not. `export_t24tools.py` appends `[groupGetter, groupClass]` to multi-value field tuples
+(schema version unchanged: readers of the first seven values are unaffected).
+`artefact_templates.java_multi_value()` (ported in T24Tools `render.js`, same tests on both sides)
+rewrites the three ways a Java template uses a field. Golden cases `java-record-lifecycle-default-mv`,
+`-validate-mv-group`, `-post-update-mv-group`: PASS with javac on the R23 install (`E:\Temenos`) and
+against the R25 record classes with TAFJ stand-ins; still `"compiled": false` until an R25 install run.

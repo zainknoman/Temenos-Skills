@@ -68,17 +68,16 @@ def _field_value(language, conn, app, field_name):
     if language == "infobasic":
         return field_name, None
     if language == "java":
-        # Java templates call rec.get<Field>().getValue(): only valid for a single-value
-        # getter on the record class (field_kinds, from record_parse.py).
+        # Java templates call rec.get<Field>().getValue() / rec.set<Field>(v). A single-value field
+        # takes that as it is; a multi-value field that Java reaches in one indexed step (field_kinds
+        # group_getter, from record_parse.py) is rewritten to its first value by java_multi_value().
+        suffix = row[0].split("_", 1)[1]
         if _has_table(conn, "field_kinds"):
-            kind = conn.execute("SELECT kind FROM field_kinds WHERE app = ? AND field_name = ?",
-                                (app, field_name)).fetchone()
-            if kind is None:
+            access = _java_access(conn, app, field_name)
+            if access is None:
                 raise FieldNotAvailable(f"{field_name} has no single-value getter on the {app} record class")
-            if kind[0] != "SV":
-                raise FieldNotAvailable(f"{field_name} is a multi-value field ({kind[0]}); "
-                                        f"this Java template needs a single-value field")
-        return row[0].split("_", 1)[1], None
+            return suffix, None, access
+        return suffix, None, ""
     try:
         hit = _primary_jbc_name(conn, app, field_name)
     except Exception:  # no component_fields table
@@ -86,6 +85,25 @@ def _field_value(language, conn, app, field_name):
     if not hit:
         raise FieldNotAvailable(f"{field_name} has no componentised (jBC) name in this release")
     return hit
+
+
+def _java_access(conn, app, field_name):
+    """'' for a single-value field, 'MV' for a list of TField, 'MV-GROUP:<getter>:<class>' for a
+    member of a multi-value group; None when the record class has no getter. Raises
+    FieldNotAvailable for a multi-value field Java cannot reach in one indexed step."""
+    columns = {r[1] for r in conn.execute("PRAGMA table_info(field_kinds)")}
+    group_col = "group_getter" if "group_getter" in columns else "NULL"
+    row = conn.execute(f"SELECT kind, getter_class, {group_col} FROM field_kinds WHERE app = ? AND field_name = ?",
+                       (app, field_name)).fetchone()
+    if row is None:
+        return None
+    kind, group_class, group_getter = row
+    if kind == "SV":
+        return ""
+    if group_getter is None:
+        raise FieldNotAvailable(f"{field_name} is a multi-value field ({kind}) that Java cannot reach in one "
+                                f"step (sub-values, a nested group or a read-only audit field)")
+    return "MV" if kind == "MV" else f"MV-GROUP:{group_getter}:{group_class}"
 
 
 def resolve(template, user_inputs, conn, today):
@@ -97,8 +115,12 @@ def resolve(template, user_inputs, conn, today):
             continue
         app = user_inputs[spec["of"]].upper()
         equ = user_inputs[spec["id"]].upper()
-        value, component = _field_value(language, conn, app, equ)
+        value, component, *access = _field_value(language, conn, app, equ)
         values[spec["id"]] = value
+        if access and access[0]:
+            # rewritten by java_multi_value() at render time; the app input's record package
+            # (<OF>_PACKAGE) is where a group class is imported from
+            values[f"{spec['id']}_ACCESS"] = f"{access[0]}:{spec['of']}" if access[0] != "MV" else "MV"
         # <ID>_NAME: the field name without the app prefix -- what OFS messages and
         # enquiry/SELECT statements use (FT.CREDIT.ACCT.NO -> CREDIT.ACCT.NO).
         prefix = dotted_prefix([r[0] for r in conn.execute("SELECT field_name FROM fields WHERE app = ?", (app,))])
@@ -126,12 +148,81 @@ def _fill(text, values, missing):
     return PLACEHOLDER.sub(sub, text)
 
 
+def _first_import_gap(text):
+    lines = text.split("\n")
+    last = max((i for i, line in enumerate(lines) if re.match(r"\s*import\s+[\w.]+\s*;", line)), default=None)
+    return lines, last
+
+
+def java_multi_value(text, suffix, access, package):
+    """Rewrite the three ways a Java template uses a field -- read (x.get<F>().getValue()), flag
+    (x.get<F>().setError(...);) and write (x.set<F>(...);) -- for the field's first value when it
+    is multi-value. `access` is 'MV' or 'MV-GROUP:<getter>:<class>'. Reads are guarded (get(0) on
+    an empty list throws); writes go through the indexed setter, which grows the list; a group
+    member is written on its group, then the group is set back on the record."""
+    s = re.escape(suffix)
+    if access == "MV":
+        def read(v):
+            return f'({v}.get{suffix}().isEmpty() ? "" : {v}.get{suffix}(0).getValue())'
+
+        def ensure(ind, v):
+            return f'{ind}if ({v}.get{suffix}().isEmpty()) {{\n{ind}    {v}.set{suffix}("", 0);\n{ind}}}\n'
+
+        def element(v):
+            return f"{v}.get{suffix}(0)"
+
+        def write(ind, v, arg):
+            return f"{ind}{v}.set{suffix}({arg}, 0);"
+        group_class = None
+    else:
+        _, getter, group_class = access.split(":")
+
+        def read(v):
+            return f'({v}.get{getter}().isEmpty() ? "" : {v}.get{getter}(0).get{suffix}().getValue())'
+
+        def ensure(ind, v):
+            return f"{ind}if ({v}.get{getter}().isEmpty()) {{\n{ind}    {v}.set{getter}(new {group_class}(), 0);\n{ind}}}\n"
+
+        def element(v):
+            return f"{v}.get{getter}(0).get{suffix}()"
+
+        def write(ind, v, arg):
+            return (f"{ind}{group_class} group{suffix} = {v}.get{getter}().isEmpty() ? new {group_class}() : "
+                    f"{v}.get{getter}(0);\n{ind}group{suffix}.set{suffix}({arg});\n{ind}{v}.set{getter}(group{suffix}, 0);")
+    out = re.sub(rf"^([ \t]*)(\w+)\.set{s}\((.*)\);[ \t]*$", lambda m: write(m[1], m[2], m[3]), text, flags=re.M)
+    out = re.sub(rf"^([ \t]*)(\w+)\.get{s}\(\)\.setError\((.*)\);[ \t]*$",
+                 lambda m: ensure(m[1], m[2]) + f"{m[1]}{element(m[2])}.setError({m[3]});", out, flags=re.M)
+    out = re.sub(rf"\b(\w+)\.get{s}\(\)\.getValue\(\)", lambda m: read(m[1]), out)
+    if group_class and out != text:
+        line = f"import com.temenos.t24.api.records.{package}.{group_class};"
+        lines, last = _first_import_gap(out)
+        if line not in lines and last is not None:
+            lines.insert(last + 1, line)
+            out = "\n".join(lines)
+    return out
+
+
+def _multi_value_fields(values):
+    """[(field value, access, record package)] of every multi-value Java field in `values`."""
+    found = []
+    for key, access in values.items():
+        if key.endswith("_ACCESS") and key[:-7] in values:
+            kind, _, of = access.rpartition(":") if access != "MV" else (access, "", "")
+            package = values.get(f"{of}_PACKAGE", "") if of else ""
+            found.append((values[key[:-7]], kind or access, package))
+    return found
+
+
 def render(template, values):
     missing, out = [], {}
     for name, content in template["files"].items():
         out[_fill(name, values, missing)] = _fill(content, values, missing)
     if missing:
         raise MissingInputs(missing)
+    for suffix, access, package in _multi_value_fields(values):
+        for name in out:
+            if name.endswith(".java"):
+                out[name] = java_multi_value(out[name], suffix, access, package)
     return out
 
 

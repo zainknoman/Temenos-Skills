@@ -153,3 +153,50 @@ def test_compiled_golden_cases_export_as_compiled(db_with_components, tmp_path):
     cat = _catalogue(tmp_path, [{"id": "validation", "label": "VVR"}])
     doc = export_templates(tmp_path / "t.json", catalogue=cat, conns={"R23": db_with_components})
     assert doc["languages"][0]["types"][0]["compiled"] is True
+
+
+# java_multi_value: the same input and expected output are asserted by T24Tools render.test.js,
+# so the Python and browser renderers rewrite multi-value fields identically.
+MV_SOURCE = """import com.temenos.t24.api.records.customer.CustomerRecord;
+
+public class X {
+    void m(CustomerRecord rec, CustomerRecord target) {
+        String value = rec.getRelCustomer().getValue();
+        if (value.isEmpty()) {
+            rec.getRelCustomer().setError("REL CUSTOMER IS MANDATORY");
+        }
+        target.setRelCustomer("1001");
+    }
+}"""
+
+
+def test_java_multi_value_list_of_tfield():
+    from artefact_templates import java_multi_value
+    out = java_multi_value(MV_SOURCE.replace("RelCustomer", "ShortTitle"), "ShortTitle", "MV", "customer")
+    assert 'String value = (rec.getShortTitle().isEmpty() ? "" : rec.getShortTitle(0).getValue());' in out
+    assert ('            if (rec.getShortTitle().isEmpty()) {\n                rec.setShortTitle("", 0);\n'
+            '            }\n            rec.getShortTitle(0).setError("REL CUSTOMER IS MANDATORY");') in out
+    assert '        target.setShortTitle("1001", 0);' in out
+    assert out.count("import ") == 1
+
+
+def test_java_multi_value_group_member():
+    from artefact_templates import java_multi_value
+    out = java_multi_value(MV_SOURCE, "RelCustomer", "MV-GROUP:RelationCode:RelationCodeClass", "customer")
+    assert out.startswith("import com.temenos.t24.api.records.customer.CustomerRecord;\n"
+                          "import com.temenos.t24.api.records.customer.RelationCodeClass;\n")
+    assert ('String value = (rec.getRelationCode().isEmpty() ? "" : '
+            'rec.getRelationCode(0).getRelCustomer().getValue());') in out
+    assert ('            if (rec.getRelationCode().isEmpty()) {\n'
+            '                rec.setRelationCode(new RelationCodeClass(), 0);\n            }\n'
+            '            rec.getRelationCode(0).getRelCustomer().setError("REL CUSTOMER IS MANDATORY");') in out
+    assert ('        RelationCodeClass groupRelCustomer = target.getRelationCode().isEmpty() ? '
+            'new RelationCodeClass() : target.getRelationCode(0);\n'
+            '        groupRelCustomer.setRelCustomer("1001");\n'
+            '        target.setRelationCode(groupRelCustomer, 0);') in out
+
+
+def test_single_value_java_is_untouched(db_with_kinds):
+    # A field resolved as SV gets no _ACCESS value, so render() leaves the template as it is.
+    from artefact_templates import java_multi_value
+    assert java_multi_value("x.getOther().getValue()", "ShortTitle", "MV", "customer") == "x.getOther().getValue()"

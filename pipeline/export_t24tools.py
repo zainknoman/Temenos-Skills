@@ -56,9 +56,15 @@ def build_export(conn, release):
     for row in rows:
         by_app[row[0]].append(row[1:])
     components, comp_names = _component_names(conn)
-    kinds = {}
+    kinds, groups = {}, {}
     if conn.execute("SELECT 1 FROM sqlite_master WHERE name = 'field_kinds'").fetchone():
-        kinds = {(a, f): k for a, f, k in conn.execute("SELECT app, field_name, kind FROM field_kinds")}
+        columns = {r[1] for r in conn.execute("PRAGMA table_info(field_kinds)")}
+        group_col = "group_getter" if "group_getter" in columns else "NULL"
+        for a, f, k, cls, getter in conn.execute(
+                f"SELECT app, field_name, kind, getter_class, {group_col} FROM field_kinds"):
+            kinds[(a, f)] = k
+            if k != "SV":
+                groups[(a, f)] = [getter, cls if k == "MV-GROUP" else None]
     apps, descs = {}, {}
     for app in sorted(by_app):
         recs = by_app[app]
@@ -66,9 +72,13 @@ def build_export(conn, release):
             "prefix": dotted_prefix([r[1] for r in recs]),
             "recordClass": record_class(app),
             "components": components.get(app, []),
-            # [position, name, javaAlias, type, mandatory, jbcName, kind] -- kind: SV / MV / MV-GROUP / null (unknown)
+            # [position, name, javaAlias, type, mandatory, jbcName, kind] -- kind: SV / MV / MV-GROUP / null
+            # (unknown). A multi-value field adds [groupGetter, groupClass]: how Java reaches its first
+            # value (record_parse.py) -- groupGetter '' for a list of TField (rec.get<F>(0)), the record's
+            # group accessor for a group member (rec.get<G>(0).get<F>()), null when Java cannot reach it
+            # in one indexed step. Readers that only know the first seven values are unaffected.
             "fields": [[r[0], r[1], r[2], _blank_to_none(r[3]), _blank_to_none(r[4]), comp_names.get((app, r[0])),
-                        kinds.get((app, r[1]))] for r in recs],
+                        kinds.get((app, r[1])), *groups.get((app, r[1]), [])] for r in recs],
         }
         d = {r[1]: r[5] for r in recs if _blank_to_none(r[5])}
         if d:
