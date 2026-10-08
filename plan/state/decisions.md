@@ -147,3 +147,35 @@ Rebuilt for R23 (`jar/`) and R25 from `E:\DesignStudioR25\R25-tafj-t24lib\t24lib
 rewrites the three ways a Java template uses a field. Golden cases `java-record-lifecycle-default-mv`,
 `-validate-mv-group`, `-post-update-mv-group`: PASS with javac on the R23 install (`E:\Temenos`) and
 against the R25 record classes with TAFJ stand-ins; still `"compiled": false` until an R25 install run.
+
+## Command line `t24skills` (2026-10-08)
+
+`pipeline/t24skills.py`, launched by `t24skills.cmd` (Windows) / `t24skills` (sh). Guide: `CLI.md`.
+- **One CLI over the existing functions, not new logic.** `validate_fields.py`, `query_docs.py` and
+  `run_golden.py` were split into a function + an unchanged `main()` (text output and exit codes are
+  the same; `validate_fields.py` output was compared byte for byte with the previous version).
+- **`--json` is the contract for other programs**: one object on stdout,
+  `{"schemaVersion": 1, "command", "ok", ...}`. `schemaVersion` changes only when a key is renamed or
+  removed. Exit 0 = ok, 1 = the check ran and failed (stdout still has the full result), 2 = cannot run
+  (no DB / vectordb, unknown app, topic, template or file). `run --json` sends the stage's own output
+  to stderr.
+- **Default release R23**, the same as the pipeline scripts. Commands run from the repository root;
+  file paths (`verify FILE`, `--out`, `--inputs`) resolve against the folder the user started in.
+- **`rules` topics** are read from Chroma's own `vectordb/chroma.sqlite3`, read-only (~1 s; the Chroma
+  API takes ~30 s for 32,657 chunks), with the API as the fallback. The topic check only runs when an
+  exact `--topic` returns nothing, so a normal search costs nothing extra.
+- **`generate`** uses `artefact_templates.resolve/render` (the code T24Tools' `render.js` mirrors), then
+  field-checks every generated `.b` against each application input, as T24Tools does. One field per
+  field input: the several-fields forms exist only in T24Tools' `multiField.js`. With each sample's
+  inputs and date it reproduces all 59 golden cases byte for byte (checked 2026-10-08). Files are
+  written with the platform's line ends, the same as `make_goldens.py`.
+- **`sample --out`** copies the golden files byte for byte (CRLF kept) and never overwrites without `--force`.
+- **`verify --no-app`** exposes `verify(no_app_ok=True)`, which `run_golden.py` already used for the
+  local-table cases, so a new local table can be compiled from the CLI.
+- **The help page's CLI pages are generated**, so they cannot drift: the stages from `STAGES`, the topic
+  table from the vectordb, and the Samples page from the golden cases + templates. Every command on the
+  Samples page was executed on 2026-10-08 (59 samples x 5 commands, all exit 0).
+- **Consumers:** T24Tools reads only exported files; `templates.json` re-exported byte-identical (the new
+  catalogue `group` / `groups` keys are not exported). Temenos-Engineering-Platform still imports
+  pipeline modules through inline Python; its `compareReleases` and `searchRules` calls were already
+  broken (ImportError, `float.strip`). Switching it to `t24skills --json` is CLAUDE.md P10.

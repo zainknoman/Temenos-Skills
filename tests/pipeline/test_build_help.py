@@ -43,3 +43,26 @@ def test_written_page_embeds_the_index_once(tmp_path):
     assert len(re.findall(r"</script>", html)) == 2          # inlined marked + the viewer
     assert "marked v" in html and 'class="markdown-body"' in html
     assert "<title>Temenos-Skills Help</title>" in html
+
+
+def _sample(case, file, apps, inputs):
+    return {"case": case, "template": "x/y", "data": {"file": file, "apps": apps, "userInputs": inputs}}
+
+
+def test_sample_commands_show_generate_and_compile():
+    from build_help import sample_commands
+    template = {"inputs": [{"id": "APP", "kind": "app"}, {"id": "TEXT", "kind": "text"},
+                           {"id": "PRODUCT", "kind": "text", "fixed": "EB"}]}
+    cmds = sample_commands(_sample("s1", "V.X.b", ["CUSTOMER"], {"APP": "CUSTOMER", "TEXT": "IS MANDATORY", "PRODUCT": "EB"}), template)
+    assert "t24skills sample s1\nt24skills template x/y" in cmds
+    assert r"t24skills generate x/y --from-sample --release R25 --out .\work\s1" in cmds
+    assert '  --set TEXT="IS MANDATORY" `' in cmds and "PRODUCT" not in cmds  # quoted; fixed inputs left out
+    assert cmds.endswith(r"t24skills verify .\work\s1\V.X.b --app CUSTOMER --release R25")
+
+
+def test_sample_commands_without_application():
+    from build_help import sample_commands
+    table = sample_commands(_sample("t", "T.b", [], {}), {"inputs": []})
+    assert table.endswith(r"t24skills verify .\work\t\T.b --no-app --release R25")
+    java = sample_commands(_sample("j", "J.java", [], {}), {"inputs": []})
+    assert java.endswith(r"t24skills verify .\work\j\J.java --release R25")

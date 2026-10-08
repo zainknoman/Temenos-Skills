@@ -75,7 +75,7 @@ All reference files live under `references/` relative to this skill.
    ```
    python pipeline/validate_fields.py --app ACCOUNT --fields "AC.CUSTOMER,AC.CATEGORY" [--release R25]
    ```
-   Exit 0 = every field verified (prints position/alias/type/mandatory for each). Exit 1 = at least one field not found, with the exact missing names listed. If the `t24-knowledge` MCP server is registered (see `CLAUDE.md` P4), `lookup_fields(app)` is the same data as a structured tool call instead of a Bash invocation.
+   Exit 0 = every field verified (prints position/alias/type/mandatory for each). Exit 1 = at least one field not found, with the exact missing names listed. If the `t24-knowledge` MCP server is registered (see `CLAUDE.md` P4), `lookup_fields(app)` is the same data as a structured tool call instead of a Bash invocation. The command line runs the same check: `python pipeline/t24skills.py fields ACCOUNT --check AC.CUSTOMER,AC.CATEGORY [--release R25] [--json]`.
    **Release:** knowledge exists for **R23** (default) and **R25**. If the developer names a release, pass `--release` and use only that release's names — fields, positions and especially jBC names differ (1,740 jBC names changed R23→R25; see `build/releases/R23-to-R25.md`). If no release is given, say that R23 was used.
 4. **If a field is missing: HALT. Ask the developer for the correct field name. Never guess.**
 5. State which fields you used and confirm they're verified, e.g. "Using fields: `AC.CUSTOMER`, `AC.CATEGORY` — both verified in `table-schema/ACCOUNT.md`" — before the code block.

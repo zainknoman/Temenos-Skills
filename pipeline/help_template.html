@@ -59,6 +59,7 @@ main { overflow: auto; padding: 20px 28px 48px; min-width: 0; }
 nav a { display: block; padding: 3px 14px 3px 34px; color: var(--ink); text-decoration: none; font-size: 14px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 nav .top > a { padding-left: 22px; }
+nav .cat { padding: 6px 14px 1px 34px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 nav a:hover { background: var(--accent-soft); }
 nav a.active { background: var(--accent); color: #fff; }
 .count { color: var(--muted); font-weight: 400; font-size: 12px; }
@@ -230,8 +231,15 @@ const outlineHtml = (items) => items.length
 
 // ---------- build routes from the index ----------
 function buildRoutes() {
-  INDEX.overview.forEach((s, k) => route(`#overview/${k}`, { group: "Overview", label: s.title,
+  INDEX.overview.forEach((s, k) => route(`#overview/${k}`, { group: "Overview", label: `${k + 1}. ${s.title}`,
     render: () => page("Overview", esc(s.title), "", mdDoc(s.content, `README.md › ${s.title}`, "README.md")) }));
+
+  if (INDEX.cli) route("#cli", { group: "Command line", label: "t24skills — commands & examples",
+    render: () => page("Command line", "t24skills", "One command for the everyday actions and every pipeline stage. Every command takes --json for other programs.",
+      tabs([["Guide", () => mdDoc(INDEX.cli.content, "CLI.md", "CLI.md")], ["Outline", () => outlineHtml(INDEX.cli.outline)]])) });
+  if (INDEX.samples) route("#cli/samples", { group: "Command line", label: `Samples: commands for all ${INDEX.samples.count}`,
+    render: () => page("Command line", "Samples", "Every artefact sample with the t24skills commands to show, generate and compile it.",
+      tabs([["Commands", () => mdDoc(INDEX.samples.content, "samples (generated)", "")], ["Outline", () => outlineHtml(INDEX.samples.outline)]])) });
 
   INDEX.skills.forEach((skill) => {
     route(`#skill/${skill.id}`, { group: "Skills", sub: skill.id, label: "About this skill",
@@ -242,16 +250,49 @@ function buildRoutes() {
       render: renderSchemas });
   });
 
+  route("#templates", { group: "Artefact templates", label: "All artefact types (by group)", render: renderTemplates });
   INDEX.templates.forEach((lang) => lang.types.forEach((t) =>
-    route(`#template/${t.id}`, { group: "Artefact templates", sub: lang.label, label: t.label, proven: t.proven, compiled: t.compiled,
+    route(`#template/${t.id}`, { group: "Artefact templates", sub: lang.label, cat: t.group, label: t.label, proven: t.proven, compiled: t.compiled,
       render: () => renderTemplate(lang, t) })));
 
   INDEX.golden.forEach((c) => route(`#golden/${c.name}`, { group: "Golden cases", label: c.name,
     render: () => renderGolden(c) }));
-  INDEX.pipeline.forEach((p) => route(`#pipeline/${p.name}`, { group: "Pipeline tools", label: p.name,
-    render: () => page("Pipeline tools", esc(p.name), `${p.lines} lines`, docDiv(`<pre>${esc(p.doc || "(no docstring)")}</pre>`)) }));
+  route("#pipeline", { group: "Pipeline tools", label: "Execution order (start here)", render: renderPipeline });
+  let step = 0;  // tools with a command are numbered in execution order
+  INDEX.pipeline.forEach((p) => route(`#pipeline/${p.name}`, { group: "Pipeline tools", sub: stageLabel(p.stage), label: p.command ? `${++step}. ${p.name}` : p.name,
+    render: () => renderTool(p) }));
   route("#releases", { group: "Releases", label: "Releases & knowledge DBs", render: renderReleases });
   if (!routes.has("#schemas")) route("#schemas", { group: "Releases", label: "Table schemas", render: renderSchemas });
+}
+
+// "Extract from the JARs (R23)" -> "1 · Extract from the JARs (R23)"; only stages with commands are numbered
+function stageLabel(title) {
+  const runnable = (t) => INDEX.pipeline.some((p) => p.stage === t && p.command);
+  const numbered = INDEX.pipelineStages.map((s) => s.title).filter(runnable);
+  const k = numbered.indexOf(title);
+  return k >= 0 ? `${k + 1} · ${title}` : title;
+}
+
+function renderPipeline() {
+  const stages = [...INDEX.pipelineStages.map((s) => s.title), "Other"];
+  const html = stages.map((title) => {
+    const tools = INDEX.pipeline.filter((p) => p.stage === title);
+    if (!tools.length) return "";
+    const intro = (INDEX.pipelineStages.find((s) => s.title === title) || {}).intro || "";
+    const run = tools.filter((p) => p.command);
+    const rows = tools.map((p) => `<tr><td><a href="#pipeline/${esc(p.name)}">${esc(p.name)}</a></td><td>${esc(p.purpose || (p.doc || "").split("\n")[0])}</td></tr>`).join("");
+    return `<h2>${esc(stageLabel(title))}</h2><p>${esc(intro)}</p><table><thead><tr><th>Tool</th><th>What it does</th></tr></thead><tbody>${rows}</tbody></table>${
+      run.length ? `<pre><code>${esc(run.map((p) => p.command).join("\n"))}</code></pre>` : ""}`;
+  }).join("");
+  page("Pipeline tools", "Execution order", "Run the stages top to bottom, or one at a time with t24skills run <stage> (t24skills stages lists them). Stages 1 to 3 build the knowledge base from jar/ (R23), the JavaDoc and the PDFs; stage 4 is optional; later stages add R25, check generated code and export to T24Tools. Each tool's own page has its full docstring.",
+    docDiv(html));
+}
+
+function renderTool(p) {
+  const head = p.command ? `<p><span class="badge plain">${esc(stageLabel(p.stage))}</span> ${esc(p.purpose)}</p><pre><code>${esc(p.command)}</code></pre>`
+    : `<p><span class="badge plain">${esc(p.stage)}</span> ${esc(p.purpose || "")}</p>`;
+  page(`<a href="#pipeline">Pipeline tools</a> › ${esc(stageLabel(p.stage))}`, esc(p.name), `${p.lines} lines`,
+    docDiv(`${head}<h2>Docstring</h2><pre>${esc(p.doc || "(no docstring)")}</pre>`));
 }
 
 function renderHome() {
@@ -261,10 +302,11 @@ function renderHome() {
   const pending = INDEX.templates.reduce((n, l) => n + l.types.filter((t) => t.proven && t.compiled === false).length, 0);
   const cards = `<div class="cards">
     <div class="card"><b>${INDEX.skills.length}</b><span>skills · ${files} reference files</span></div>
-    <div class="card"><b>${proven}/${types}</b><span>artefact types proven (compile on R25)${pending ? ` · ${pending} not compiled yet` : ""}</span></div>
+    ${INDEX.cli ? `<div class="card"><b><a href="#cli">t24skills</a></b><span>command line · every command with examples</span></div>` : ""}
+    <div class="card"><b><a href="#templates">${proven}/${types}</a></b><span>artefact types proven (compile on R25)${pending ? ` · ${pending} not compiled yet` : ""}</span></div>
     <div class="card"><b>${INDEX.golden.length}</b><span>golden cases</span></div>
     <div class="card"><b>${INDEX.releases.filter((r) => r.built).map((r) => r.release).join(" + ") || "—"}</b><span>releases with a knowledge DB</span></div>
-    <div class="card"><b>${INDEX.pipeline.length}</b><span>pipeline tools</span></div></div>`;
+    <div class="card"><b><a href="#pipeline">${INDEX.pipeline.length}</a></b><span>pipeline tools · <a href="#pipeline">execution order</a></span></div></div>`;
   const skills = `<table><thead><tr><th>Skill</th><th>What it covers</th><th>Files</th></tr></thead><tbody>${
     INDEX.skills.map((s) => `<tr><td><a href="#skill/${s.id}">${esc(s.name)}</a></td><td>${esc(s.description).slice(0, 260)}${s.description.length > 260 ? "…" : ""}</td><td>${s.files.length}</td></tr>`).join("")
   }</tbody></table>`;
@@ -293,6 +335,19 @@ function renderFile(skill, f) {
   page(`Skills › <a href="#skill/${skill.id}">${esc(skill.id)}</a>`, esc(f.path), `${f.lines} lines · ${fmtBytes(f.bytes)}`, tabs(defs));
 }
 
+const statusMark = (t) => t.proven === true && t.compiled !== false ? "✓ compiles on R25" : t.proven === true ? "◦ not compiled yet" : t.proven === false ? "· not proven" : "—";
+
+function renderTemplates() {
+  const groups = (lang) => [...new Set(lang.types.map((t) => t.group))].map((g) => [g, lang.types.filter((t) => t.group === g)]);
+  const html = INDEX.templates.map((lang) => `<h2>${esc(lang.label)} <span class="count">${lang.types.length} types</span></h2>${
+    groups(lang).map(([g, ts]) => `<h3>${esc(g)}</h3><table><thead><tr><th>Type</th><th>What it generates</th><th>Status</th></tr></thead><tbody>${
+      ts.map((t) => `<tr><td><a href="#template/${t.id}">${esc(t.label)}</a></td><td>${esc(t.description).slice(0, 220)}${t.description.length > 220 ? "…" : ""}</td><td>${statusMark(t)}</td></tr>`).join("")
+    }</tbody></table>`).join("")}`).join("");
+  const types = INDEX.templates.reduce((n, l) => n + l.types.length, 0);
+  page("Artefact templates", "All artefact types", `${types} types in ${INDEX.templates.length} languages, grouped as on the T24Tools Artefact Generator's routine-type cards (step 3).`,
+    docDiv(`<p>Local tables come in two styles: <a href="#template/infobasic/local-table">Infobasic</a> (TAFJ <code>I_Table</code>, <code>CALL Table.*</code>) and <a href="#template/jbc/local-table">jBC</a> (componentised <code>EB.Template</code>). T24Tools also lists four <em>Legacy templates (Routine Builder)</em> under Infobasic; they live in T24Tools, are never compiled and are not Temenos-Skills templates, so they are not listed here.</p>` + html));
+}
+
 function renderTemplate(lang, t) {
   const status = t.proven === true && t.compiled !== false ? `<span class="badge ok">proven — golden case compiles on R25, fields verified on R23 + R25</span>`
     : t.proven === true ? `<span class="badge warn">not compiled yet — golden case renders and fields verify on R23 + R25; awaiting the R25 compile (run_golden.py on a machine with C:\\R25)</span>`
@@ -302,7 +357,7 @@ function renderTemplate(lang, t) {
   }</tbody></table><p class="muted">Derived automatically: <code>{{TODAY}}</code>, <code>{{&lt;FIELD&gt;_NAME}}</code> (field name without the app prefix), <code>{{APP_COMPONENT}}</code> / <code>{{APP_RECORD}}</code> (jBC), <code>{{RECORD_CLASS}}</code> / <code>{{RECORD_PACKAGE}}</code> and <code>{{&lt;APP&gt;_CLASS}}</code> / <code>{{&lt;APP&gt;_PACKAGE}}</code> (Java). A <em>field</em> input becomes the EQU name (Infobasic), the componentised name (jBC) or the getter suffix (Java) of the selected release.</p>` : "<p class='muted'>No template yet.</p>";
   const files = Object.entries(t.files || {});
   const golden = t.golden && t.golden.output ? Object.entries(t.golden.output) : [];
-  page(`Artefact templates › ${esc(lang.label)}`, esc(t.label), esc(t.description), tabs([
+  page(`<a href="#templates">Artefact templates</a> › ${esc(lang.label)} › ${esc(t.group || "")}`, esc(t.label), esc(t.description), tabs([
     ["Overview", () => docDiv(`<p>${status}</p><p>${esc(t.description)}</p><p>Generates: ${files.map(([n]) => `<code>${esc(n)}</code>`).join(" ") || "—"} · inputs: ${t.inputs.map((i) => `<code>${esc(i.id)}</code>`).join(" ")}</p><p>Template id <code>${esc(t.id)}</code>${t.golden && t.golden.case ? ` · golden case <a href="#golden/${esc(t.golden.case)}">${esc(t.golden.case)}</a>` : ""}</p>`)],
     ["Inputs", () => docDiv(inputs)],
     ["Template files", () => docDiv(files.map(([n, c]) => `<h3>${esc(n)}</h3><pre><code>${esc(c)}</code></pre>`).join("") || "<p class='muted'>None.</p>")],
@@ -367,6 +422,8 @@ function searchAll(q) {
   INDEX.templates.forEach((l) => l.types.forEach((t) => add(`#template/${t.id}`, `template ${t.id}`, [t.label, t.description, ...Object.values(t.files || {})].join("\n"))));
   INDEX.pipeline.forEach((p) => add(`#pipeline/${p.name}`, `pipeline / ${p.name}`, p.doc));
   INDEX.overview.forEach((s, k) => add(`#overview/${k}`, `README / ${s.title}`, s.content));
+  if (INDEX.cli) add("#cli", "Command line / t24skills", INDEX.cli.content);
+  if (INDEX.samples) add("#cli/samples", "Command line / samples", INDEX.samples.content);
   hits.sort((a, b) => b.count - a.count);
   const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "ig");
   page("Search", `“${esc(q)}”`, `${hits.length} files match`, docDiv(hits.slice(0, 200).map((h) =>
@@ -381,21 +438,23 @@ function drawNav(filter) {
   home.innerHTML = `<a href="#home">🏠 Home</a>`; nav.append(home);
   const groups = new Map();
   for (const [hash, e] of routes) {
-    if (f && !(`${e.label} ${e.sub || ""} ${hash}`.toLowerCase().includes(f))) continue;
+    if (f && !(`${e.label} ${e.sub || ""} ${e.cat || ""} ${hash}`.toLowerCase().includes(f))) continue;
     if (!groups.has(e.group)) groups.set(e.group, new Map());
     const subs = groups.get(e.group); const key = e.sub || "";
     if (!subs.has(key)) subs.set(key, []);
     if (!subs.get(key).some(([h]) => h === hash)) subs.get(key).push([hash, e]);
   }
   for (const [group, subs] of groups) {
-    const det = document.createElement("details"); det.className = "group"; det.open = !!f || group === "Skills" || group === "Artefact templates";
+    const det = document.createElement("details"); det.className = "group"; det.open = !!f || group === "Skills" || group === "Artefact templates" || group === "Command line";
     const total = [...subs.values()].reduce((n, l) => n + l.length, 0);
     det.innerHTML = `<summary>${esc(group)} <span class="count">${total}</span></summary>`;
     for (const [sub, items] of subs) {
       const link = ([hash, e]) => `<a href="${hash}" title="${esc(e.label)}">${e.proven === true && e.compiled === false ? "◦ " : e.proven === true ? "✓ " : e.proven === false ? "· " : ""}${esc(e.label)}</a>`;
       if (!sub) { const top = document.createElement("div"); top.className = "top"; top.innerHTML = items.map(link).join(""); det.append(top); continue; }
       const sd = document.createElement("details"); sd.className = "sub"; sd.open = !!f;
-      sd.innerHTML = `<summary>${esc(sub)} <span class="count">${items.length}</span></summary>${items.map(link).join("")}`;
+      // artefact types: a heading per group (Version routines, Enquiry, ...) as in T24Tools step 3
+      const body = items.map((it, k) => (it[1].cat && it[1].cat !== (items[k - 1] || [])[1]?.cat ? `<div class="cat">${esc(it[1].cat)}</div>` : "") + link(it)).join("");
+      sd.innerHTML = `<summary>${esc(sub)} <span class="count">${items.length}</span></summary>${body}`;
       det.append(sd);
     }
     nav.append(det);

@@ -11,7 +11,8 @@ Bank — not invented field names, guessed API signatures, or guessed config.
 - **Two T24 releases**: a complete knowledge base for **R23** and for **R25** (fields, positions, types, componentised jBC names), plus a generated R23→R25 change report.
 - **59 artefact types, every one proven**: 19 Infobasic, 16 jBC and 24 L3 Java hook templates. Each template's example compiles against a real R25 install and has its fields verified on both releases.
 - **An accuracy check for generated code**: `pipeline/verify_artefact.py` verifies every field and compiles the file against R25 before it's presented.
-- **Help page**: open [`Temenos-Skills-HelpText.html`](Temenos-Skills-HelpText.html) in a browser. It's a JavaDoc-style index of every skill, reference file, artefact template, golden case, pipeline tool and release, with search. Rebuild it with `python pipeline/build_help.py`.
+- **A command line, `t24skills`**: one command for field checks, business-rule search, the 59 samples, generating code from the templates, verify/compile, the golden suite, the release diff and every pipeline stage. Every command takes `--json` for other programs. See [CLI.md](CLI.md).
+- **Help page**: open [`Temenos-Skills-HelpText.html`](Temenos-Skills-HelpText.html) in a browser. It's a JavaDoc-style index of every skill, reference file, artefact template (grouped as in T24Tools), golden case, pipeline tool (in execution order) and release, with search. Its *Command line* section has the CLI guide, every `rules --topic` topic, and the commands for all 59 samples. Rebuild it with `t24skills run help` (or `python pipeline/build_help.py`).
 
 ---
 
@@ -177,6 +178,28 @@ A template is **proven** when rendering its golden case's inputs reproduces that
 
 `python pipeline/release_t24tools.py --release R25` runs the golden cases. Only if they pass does it write the T24Tools export: `build/t24tools/<R>/` (fields, Temenos-derived, for personal use only) and `templates.json` (the templates themselves).
 
+Each type in `templates/catalogue.json` has a `group`, the same groups the T24Tools Artefact Generator uses for its routine-type cards:
+
+| Language | Groups |
+|---|---|
+| Infobasic | Version routines · Enquiry · Batch and services · Messaging and delivery · Arrangements (AA) · Tables |
+| jBC | Version routines · Enquiry · Component methods · Batch and services · Messaging and delivery · Tables |
+| Java | RecordLifecycle · Enquiry · Services · AA activity · AA calculation · Payments |
+
+---
+
+## T24Tools Artefact Generator
+
+T24Tools (a separate repo) loads `templates.json` and a release's `fields.json`, and generates routines in the browser with no network calls. The flow has five steps:
+
+1. **Release**: the app-wide active release (header buttons; R25 loads at start-up). The Artefact Generator, Routine Builder, JAR Viewer and Application Viewer all use it.
+2. **Language**: Infobasic (legacy), jBC (componentised) or Java (L3 hooks).
+3. **Routine type**: the 59 types as cards, grouped as in the table above, with a filter box. Every one is compile-verified on R25. T24Tools adds a seventh Infobasic group, **Legacy templates (Routine Builder)**: four recovered templates (Standard Routine, OFS Routine, OFS OPM Routine, F.WRITE Routine). They are not Temenos-Skills templates and have never been compiled.
+4. **Inputs**: each field input is a filterable list of the application's fields, with position and `SV` / `MV` / `MV-GROUP`. Fields the language cannot use are disabled, with the reason. 38 types accept **several fields** for at least one input. For those types, only the field-specific statements repeat: a check per field, `AND`-ed selections, fields returned together, or every field written in one OFS message. The multi-field forms have not been compiled on T24.
+5. **Generate**: editable code, one tab per file, with **Copy** and **Download**. A toolbar of **building blocks** (Files, Select, Strings, Dates, Local ref, Messages; 20 in all) inserts code at the cursor in the routine's language. That means legacy `CALL` for Infobasic, componentised names such as `EB.DataAccess.FRead` for jBC, and `DataAccess` / `Session` for Java. Each block is filled from the template's application and field, and its `$INSERT` / `$USING` / `import` lines are added once. The field check reruns on every edit. **Reset to template** undoes all changes.
+
+Generation never leaves a `{{PLACEHOLDER}}` in the output. Componentised names differ between R23 and R25, so generate for the release you will deploy to.
+
 ---
 
 ## Pipeline
@@ -211,7 +234,7 @@ jar/                    T24.javadoc/              docs/
 | T24 fields catalogued (Layer A) | 162,842, across 4,596 applications |
 | Fields enriched with type/mandatory/description | 96,159 (59% — remainder are MV fields with no no-arg getter, or apps with no `Record.html`) |
 | Business-rule PDFs indexed (Layer B) | 3,534 — 3,481 from the original training/doc archive (4 corrupt source files skipped) + 53 official Temenos install/admin/migration/integration/devsecops/componentisation PDFs added 2026-07-31 from a real installed R25 Model Bank's `TAFJ_HOME/doc` |
-| Vector chunks embedded | 32,507 |
+| Vector chunks embedded | 32,657, in 54 topics (`t24skills topics`) |
 | Cache size | ~620 MB (incremental, SHA-256 hashed) |
 
 `jar/`, `T24.javadoc/`, and `docs/` are not shipped in this repo (large
@@ -345,13 +368,17 @@ python pipeline/query_docs.py "<question>" --topic TAFJ-Admin -n 5
 ```
 Temenos-Skills/
 ├── CLAUDE.md                          ← architecture decisions, read every session
+├── CLI.md                             ← the command line: every command with examples
+├── t24skills.cmd / t24skills          ← launchers for the command line
 ├── pipeline/
+│   ├── t24skills.py                   ← the command line: status, fields, rules, topics, samples, sample,
+│   │                                     template, generate, verify, golden, diff, stages, run <stage>
 │   ├── extract.py                     ← Phase 1: extract classes from JARs
 │   ├── aggregate.py                   ← Phase 2: generate reference .md files
 │   ├── insert_parse.py                ← Phase 1b: field name/position schema from INSERTS/I_F.*
 │   ├── html_parse.py                  ← Phase 1c: backfill type/mandatory/description from JavaDoc HTML
 │   ├── pdf_extract.py                 ← Phase 1d: chunk + TF-IDF embed PDFs into Chroma (Layer B)
-│   ├── query_docs.py                  ← Query Layer B (CLI)
+│   ├── query_docs.py                  ← Query Layer B (CLI); topics() lists the --topic names
 │   ├── validate_fields.py             ← Field Verification Gate (CLI, prints jBC names)
 │   ├── component_parse.py             ← componentised (jBC) field names from component classes
 │   ├── record_parse.py                ← single / multi-value flag per field (record-class getters)
@@ -433,6 +460,31 @@ pip install javatools pdfplumber beautifulsoup4 lxml chromadb scikit-learn jobli
 
 ---
 
+## Command Line (`t24skills`)
+
+One entry point for the everyday commands and every pipeline stage. On Windows: `.\t24skills.cmd` in the repository folder (PowerShell needs the `.\`), or put the repository on your PATH once and type `t24skills` anywhere (see [CLI.md](CLI.md#put-it-on-your-path-once)). In sh: `./t24skills`. Anywhere: `python pipeline/t24skills.py`. Every command with examples and sample output: [CLI.md](CLI.md) (also the "Command line" page of the help).
+
+```bash
+t24skills status                                    # what is built, per release; is the help page stale?
+t24skills fields ACCOUNT [--release R25]            # an application's fields (position, SV/MV, jBC name)
+t24skills fields ACCOUNT --check AC.CUSTOMER,AC.CATEGORY   # Field Verification Gate (exit 1 if one is missing)
+t24skills rules "what controls dormancy?" --topic ACCOUNT  # business-rule PDFs (never for field names)
+t24skills verify out/V.CUS.CHECK.b --app CUSTOMER --release R25 [--no-compile]   # --no-app for a new local table
+t24skills golden --release R25 [--case NAME]
+t24skills diff R23 R25 [--full]
+t24skills stages                                    # the pipeline stages, in execution order
+t24skills topics                                    # the topics rules --topic accepts
+t24skills samples [FILTER] [--language jbc]         # the 59 artefact samples (one golden case per type)
+t24skills sample jbc/local-table [--file F] [--out DIR]   # one sample's requirement, inputs and code
+t24skills template jbc/validation                   # a template's inputs + a generate command that works
+t24skills generate jbc/validation --from-sample --set FIELD=EB.CUS.SECTOR --release R25 --out .\work
+t24skills run r23|docs|refs|sepa|r25|golden|export|help [--release R25] [--dry-run]
+```
+
+**For other programs:** add `--json` to any command and stdout is one JSON object: `{"schemaVersion": 1, "command": "...", "ok": true|false, ...}`. With `run --json`, the stage's own output goes to stderr. Exit codes: `0` ok, `1` the check failed (a field is missing; verify, golden or a stage step fails), `2` cannot run (no knowledge DB or vectordb, unknown application or file). Without `--release`, commands use R23, like the pipeline scripts.
+
+---
+
 ## How to Run
 
 ```bash
@@ -488,6 +540,8 @@ has to reflect the whole corpus, not just the newly-changed files).
 ```bash
 python -m pytest tests/pipeline/ -v
 ```
+
+`tests/pipeline/test_t24skills.py` covers the command line on a temporary DB; it needs no T24 install.
 
 ---
 

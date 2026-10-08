@@ -48,24 +48,31 @@ def main():
 
     conn = connect(args)
     failures = 0
-    for case in load_cases():
-        if args.case and case["name"] != args.case:
+    for r in run_cases(conn, args.case):
+        failures += r["result"] == "FAIL"
+        detail = r["report"]["compile"]["status"] + (f" expected-fields-not-seen={r['lost']}" if r["lost"] else "")
+        if r["result"] == "PASS" and r["compiled"] is False:
+            detail += f' -- now compiles on {compiled_on}: remove "compiled": false from its case.json'
+        print(f"{r['result']}  {r['case']:<40} {detail}")
+        if not r["report"]["passed"] and r["report"]["compile"]["status"] != "OK":
+            print(r["report"]["compile"]["output"][-2000:])
+    conn.close()
+    sys.exit(1 if failures else 0)
+
+
+def run_cases(conn, only=None, root=GOLDEN):
+    """Verify every golden case (or just `only`), yielding {"case", "result", "lost", "compiled", "report"}
+    as each one finishes. result is PASS / FAIL / PEND (see outcome)."""
+    for case in load_cases(root):
+        if only and case["name"] != only:
             continue
         report = verify(case["dir"] / case["file"], case["apps"], conn, Path("build/verify/golden"),
                         no_app_ok=not case["apps"])
         expected = set(case.get("expected_fields", []))
         seen = {f for r in report["fields"] for f in r["verified"] + r.get("compiler_checked", [])}
         lost = expected - seen if not case["file"].endswith(".java") else set()
-        result = outcome(case, report, lost)
-        failures += result == "FAIL"
-        detail = report["compile"]["status"] + (f" expected-fields-not-seen={sorted(lost)}" if lost else "")
-        if result == "PASS" and case.get("compiled", True) is False:
-            detail += f' -- now compiles on {compiled_on}: remove "compiled": false from its case.json'
-        print(f"{result}  {case['name']:<40} {detail}")
-        if not report["passed"] and report["compile"]["status"] != "OK":
-            print(report["compile"]["output"][-2000:])
-    conn.close()
-    sys.exit(1 if failures else 0)
+        yield {"case": case["name"], "result": outcome(case, report, lost), "lost": sorted(lost),
+               "compiled": case.get("compiled", True), "report": report}
 
 
 if __name__ == "__main__":

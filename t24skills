@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+# t24skills -- Temenos-Skills command line (pipeline/t24skills.py). See: t24skills --help
+here=$(dirname "$0")
+if command -v python3 >/dev/null 2>&1 && python3 -c "" >/dev/null 2>&1; then py=python3
+elif command -v py >/dev/null 2>&1; then py="py -3"
+else py=python; fi
+exec $py "$here/pipeline/t24skills.py" "$@"
