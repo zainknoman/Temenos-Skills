@@ -42,7 +42,7 @@ every option.
 | `topics` | The topics `rules --topic` accepts, with PDF and chunk counts and the largest PDFs | `--json` |
 | `samples [FILTER]` | List the artefact samples: one golden case per artefact type, grouped by language and group | `--language`, `--json` |
 | `sample NAME` | Show one sample's requirement, inputs and generated files, print one file, or copy them | `--file`, `--out`, `--force`, `--json` |
-| `template [ID]` | A template's inputs, its sample values and a generate command that works; no ID lists all 59 | `--json` |
+| `template [ID]` | A template's inputs, its sample values and a generate command that works; no ID lists all 59 templates | `--json` |
 | `generate ID` | Generate an artefact from a template with your own inputs, plus the field check | `--set`, `--inputs`, `--from-sample`, `--release`, `--today`, `--out`, `--force`, `--json` |
 | `verify FILE --app APP` | Accuracy gate for one generated file: field check + compile | `--release`, `--no-compile`, `--no-app`, `--install`, `--json` |
 | `golden` | Run every golden case (field check + compile) | `--case`, `--release`, `--install`, `--json` |
@@ -76,7 +76,7 @@ Temenos-Skills at D:\Personal\Projects\Temenos-Skills (default release R23)
   R25: 4,838 apps, 171,858 fields, 69,119 jBC names (releases/R25/temenos_knowledge.db, 2026-10-02T19:38:14Z)
        T24Tools fields.json: 2026-10-06T14:40:47Z
   Business-rule docs (vectordb): built 2026-08-09T09:17:59Z
-  Templates: 59 types, 59 golden cases, templates.json exported
+  Templates: 59 types, 62 golden cases, templates.json exported
   Compile install: C:\R25 (R25)
   Help page: 2026-10-08T08:05:23Z
 ```
@@ -177,13 +177,14 @@ table below is generated from the same data when the help is rebuilt.
 
 ## samples and sample
 
-Every artefact type has one sample: a golden case under `tests\golden\<name>\`. It holds the
-requirement, the inputs it was generated from, and the generated files, which compile on R25.
-The help page **Command line → Samples** lists all 59 with the commands to show, generate and
-compile each one.
+Every artefact type has a sample: a golden case under `tests\golden\<name>\`. It holds the
+requirement, the inputs it was generated from, and the generated files. There are 62 samples for
+the 59 types: three Java types also have a multi-value variant (`-mv`, `-mv-group`), which compiles
+with javac on R23 but is *not compiled on R25 yet*. Every other sample compiles on R25. The help page
+**Command line → Samples** lists all of them with the commands to show, generate and compile each one.
 
 ```powershell
-t24skills samples                        # all 59, by language and group
+t24skills samples                        # all 62, by language and group
 t24skills samples --language jbc         # only jBC
 t24skills samples table                  # name, type, group or requirement contains "table"
 ```
@@ -192,10 +193,10 @@ t24skills samples table                  # name, type, group or requirement cont
 jBC (componentised) > Tables
   jbc-local-table                            Local table definition (componentised, EB.Template)
 
-59 samples. Show one: t24skills sample <name>
+62 samples. Show one: t24skills sample <name>
 ```
 
-Show one sample. Give the case name or the template id:
+Show one sample. Give the sample name, or a template id (which picks its compile-verified sample):
 
 ```powershell
 t24skills sample jbc-local-table
@@ -303,7 +304,8 @@ Then compile it on R25 with the printed `verify` command. That compile gives `CO
 | A missing or unknown input, an unknown template or application, or files already there | `2` |
 
 With the sample's inputs and date (`--from-sample --today 2026-10-02`), `generate` reproduces each
-golden case byte for byte, for all 59 templates.
+golden case byte for byte, for all 62 samples (`generate <sample name> --from-sample` uses that
+sample's inputs; with a template id it uses the template's compile-verified sample).
 
 ## verify
 
@@ -337,7 +339,7 @@ PASS
 ## golden
 
 ```powershell
-t24skills golden --release R25                          # all 59 cases
+t24skills golden --release R25                          # all 62 cases
 t24skills golden --release R25 --case jbc-local-table   # one case (folder name under tests\golden)
 ```
 
@@ -346,7 +348,7 @@ PASS  jbc-local-table                          OK
 1 PASS, 0 FAIL, 0 PEND on R25
 ```
 
-The full run compiles 59 cases and takes a while. Run it with plenty of free memory, or one
+The full run compiles 62 cases and takes a while. Run it with plenty of free memory, or one
 `--case` at a time.
 
 ## diff

@@ -352,7 +352,7 @@ package com.temenos.t24.custom.<module>;
 - [x] **P9** Command line `t24skills` (2026-10-08) — `pipeline/t24skills.py`, launchers `t24skills.cmd` / `t24skills`,
   guide `CLI.md`. `--json` is the contract for other programs (`schemaVersion` 1). Catalogue types carry a
   `group` (T24Tools' step-3 groups); the help page shows templates by group, pipeline tools in execution order,
-  and generated CLI pages (stages, `rules` topics, all 59 samples with their commands). Details:
+  and generated CLI pages (stages, `rules` topics, all 62 samples with their commands). Details:
   `plan/state/decisions.md` "Command line".
 - [ ] **P10** Temenos-Engineering-Platform: switch `src/adapters/temenos-skills.js` from inline Python to
   `python pipeline/t24skills.py <cmd> --json` (parse stdout on exit 1, reject only exit 2; keys are

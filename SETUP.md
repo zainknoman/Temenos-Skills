@@ -93,7 +93,7 @@ Claude Code will:
 
 ## Step 7 — the command line (optional)
 
-`t24skills` runs the everyday actions without Claude: field checks, business-rule search, the 59
+`t24skills` runs the everyday actions without Claude: field checks, business-rule search, the 62
 samples, generating code from the templates, compiling on R25, and every pipeline stage.
 
 1. Put the repository on your **user** PATH once, then open a new terminal:

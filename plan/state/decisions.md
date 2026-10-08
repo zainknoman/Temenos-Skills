@@ -167,14 +167,25 @@ against the R25 record classes with TAFJ stand-ins; still `"compiled": false` un
 - **`generate`** uses `artefact_templates.resolve/render` (the code T24Tools' `render.js` mirrors), then
   field-checks every generated `.b` against each application input, as T24Tools does. One field per
   field input: the several-fields forms exist only in T24Tools' `multiField.js`. With each sample's
-  inputs and date it reproduces all 59 golden cases byte for byte (checked 2026-10-08). Files are
+  inputs and date it reproduces all 62 golden cases byte for byte (checked 2026-10-08, after rebasing
+  onto the multi-value commits; the local field_kinds were rebuilt with record_parse.py first). Files are
   written with the platform's line ends, the same as `make_goldens.py`.
 - **`sample --out`** copies the golden files byte for byte (CRLF kept) and never overwrites without `--force`.
 - **`verify --no-app`** exposes `verify(no_app_ok=True)`, which `run_golden.py` already used for the
   local-table cases, so a new local table can be compiled from the CLI.
 - **The help page's CLI pages are generated**, so they cannot drift: the stages from `STAGES`, the topic
   table from the vectordb, and the Samples page from the golden cases + templates. Every command on the
-  Samples page was executed on 2026-10-08 (59 samples x 5 commands, all exit 0).
+  Samples page was executed on 2026-10-08 (59 samples x 5 commands, all exit 0; re-run for 62 after
+  the rebase).
+- **A template with several samples** (the multi-value variants) is shown and generated with its
+  compile-verified sample (`_primary_sample`); a sample name always means that sample.
+  `artefact_templates.golden_case()` instead takes the first case by folder name, so
+  `java/record-lifecycle-validate` now proves against `java-record-lifecycle-validate-mv-group`
+  and a fresh `templates.json` export marks the type `compiled: false` (before: compile-verified via
+  `l3-account-category-guard`). The three variants were then run on R25 (`t24skills golden --release
+  R25 --case ...`, `Compile install: C:\R25`): all PASS, COMPILE OK. Their `"compiled": false` flags
+  are not changed yet. Removing them (or making `golden_case()` prefer the compiled case) puts
+  `java/record-lifecycle-validate` back to compile-verified in the export.
 - **Consumers:** T24Tools reads only exported files; `templates.json` re-exported byte-identical (the new
   catalogue `group` / `groups` keys are not exported). Temenos-Engineering-Platform still imports
   pipeline modules through inline Python; its `compareReleases` and `searchRules` calls were already

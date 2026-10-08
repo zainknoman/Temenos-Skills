@@ -12,7 +12,7 @@ unknown release, application, topic, template or file). Full guide: CLI.md.
   t24skills fields ACCOUNT [--check AC.CUSTOMER,AC.CATEGORY] [--release R25]
   t24skills rules "what controls dormancy?" [--topic ACCOUNT] [-n 5]
   t24skills topics                                   the topics rules --topic accepts
-  t24skills samples [FILTER] [--language jbc]        the artefact samples (one golden case per type)
+  t24skills samples [FILTER] [--language jbc]        the artefact samples (golden cases: one or more per type)
   t24skills sample jbc/local-table [--file F] [--out DIR]   one sample's requirement, inputs and files
   t24skills template jbc/validation                  a template's inputs + a generate command that works
   t24skills generate jbc/validation --set APP=CUSTOMER --set FIELD=EB.CUS.SECTOR ... [--out DIR]
@@ -298,12 +298,22 @@ def show_samples(r):
     print(f"\n{r['count']} samples. Show one: t24skills sample <name>")
 
 
+def _primary_sample(template_id, samples=None):
+    """The sample a template is shown and generated with: its compile-verified case when it has
+    several (e.g. a multi-value variant marked "compiled": false), else its first."""
+    cases = [s for s in (samples or _samples()) if s["template"] == template_id]
+    return next((s for s in cases if s["compiled"] is not False), cases[0] if cases else None)
+
+
 def _find_sample(name):
     samples = _samples()
     key = name.strip().lower().replace("\\", "/")
     for s in samples:
-        if key in (s["case"].lower(), s["template"].lower()):
+        if key == s["case"].lower():
             return s
+    for s in samples:
+        if key == s["template"].lower():
+            return _primary_sample(s["template"], samples)
     import difflib
     names = [s["case"] for s in samples]
     close = [n for n in names if key in n] or difflib.get_close_matches(key, names, n=5, cutoff=0.5)
@@ -390,11 +400,16 @@ def _example_command(template, inputs):
     return f"t24skills generate {template['id']} {sets} --release R25 --out .\\work"
 
 
+def _sample_for(name, template_id):
+    """The sample named `name` when it is a sample name, else the template's primary sample."""
+    return next((x for x in _samples() if x["case"].lower() == name.strip().lower()), None) or _primary_sample(template_id)
+
+
 def cmd_template(args):
     if not args.name:
         return True, {"templates": [{"id": t["id"], "label": t["label"]} for t in _templates().values()]}
     t = _find_template(args.name)
-    sample = next((s for s in _samples() if s["template"] == t["id"]), None)
+    sample = _sample_for(args.name, t["id"])
     sample_inputs = sample["data"].get("userInputs", {}) if sample else {}
     inputs = [{**i, "sample": sample_inputs.get(i["id"])} for i in t["inputs"]]
     return True, {"id": t["id"], "language": t["language"], "label": t["label"], "description": t.get("description", ""),
@@ -442,7 +457,7 @@ def cmd_generate(args):
     specs = {i["id"]: i for i in t["inputs"]}
     inputs = {}
     if args.from_sample:
-        sample = next((s for s in _samples() if s["template"] == t["id"]), None)
+        sample = _sample_for(args.name, t["id"])
         inputs.update(sample["data"].get("userInputs", {}) if sample else {})
     if args.inputs:
         try:
@@ -698,7 +713,7 @@ def parser():
     p.add_argument("--topic", help="limit to one topic, e.g. ACCOUNT (any case; list them with: t24skills topics)")
     p.add_argument("-n", type=int, default=5, help="number of results (default 5)")
     sub.add_parser("topics", parents=[common], help="the topics rules --topic accepts, with PDF and chunk counts")
-    p = sub.add_parser("samples", parents=[common], help="list the artefact samples (one golden case per type)")
+    p = sub.add_parser("samples", parents=[common], help="list the artefact samples (the golden cases: one or more per type)")
     p.add_argument("filter", nargs="?", help="only samples whose name, type, group or requirement contains this")
     p.add_argument("--language", choices=["infobasic", "jbc", "java"])
     p = sub.add_parser("sample", parents=[common], help="show one sample: requirement, inputs and generated files")

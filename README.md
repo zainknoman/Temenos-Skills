@@ -11,8 +11,8 @@ Bank — not invented field names, guessed API signatures, or guessed config.
 - **Two T24 releases**: a complete knowledge base for **R23** and for **R25** (fields, positions, types, componentised jBC names), plus a generated R23→R25 change report.
 - **59 artefact types, every one proven**: 19 Infobasic, 16 jBC and 24 L3 Java hook templates. Each template's example compiles against a real R25 install and has its fields verified on both releases.
 - **An accuracy check for generated code**: `pipeline/verify_artefact.py` verifies every field and compiles the file against R25 before it's presented.
-- **A command line, `t24skills`**: one command for field checks, business-rule search, the 59 samples, generating code from the templates, verify/compile, the golden suite, the release diff and every pipeline stage. Every command takes `--json` for other programs. See [CLI.md](CLI.md).
-- **Help page**: open [`Temenos-Skills-HelpText.html`](Temenos-Skills-HelpText.html) in a browser. It's a JavaDoc-style index of every skill, reference file, artefact template (grouped as in T24Tools), golden case, pipeline tool (in execution order) and release, with search. Its *Command line* section has the CLI guide, every `rules --topic` topic, and the commands for all 59 samples. Rebuild it with `t24skills run help` (or `python pipeline/build_help.py`).
+- **A command line, `t24skills`**: one command for field checks, business-rule search, the 62 samples, generating code from the templates, verify/compile, the golden suite, the release diff and every pipeline stage. Every command takes `--json` for other programs. See [CLI.md](CLI.md).
+- **Help page**: open [`Temenos-Skills-HelpText.html`](Temenos-Skills-HelpText.html) in a browser. It's a JavaDoc-style index of every skill, reference file, artefact template (grouped as in T24Tools), golden case, pipeline tool (in execution order) and release, with search. Its *Command line* section has the CLI guide, every `rules --topic` topic, and the commands for all 62 samples. Rebuild it with `t24skills run help` (or `python pipeline/build_help.py`).
 
 ---
 
@@ -474,7 +474,7 @@ t24skills golden --release R25 [--case NAME]
 t24skills diff R23 R25 [--full]
 t24skills stages                                    # the pipeline stages, in execution order
 t24skills topics                                    # the topics rules --topic accepts
-t24skills samples [FILTER] [--language jbc]         # the 59 artefact samples (one golden case per type)
+t24skills samples [FILTER] [--language jbc]         # the 62 artefact samples (golden cases)
 t24skills sample jbc/local-table [--file F] [--out DIR]   # one sample's requirement, inputs and code
 t24skills template jbc/validation                   # a template's inputs + a generate command that works
 t24skills generate jbc/validation --from-sample --set FIELD=EB.CUS.SECTOR --release R25 --out .\work

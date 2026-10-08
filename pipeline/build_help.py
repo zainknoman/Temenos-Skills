@@ -348,7 +348,7 @@ def sample_commands(sample, template, release="R25"):
         f"t24skills template {tid}",
         "",
         "# generate it with the sample's inputs: the sample's code, dated today",
-        f"t24skills generate {tid} --from-sample --release {release} --out {out}",
+        f"t24skills generate {sid} --from-sample --release {release} --out {out}",
         "",
         "# generate it with every input written out: change the values you need",
         full,
@@ -365,14 +365,16 @@ def samples_page():
     samples, templates = _samples(), _templates()
     lines = [
         "# Samples: commands for every artefact type", "",
-        f"Every artefact type has one sample: a golden case in `tests/golden/<sample>/`, generated from its template "
-        f"and compiled on R25. This page lists all {len(samples)} with the commands for each one. They are "
+        f"Every artefact type has a sample: a golden case in `tests/golden/<sample>/`, generated from its template. "
+        f"A few types have more than one (the multi-value Java variants). This page lists all {len(samples)} samples "
+        f"for {len(templates)} types, with the commands for each one. Every sample compiles on R25 except those marked "
+        "*not compiled on R25 yet*. The commands are "
         "PowerShell (a backtick ` continues a line) and assume `t24skills` is on your PATH; without that, use "
         "`.\\t24skills.cmd` in the repository folder.", "",
         "For each sample:", "",
         "- `sample` shows its requirement, inputs and files; `template` shows the inputs the type takes.",
-        "- `generate --from-sample` writes the sample's code into `.\\work\\<sample>`, dated today "
-        "(add `--today 2026-10-02` and it is byte-identical to the sample).",
+        "- `generate <sample> --from-sample` writes that sample's code into `.\\work\\<sample>`, dated today "
+        "(add `--today` with the date in the sample's header and it is byte-identical to the sample).",
         "- The long `generate` form lists every input: copy it and change the values (a field input is the EQU name; "
         "the generator turns it into the jBC name or Java getter for the release).",
         "- `verify` compiles the main file on R25 (field check + compile).", "",
@@ -394,6 +396,7 @@ def samples_page():
             continue
         lines += ["", f"#### {s['case']}", "",
                   f"**{s['type']}**. {s['requirement']} Applications: {', '.join(s['apps']) or 'none'}. "
+                  + ("**Not compiled on R25 yet.** " if s["compiled"] is False else "") +
                   f"Generates: {', '.join(f'`{n}`' for n in sorted(p.name for p in s['dir'].iterdir() if p.name != 'case.json'))}.",
                   "", "```powershell", sample_commands(s, t), "```"]
     text = "\n".join(lines) + "\n"

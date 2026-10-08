@@ -55,7 +55,7 @@ def test_sample_commands_show_generate_and_compile():
                            {"id": "PRODUCT", "kind": "text", "fixed": "EB"}]}
     cmds = sample_commands(_sample("s1", "V.X.b", ["CUSTOMER"], {"APP": "CUSTOMER", "TEXT": "IS MANDATORY", "PRODUCT": "EB"}), template)
     assert "t24skills sample s1\nt24skills template x/y" in cmds
-    assert r"t24skills generate x/y --from-sample --release R25 --out .\work\s1" in cmds
+    assert r"t24skills generate s1 --from-sample --release R25 --out .\work\s1" in cmds
     assert '  --set TEXT="IS MANDATORY" `' in cmds and "PRODUCT" not in cmds  # quoted; fixed inputs left out
     assert cmds.endswith(r"t24skills verify .\work\s1\V.X.b --app CUSTOMER --release R25")
 
