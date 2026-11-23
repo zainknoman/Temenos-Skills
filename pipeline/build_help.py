@@ -77,6 +77,8 @@ PIPELINE_STAGES = [
          "python pipeline/record_parse.py --jars jar --release R23"),
     ]),
     ("Business-rule docs (Layer B)", "Embeds the PDFs for semantic search.", [
+        ("docx_extract.py", "Word file of slide screenshots to an OCR'd, searchable PDF in docs/<topic>/ (Windows OCR)",
+         'py -3 pipeline/docx_extract.py --docx "D:/Learning/COB/COB Foundation.docx" --topic COB'),
         ("pdf_extract.py", "Chunk the PDFs and embed them into Chroma (TF-IDF, offline)",
          "python pipeline/pdf_extract.py --pdfs docs --vectordb vectordb --cache cache/pdf_extracts"),
         ("query_docs.py", "Search the business rules",

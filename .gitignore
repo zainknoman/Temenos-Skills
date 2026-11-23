@@ -38,3 +38,6 @@ releases/
 # Local runtime artefacts
 .claude/scheduled_tasks.lock
 .playwright-mcp/
+
+# Claude Project kits: course transcripts are Temenos training text, regenerable via pipeline/docx_extract.py --transcript
+claude-project/**/*-transcript.md

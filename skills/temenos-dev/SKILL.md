@@ -150,7 +150,7 @@ Route to the correct domain. For rows marked **REQUIRED SUB-SKILL**, invoke that
 | AccountRecord, ACCOUNT, AC.AccountOpening | Accounts (inline) |
 | FT, FUNDS.TRANSFER, payments routing | Payments (inline) |
 | REST, @GET, @POST, @Path, @QueryParam | REST API (inline) |
-| COB, batch, end-of-day, COB.SERVICE | COB (inline) |
+| COB, batch, end-of-day, COB.SERVICE | COB (inline); setup, running, errors, tSM/tSA and job internals: `temenos-admin` → `references/cob.md` |
 | ATM, TT.Contract.Teller, cash, denomination | ATM/Teller (inline) |
 | VVR, VIR, VAR, VCRR, NoFile, Infobasic, SUBROUTINE, GOSUB | **REQUIRED SUB-SKILL:** `temenos-infobasic` |
 | jBC, .component, .b file, metamodelVersion, $PACKAGE | **REQUIRED SUB-SKILL:** `temenos-jbc` |
