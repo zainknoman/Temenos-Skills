@@ -27,6 +27,10 @@ to `temenos-dev` and its sub-skills.
 | [build-test-debug.md](references/build-test-debug.md) | Precompiler rules, remote debugging, unit testing, Maven plugin, SonarQube/code coverage |
 | [security-multitenancy-rules.md](references/security-multitenancy-rules.md) | Keycloak/Kerberos auth, multi-tenancy, message integrity, the Rules Engine |
 
+Packaging L3 jBC/Java into a JAR with the Temenos Packager Code Packager archetypes, and
+promoting configuration packages through a CI pipeline (dsf-iris API, Maven `-Ddsf.command=deploy`),
+are in `temenos-migration` → `references/temenos-packager.md` §6 and §11.
+
 For procedural detail beyond these summaries:
 ```
 python pipeline/query_docs.py "<question>" --topic TAFJ-DevSecOps -n 5

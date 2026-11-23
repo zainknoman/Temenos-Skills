@@ -16,7 +16,7 @@ python pipeline/query_docs.py "<question>" --topic TAFJ-Migration -n 5
 | `TAFJ-Upgrade.pdf` | The official TAFJ version-upgrade procedure |
 | `TAFJ-GIT-ChangeSet-Installation.pdf` | Installing a change set sourced from a GIT-based development environment |
 | `TAFJ-RTC-ChangeSet-Installation.pdf` | Installing a change set sourced from IBM RTC (Rational Team Concert) |
-| `TAFJ-DSPackageInstaller.pdf` | The Design Studio package installer tool |
+| `TAFJ-DSPackageInstaller.pdf` | The Design Studio package installer tool (the older DSL/ESON packager; its successor, Temenos Packager, is in [temenos-packager.md](temenos-packager.md)) |
 
 ## What "ChangeSet installation" means in a TAFJ context
 

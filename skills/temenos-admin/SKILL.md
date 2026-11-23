@@ -60,6 +60,10 @@ OCR'd from slide screenshots by `pipeline/docx_extract.py` on 2026-11-23. PDF pa
 py -3 pipeline/query_docs.py "<question>" --topic COB -n 5
 ```
 
+Temenos Packager server configuration (`dsf-iris.war` `dsf.properties`, JMS user, password
+encryption, logs, the Nitrite package repository) is in `temenos-migration` →
+`references/temenos-packager.md` §3 and §9.
+
 ## COB rules that matter most
 
 Full detail is in [cob.md](references/cob.md). Before answering any COB question:
